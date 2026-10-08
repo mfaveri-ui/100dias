@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>100 dias + 75 Duro</title>
+<meta name="theme-color" content="#15212C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="100 dias">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1EC; --surface:#FFFFFF; --sunk:#E3E8E1; --ink:#15212C; --muted:#56636E; --line:#CFD7CD;
+  --hit:#1E6A4F; --cell:#DCE3DA;
+  --fis:#2E7D57; --est:#2456A6; --ali:#A86F14; --fin:#6C4A9A; --auc:#1D6F80; --fe:#A8433C; --bad:#B3261E;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F151B; --surface:#17202A; --sunk:#1E2833; --ink:#E4EAEE; --muted:#93A1AC; --line:#2A3743;
+    --hit:#48BE88; --cell:#223040;
+    --fis:#5CC08E; --est:#6E9BEA; --ali:#E0A649; --fin:#AE8BE0; --auc:#5CC2D4; --fe:#E58C84; --bad:#F2877E;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F151B; --surface:#17202A; --sunk:#1E2833; --ink:#E4EAEE; --muted:#93A1AC; --line:#2A3743;
+  --hit:#48BE88; --cell:#223040;
+  --fis:#5CC08E; --est:#6E9BEA; --ali:#E0A649; --fin:#AE8BE0; --auc:#5CC2D4; --fe:#E58C84; --bad:#F2877E;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--hit);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 20px 64px}
+
+header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--line)}
+header.top h1{font-family:var(--display);font-weight:700;font-size:2rem;line-height:1;margin:0;letter-spacing:.01em}
+header.top p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+.status{font-size:.82rem;color:var(--muted);display:flex;align-items:center;gap:6px}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--hit);display:inline-block}
+.status.busy i{background:var(--ali)}
+.status.local i{background:var(--muted)}
+
+nav.tabs{display:flex;gap:4px;margin:16px 0 20px;overflow-x:auto}
+nav.tabs button{background:none;border:0;padding:8px 14px;border-radius:999px;cursor:pointer;color:var(--muted);font-weight:500;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+
+.view[hidden]{display:none}
+
+/* Dia */
+.dayview{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:28px;align-items:start}
+@media (max-width:880px){.dayview{grid-template-columns:1fr}}
+
+.hero{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+.bignum{font-family:var(--display);font-weight:700;font-size:clamp(5rem,14vw,8.5rem);line-height:.8;letter-spacing:-.01em}
+.bignum small{font-size:.28em;font-weight:600;color:var(--muted);letter-spacing:.02em;margin-left:6px}
+.herometa{padding-bottom:6px}
+.herometa .date{font-weight:600}
+.herometa .phase{color:var(--muted);font-size:.92rem}
+.daynav{display:flex;gap:6px;margin-left:auto;padding-bottom:8px}
+.daynav button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 12px;cursor:pointer}
+.daynav button:disabled{opacity:.4;cursor:default}
+
+.score{display:flex;align-items:center;gap:12px;margin:0 0 18px}
+.score .bar{flex:1;height:10px;background:var(--cell);border-radius:5px;overflow:hidden}
+.score .bar span{display:block;height:100%;background:var(--hit);transition:width .3s}
+.score b{font-family:var(--display);font-size:1.6rem;min-width:3.2em;text-align:right}
+
+.area{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.area h3{margin:0 0 8px;font-size:1rem;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.area h3 span{font-family:var(--display);font-size:1.25rem;color:var(--c)}
+.item{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
+.item:first-of-type{border-top:0}
+.item label{flex:1;cursor:pointer}
+.item .hs{display:block;font-size:.78rem;color:var(--muted)}
+.item input[type=checkbox]{width:22px;height:22px;accent-color:var(--c);cursor:pointer;flex:none}
+.item .num{display:flex;align-items:center;gap:6px;flex:none}
+.item .num input{width:84px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);text-align:right}
+.item .num small{color:var(--muted);font-size:.8rem;white-space:nowrap}
+.note textarea,.field textarea,.field input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);resize:vertical}
+.note label,.field label{display:block;font-weight:600;font-size:.92rem;margin:0 0 6px}
+.note{margin-top:4px}
+.future{padding:14px 16px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);margin-bottom:12px}
+
+.side h2{font-family:var(--display);font-weight:600;font-size:1.5rem;margin:0 0 10px}
+.phasestrip{display:flex;gap:3px;margin-bottom:8px}
+.phasestrip div{height:6px;border-radius:3px;background:var(--line)}
+.phasestrip div.on{background:var(--ink)}
+.phasenames{display:flex;gap:3px;font-size:.74rem;color:var(--muted);margin-bottom:12px}
+.phasenames span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
+.grid button{aspect-ratio:1;border:0;border-radius:5px;cursor:pointer;font-family:var(--display);font-weight:600;font-size:.95rem;
+  background:color-mix(in srgb,var(--hit) var(--p,0%),var(--cell));color:var(--ink);padding:0;position:relative}
+.grid button.dark{color:#fff}
+.grid button.fut{background:transparent;border:1px dashed var(--line);color:var(--muted)}
+.grid button.today{box-shadow:0 0 0 2px var(--ink)}
+.grid button.sel{outline:2px solid var(--est);outline-offset:2px}
+.legend{display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--muted);margin:10px 0 22px}
+.legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-family:var(--display);font-size:1.9rem;line-height:1.05}
+.stat span{font-size:.8rem;color:var(--muted)}
+.arearow{display:grid;grid-template-columns:110px 1fr 44px;align-items:center;gap:10px;margin-bottom:8px;font-size:.9rem}
+.arearow .bar{height:8px;background:var(--cell);border-radius:4px;overflow:hidden}
+.arearow .bar span{display:block;height:100%;background:var(--c)}
+.arearow b{text-align:right;font-family:var(--display);font-size:1.1rem}
+
+/* Metas */
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:720px){.cols{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card.area-card{border-top:4px solid var(--c)}
+.card h3{margin:0 0 4px;font-size:1.05rem}
+.card p.hint{margin:0 0 10px;color:var(--muted);font-size:.88rem}
+.section-title{font-family:var(--display);font-weight:600;font-size:1.7rem;margin:28px 0 6px}
+.section-title:first-child{margin-top:0}
+.lead{color:var(--muted);margin:0 0 14px;max-width:68ch}
+.money{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.money .bar{flex:1;min-width:140px;height:8px;background:var(--cell);border-radius:4px;overflow:hidden}
+.money .bar span{display:block;height:100%;background:var(--fin)}
+
+.tablewrap{overflow-x:auto}
+table.bench{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+table.bench th,table.bench td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;font-size:.92rem}
+table.bench th{font-weight:600;color:var(--muted)}
+table.bench input{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+
+/* Revisões */
+.week{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:10px}
+.week summary{cursor:pointer;padding:12px 16px;display:flex;justify-content:space-between;gap:10px;align-items:center;list-style:none}
+.week summary::-webkit-details-marker{display:none}
+.week summary b{font-weight:600}
+.week summary span{color:var(--muted);font-size:.88rem}
+.week .body{padding:0 16px 16px;display:grid;gap:12px}
+.week.current{border-color:var(--ink)}
+
+/* Ajustes */
+.hab{display:grid;grid-template-columns:1fr 110px 90px 90px 40px 36px;gap:8px;align-items:center;margin-bottom:6px}
+.hab input,.hab select{padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);width:100%;min-width:0}
+.hab.head{font-size:.78rem;color:var(--muted)}
+.hab input[type=checkbox]{width:20px;height:20px;justify-self:center;accent-color:var(--ink)}
+.hab button{border:1px solid var(--line);background:none;border-radius:6px;height:32px;cursor:pointer;color:var(--muted)}
+@media (max-width:640px){.hab{grid-template-columns:1fr 1fr 1fr 40px 36px}.hab .lbl{grid-column:1/-1}.hab.head{display:none}}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:500}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--line)}
+.btn.danger{background:none;color:#B3261E;border-color:#B3261E}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.small{font-size:.85rem;color:var(--muted)}
+
+.c75{display:flex;gap:16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--ink);border-radius:10px;padding:12px 16px;margin:0 0 16px}
+.c75 .n{font-family:var(--display);font-weight:700;font-size:2.8rem;line-height:.9;white-space:nowrap}
+.c75 .n small{font-size:.42em;color:var(--muted);font-weight:600;margin-left:2px}
+.c75 .t b{display:block;font-weight:600}
+.c75 .t span{display:block;color:var(--muted);font-size:.9rem}
+.c75.ok{border-left-color:var(--hit)} .c75.ok .n{color:var(--hit)}
+.c75.fail{border-left-color:var(--bad)} .c75.fail .n{color:var(--bad)}
+.c75.wait .n{color:var(--muted)}
+.t75{display:inline-block;margin-left:6px;padding:0 5px;border:1px solid var(--line);border-radius:4px;font-family:var(--display);font-weight:600;font-size:.74rem;line-height:1.4;color:var(--muted);vertical-align:1px}
+.side h2.h75{margin-top:26px}
+.g75{display:grid;grid-template-columns:repeat(15,1fr);gap:3px;margin-bottom:12px}
+.g75 button{aspect-ratio:1;border:0;border-radius:3px;background:var(--cell);padding:0;cursor:pointer}
+.g75 button.on{background:var(--ink)}
+.g75 button.now{outline:2px solid var(--ink);outline-offset:1px}
+.g75 button:disabled{cursor:default}
+.treino{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--fis);border-radius:10px;padding:14px 16px 6px;margin:0 0 16px}
+.treino h3{margin:0 0 4px;font-size:1rem;display:flex;justify-content:space-between;gap:4px 10px;align-items:baseline;flex-wrap:wrap}
+.treino h3 span{font-size:.85rem;color:var(--muted);font-weight:500}
+.treino .tr{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;padding:10px 0;border-top:1px solid var(--line)}
+.treino .k{font-family:var(--display);font-weight:600;font-size:1.1rem;color:var(--fis);white-space:nowrap;line-height:1.3}
+.treino .tr b{font-weight:600}
+.treino .tr p{margin:2px 0 0;color:var(--muted);font-size:.9rem}
+.treino .tr ul{margin:4px 0 0;padding-left:18px;color:var(--muted);font-size:.9rem}
+.treino .foot{margin:0;padding:8px 0 6px;border-top:1px solid var(--line);font-size:.8rem;color:var(--muted)}
+.leve{display:inline-block;font-size:.74rem;padding:0 6px;border-radius:4px;background:var(--cell);color:var(--muted);margin-left:6px;vertical-align:1px;font-weight:500}
+.planlist{margin:0 0 14px;padding-left:20px;max-width:68ch}
+.planlist li{margin-bottom:6px}
+.ch{font-size:1.05rem;margin:24px 0 8px}
+.cphase{border-left:4px solid var(--est);margin-top:4px}
+.cphase b{display:block;font-family:var(--display);font-size:1.3rem;font-weight:600}
+.cphase p{margin:4px 0 0;color:var(--muted);font-size:.92rem}
+.cbar{position:relative;height:12px;background:var(--cell);border-radius:6px}
+.cbar span{position:absolute;left:0;top:0;bottom:0;background:var(--est);border-radius:6px;transition:width .3s}
+.cbar i{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink)}
+.qbar{height:8px;background:var(--cell);border-radius:4px;overflow:hidden;min-width:80px}
+.qbar span{display:block;height:100%;background:var(--est)}
+.qbar.ok span{background:var(--hit)}
+.btn{padding:8px 14px;border:1px solid var(--line);border-radius:8px;background:var(--ink);color:var(--bg);cursor:pointer;font-weight:500}
+.clist{list-style:none;margin:10px 0 0;padding:0}
+.clist li{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:7px 0;border-top:1px solid var(--line);font-size:.92rem}
+.clist li button{border:0;background:none;color:var(--muted);cursor:pointer;font-size:1.1rem;line-height:1}
+.mk{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.mk:first-child{border-top:0}
+.mk input{width:20px;height:20px;margin-top:2px;accent-color:var(--hit);flex:none}
+.mk label{flex:1}
+.mk span{font-size:.82rem;color:var(--muted);white-space:nowrap}
+.mk.late span{color:var(--bad);font-weight:600}
+.mk.done label{color:var(--muted);text-decoration:line-through}
+.banner{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--ali);border-radius:10px;padding:12px 16px;margin:0 0 16px}
+.banner p{margin:0;flex:1;min-width:200px}
+.banner[hidden]{display:none}
+#importBox textarea{width:100%;min-height:110px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-family:ui-monospace,monospace;font-size:.8rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>100 dias + 75 Duro</h1>
+      <p id="range">Controle de objetivos</p>
+    </div>
+    <div class="status local" id="status"><i></i><span>Carregando…</span></div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="dia" aria-selected="true">Dia</button>
+    <button role="tab" data-tab="concurso" aria-selected="false">Concurso</button>
+    <button role="tab" data-tab="metas" aria-selected="false">Metas e rotina</button>
+    <button role="tab" data-tab="revisoes" aria-selected="false">Revisões semanais</button>
+    <button role="tab" data-tab="ajustes" aria-selected="false">Ajustes</button>
+  </nav>
+
+  <div class="banner" id="bnInstall" hidden><p><b>Instalar como app.</b> Coloca o ícone na tela inicial e abre em tela cheia, mesmo sem internet.</p><button class="btn" id="btnInstall">Instalar</button></div>
+  <div class="banner" id="bnFirst" hidden><p><b>Primeira vez aqui?</b> Traga os registros que você já fez no controle antigo, em Ajustes → Dados.</p><button class="btn" id="btnGoImport">Trazer meus registros</button><button class="btn ghost" id="btnDismissFirst">Começar do zero</button></div>
+  <div class="banner" id="bnYesterday" hidden><p id="bnYesterdayTxt"></p><button class="btn" id="btnYesterday">Preencher ontem</button></div>
+  <section class="view" id="v-dia">
+    <div class="dayview">
+      <div>
+        <div class="hero">
+          <div class="bignum" id="bignum">1<small>de 100</small></div>
+          <div class="herometa"><div class="date" id="dateLbl"></div><div class="phase" id="phaseLbl"></div></div>
+          <div class="daynav">
+            <button id="prev" aria-label="Dia anterior">‹</button>
+            <button id="goToday">Hoje</button>
+            <button id="next" aria-label="Próximo dia">›</button>
+          </div>
+        </div>
+        <div class="score"><div class="bar"><span id="dayBar" style="width:0"></span></div><b id="dayPct">0%</b></div>
+        <div class="c75" id="c75" aria-live="polite"></div>
+        <div class="treino" id="treino"></div>
+        <div id="areas"></div>
+        <div class="note">
+          <label for="dayNote">Nota do dia</label>
+          <textarea id="dayNote" rows="3" placeholder="O que aconteceu hoje, o que atrapalhou, o que repetir amanhã."></textarea>
+        </div>
+      </div>
+
+      <aside class="side">
+        <h2>Os 100 dias</h2>
+        <div class="phasestrip" id="phasestrip"></div>
+        <div class="phasenames" id="phasenames"></div>
+        <div class="grid" id="grid"></div>
+        <div class="legend">
+          <span>Aproveitamento:</span>
+          <i style="background:var(--cell)"></i>0%
+          <i style="background:color-mix(in srgb,var(--hit) 50%,var(--cell))"></i>50%
+          <i style="background:var(--hit)"></i>100%
+          <span style="margin-left:auto">Dia vencido: 80% ou mais</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><b id="stStreak">0</b><span>dias seguidos vencidos</span></div>
+          <div class="stat"><b id="stWon">0</b><span>dias vencidos até hoje</span></div>
+          <div class="stat"><b id="stAvg">0%</b><span>média até hoje</span></div>
+        </div>
+        <div id="areaRows"></div>
+
+        <h2 class="h75">75 Duro</h2>
+        <div class="g75" id="g75"></div>
+        <div class="stats">
+          <div class="stat"><b id="s75day">0</b><span>dia atual de 75</span></div>
+          <div class="stat"><b id="s75att">1</b><span>tentativa</span></div>
+          <div class="stat"><b id="s75best">0</b><span>recorde de dias seguidos</span></div>
+        </div>
+        <p class="small" id="s75txt"></p>
+        <h2 class="h75">Concurso</h2>
+        <p class="small" id="sideConc"></p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="view" id="v-concurso" hidden>
+    <h2 class="section-title">Concurso AFRFB</h2>
+    <p class="lead">O plano até a prova, medido toda semana. Questões vêm do registro diário; cobertura do edital, simulados e discursivas você lança aqui.</p>
+    <div class="stats">
+      <div class="stat"><b id="cEdital">0</b><span>dias até o edital (estimativa)</span></div>
+      <div class="stat"><b id="cProva">0</b><span>dias até a prova (estimativa)</span></div>
+      <div class="stat"><b id="cQsem">0</b><span id="cQsemLbl">questões nesta semana</span></div>
+    </div>
+    <div class="card cphase" id="cPhase"></div>
+
+    <h3 class="ch">Cobertura do edital</h3>
+    <div class="card">
+      <div class="cbar" aria-hidden="true"><span id="covFill"></span><i id="covMark"></i></div>
+      <p id="covTxt" style="margin:8px 0 12px"></p>
+      <div class="row"><label for="covIn" class="small">Cobertura hoje</label><input type="number" id="covIn" min="0" max="100" step="0.5" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);width:90px"><span class="small">%</span><button type="button" class="btn" id="covAdd">Registrar</button></div>
+      <p class="small" id="covHist" style="margin:10px 0 0"></p>
+    </div>
+    <div class="tablewrap" style="margin-top:12px"><table class="bench" id="covTable"></table></div>
+
+    <h3 class="ch">Questões por semana</h3>
+    <p class="small" style="margin:0 0 8px">Mínimo de 30 por dia útil e 60 por dia no fim de semana. A meta sobe na reta final.</p>
+    <div class="tablewrap"><table class="bench" id="qTable"></table></div>
+
+    <div class="cols" style="margin-top:22px">
+      <div>
+        <h3 class="ch" style="margin-top:0">Simulados</h3>
+        <p class="small" id="simTxt" style="margin:0 0 8px"></p>
+        <div class="card">
+          <div class="row"><input type="date" id="simD" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"><input type="number" id="simG" min="0" max="100" placeholder="% geral" aria-label="Acerto geral em %" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);width:100px"><input type="number" id="simE" min="0" max="100" placeholder="% específicos" aria-label="Acerto nos específicos em %" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);width:120px"><button type="button" class="btn" id="simAdd">Lançar</button></div>
+          <ul class="clist" id="simList"></ul>
+        </div>
+      </div>
+      <div>
+        <h3 class="ch" style="margin-top:0">Discursivas</h3>
+        <p class="small" id="discTxt" style="margin:0 0 8px"></p>
+        <div class="card">
+          <div class="row"><input type="date" id="discD" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"><input type="text" id="discT" placeholder="Tema" aria-label="Tema da discursiva" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);flex:1;min-width:120px"><input type="number" id="discN" min="0" placeholder="Nota" aria-label="Nota" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);width:80px"><button type="button" class="btn" id="discAdd">Lançar</button></div>
+          <ul class="clist" id="discList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="ch">Marcos até a prova</h3>
+    <div class="card"><div id="marcos"></div></div>
+
+    <h3 class="ch">Datas</h3>
+    <div class="row"><label for="dEdital" class="small">Edital (estimativa)</label><input type="date" id="dEdital" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"><label for="dProva" class="small">Prova (estimativa)</label><input type="date" id="dProva" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"></div>
+    <p class="small">Quando o edital sair, troque as duas datas pelas oficiais: fases, metas e prazos se ajustam sozinhos.</p>
+  </section>
+
+  <section class="view" id="v-metas" hidden>
+    <h2 class="section-title">Onde quero estar no dia 100</h2>
+    <p class="lead">Escreva uma meta por área, medível e com número. É ela que dá sentido ao checklist diário.</p>
+    <div class="cols" id="goalCards"></div>
+
+    <h2 class="section-title">Marcos de medição</h2>
+    <p class="lead">Meça as mesmas coisas no dia 1, no dia 50 e no dia 100. A comparação é a prova da mudança.</p>
+    <div class="tablewrap"><table class="bench" id="bench"></table></div>
+
+    <h2 class="section-title">Plano de treinos</h2>
+    <p class="lead">Um treino por dia, de manhã, com 30 minutos, alternando corrida, calistenia e corda. Perna pesada nunca na véspera de treino forte de corrida. O estudo para o concurso vem primeiro.</p>
+    <div class="tablewrap"><table class="bench" id="planWeek"></table></div>
+    <h3 style="margin:22px 0 8px;font-size:1.05rem">Progressão</h3>
+    <div class="tablewrap"><table class="bench" id="planPhases"></table></div>
+    <h3 style="margin:22px 0 8px;font-size:1.05rem">Semanas leves e segurança</h3>
+    <ul class="planlist" id="planNotes"></ul>
+
+    <h2 class="section-title">Rotina-base</h2>
+    <p class="lead">Ponto de partida montado em volta do turno no moinho. Ajuste à vontade; é o que você consulta quando o dia sair do trilho.</p>
+    <div class="field"><textarea id="routine" rows="16"></textarea></div>
+  </section>
+
+  <section class="view" id="v-revisoes" hidden>
+    <h2 class="section-title">Revisões semanais</h2>
+    <p class="lead">Ao fim de cada 7 dias, 10 minutos: olhe a média da semana, responda as três perguntas e mude uma coisa só.</p>
+    <div id="weeks"></div>
+  </section>
+
+  <section class="view" id="v-ajustes" hidden>
+    <h2 class="section-title">Início do desafio</h2>
+    <div class="row"><input type="date" id="startDate" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"><span class="small" id="endLbl"></span></div>
+
+    <h2 class="section-title">75 Duro</h2>
+    <p class="lead">Os hábitos com a caixa 75 marcada são as regras. Todos cumpridos validam o dia. Se um dia fechar incompleto, a contagem volta ao Dia 1 no dia seguinte, sozinha.</p>
+    <div class="row"><label for="start75" class="small">Início do 75 Duro</label><input type="date" id="start75" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"><span class="small" id="end75Lbl"></span></div>
+
+    <div class="row" id="min75Row"><span class="small">Mínimo de estudo para validar o dia no 75:</span>
+      <label class="small" for="min75d">dias úteis</label><input type="number" id="min75d" min="0" step="0.5" style="width:80px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"><span class="small">h</span>
+      <label class="small" for="min75w">sábado e domingo</label><input type="number" id="min75w" min="0" step="0.5" style="width:80px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"><span class="small">h</span></div>
+
+    <h2 class="section-title">Hábitos diários</h2>
+    <p class="lead">Marcação (sim/não) conta 1 ponto se feita. Número conta proporcional à meta mínima. Limite máximo vale 1 ponto se ficar dentro do limite e perde pontos conforme passa; em branco conta zero, então registre mesmo quando for 0 (meta de fim de semana vale para sábado e domingo). Valor em R$ não entra na nota; soma na reserva.</p>
+    <div id="habitEditor"></div>
+
+    <h2 class="section-title">Dados</h2>
+    <p class="lead">Seus registros ficam guardados só neste celular, sem login. Baixe um backup de vez em quando, principalmente antes de trocar de aparelho ou limpar os dados do navegador.</p>
+    <div class="row">
+      <button class="btn" id="dlJson">Baixar backup</button>
+      <button class="btn ghost" id="copyJson">Copiar dados (JSON)</button>
+    </div>
+    <h3 style="margin:22px 0 6px;font-size:1rem">Importar registros</h3>
+    <p class="small" style="margin:0 0 8px">Do controle antigo: abra-o, vá em Ajustes → Dados → <b>Copiar dados (JSON)</b> e cole aqui. Ou escolha um arquivo de backup.</p>
+    <div id="importBox">
+      <textarea id="importTxt" placeholder="Cole aqui os dados copiados"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="btnImport">Importar dados colados</button>
+        <label class="btn ghost" for="importFile" style="display:inline-block">Escolher arquivo de backup</label>
+        <input type="file" id="importFile" accept=".json,application/json" hidden>
+      </div>
+    </div>
+    <div class="row" style="margin-top:22px">
+      <button class="btn danger" id="resetAll">Apagar tudo e recomeçar</button>
+    </div>
+    <p class="small" id="dataMsg" aria-live="polite"></p>
+  </section>
+</div>
+
+<script>
+(function(){
+"use strict";
+var AREAS=[
+  {id:"fisico",name:"Atividade física",short:"Físico",c:"var(--fis)"},
+  {id:"estudo",name:"Estudo AFRFB",short:"Estudo",c:"var(--est)"},
+  {id:"alimentacao",name:"Alimentação",short:"Alimentação",c:"var(--ali)"},
+  {id:"fe",name:"Fé e leitura",short:"Fé e leitura",c:"var(--fe)"},
+  {id:"financas",name:"Finanças",short:"Finanças",c:"var(--fin)"},
+  {id:"autocontrole",name:"Autocontrole",short:"Autocontrole",c:"var(--auc)",streak:true}
+];
+var PHASES=[
+  {from:1,to:21,name:"Fundação",txt:"Fundação (dias 1–21): instalar os hábitos, sem heroísmo."},
+  {from:22,to:50,name:"Construção",txt:"Construção (dias 22–50): subir volume de estudo e treino."},
+  {from:51,to:80,name:"Aceleração",txt:"Aceleração (dias 51–80): simulados e treinos de qualidade."},
+  {from:81,to:100,name:"Consolidação",txt:"Consolidação (dias 81–100): manter o padrão e medir."}
+];
+var ROUTINE_OLD="SEGUNDA A SEXTA (moinho 07h30–12h00 / 13h30–17h00)\n"+
+"05h00  Acordar, água, sem celular\n"+
+"05h15–06h45  Estudo bloco 1 (teoria nova, cabeça descansada)\n"+
+"06h45–07h15  Café da manhã e deslocamento\n"+
+"12h00–13h30  Almoço + 30 min de flashcards / Caderno de Erros (D+1, D+3)\n"+
+"17h30–18h30  Treino (corrida ou força, conforme a semana)\n"+
+"19h00  Jantar planejado\n"+
+"19h30–21h00  Estudo bloco 2 (questões da banca + registro de erros)\n"+
+"21h00–21h15  Anotar gastos do dia e fechar o checklist\n"+
+"22h00  Dormir (7 h de sono protegem a memória do que você estudou)\n\n"+
+"SÁBADO (moinho até 12h00)\n"+
+"Tarde: 4 h de estudo (2 blocos) + revisão D+7\n"+
+"Treino leve ou descanso ativo\n\n"+
+"DOMINGO\n"+
+"Manhã: longão\n"+
+"Simulado ou bateria grande de questões (a cada 2 semanas)\n"+
+"Revisão semanal do desafio (aba Revisões) + revisão D+30\n"+
+"Planejar cardápio e compras da semana; conferir orçamento";
+var ROUTINE_450="SEGUNDA A SEXTA (moinho 07h30–12h00 / 13h30–17h00)\n"+
+"04h50  Acordar, água, sem celular\n"+
+"04h55–05h10  Fé: oração e leitura sagrada (15 min)\n"+
+"05h15–06h00  Treino 1 ao ar livre (corrida) + foto de progresso\n"+
+"06h05–07h00  Estudo bloco 1 (teoria nova, cabeça descansada)\n"+
+"07h00–07h20  Café da manhã do plano e deslocamento\n"+
+"Água: 4 garrafas de 1 L (até 10h, 13h, 17h e 20h)\n"+
+"12h00–13h30  Almoço + 10 páginas + 20 min de flashcards / Caderno de Erros\n"+
+"17h30–18h15  Treino 2 (força ou funcional)\n"+
+"18h45  Jantar do plano\n"+
+"19h15–21h00  Estudo bloco 2 (questões da banca + registro de erros)\n"+
+"21h00–21h15  Anotar gastos do dia e fechar o checklist\n"+
+"21h45  Dormir (7 h de sono protegem treino e memória)\n\n"+
+"SÁBADO (moinho até 12h00)\n"+
+"Cedo: fé + treino 1 ao ar livre + foto\n"+
+"Tarde: 4 h de estudo (2 blocos) + revisão D+7 + 10 páginas\n"+
+"Fim da tarde: treino 2 leve (caminhada ou mobilidade, 45 min)\n\n"+
+"DOMINGO\n"+
+"Manhã: fé + longão (treino 1 ao ar livre) + foto\n"+
+"Simulado ou bateria grande de questões (a cada 2 semanas)\n"+
+"Treino 2 pelo menos 3 h depois do longão (força leve ou caminhada)\n"+
+"Revisão semanal do desafio (aba Revisões) + revisão D+30\n"+
+"Planejar cardápio, compras e marmitas da semana; conferir orçamento";
+var ROUTINE_4H="SEGUNDA A SEXTA (moinho 07h30–12h00 / 13h30–17h00)\n"+
+"04h00  Acordar, água, sem celular\n"+
+"04h05–04h20  Fé: oração e leitura sagrada (15 min)\n"+
+"04h30–05h15  Treino 1 ao ar livre (corrida) + foto de progresso. Ainda escuro: colete refletivo e lanterna\n"+
+"05h20–07h00  Estudo bloco 1 (teoria nova, cabeça descansada)\n"+
+"07h00–07h20  Café da manhã do plano e deslocamento\n"+
+"Água: 4 garrafas de 1 L (até 10h, 13h, 17h e 19h30)\n"+
+"12h00–13h30  Almoço + 10 páginas + 20 min de flashcards / Caderno de Erros\n"+
+"17h30–18h15  Treino 2 (calistenia ou corda, conforme o dia)\n"+
+"18h30  Jantar do plano\n"+
+"19h00–20h30  Estudo bloco 2 (questões da banca + registro de erros)\n"+
+"20h30–20h45  Anotar gastos do dia e fechar o checklist\n"+
+"21h00  Dormir (7 h de sono protegem treino e memória)\n\n"+
+"SÁBADO (moinho até 12h00)\n"+
+"04h00  Acordar; fé e treino 1 ao ar livre + foto, como nos dias úteis\n"+
+"13h30–17h45  4 h de estudo (2 blocos) + revisão D+7 + 10 páginas\n"+
+"18h00  Treino 2 leve (caminhada ou mobilidade, 45 min)\n\n"+
+"DOMINGO\n"+
+"06h00  Fé; 06h30 longão (treino 1 ao ar livre) + foto\n"+
+"11h15  Treino 2 leve, pelo menos 3 h depois do longão\n"+
+"13h00  10 páginas\n"+
+"14h00–17h00  Simulado ou bateria grande de questões (a cada 2 semanas) + revisão D+30\n"+
+"17h30  Revisão semanal do desafio (aba Revisões); cardápio, compras e marmitas; conferir orçamento\n"+
+"21h00  Dormir";
+var ROUTINE_45="SEGUNDA A SEXTA (moinho 07h30–12h00 / 13h30–17h00)\n"+
+"04h00  Acordar, água, sem celular\n"+
+"04h05–04h20  Fé: oração e leitura sagrada (15 min)\n"+
+"04h30–05h15  Treino do dia (45 min) + foto de progresso. Corrida no escuro: colete refletivo e lanterna\n"+
+"05h20–07h00  Estudo bloco 1 (teoria nova, cabeça descansada)\n"+
+"07h00–07h20  Café da manhã do plano e deslocamento\n"+
+"Água: 4 garrafas de 1 L (até 10h, 13h, 17h e 19h30)\n"+
+"12h00–13h30  Almoço + 10 páginas + 20 min de flashcards / Caderno de Erros\n"+
+"17h30–18h15  Estudo: revisões D+1/D+3 e Caderno de Erros\n"+
+"18h15–18h45  Jantar do plano\n"+
+"19h00–20h30  Estudo bloco 2 (questões da banca + registro de erros)\n"+
+"20h30–20h45  Anotar gastos do dia e fechar o checklist\n"+
+"21h00  Dormir (7 h de sono protegem treino e memória)\n\n"+
+"SÁBADO (moinho até 12h00)\n"+
+"04h00  Acordar; fé e treino do dia + foto, como nos dias úteis\n"+
+"13h30–17h45  4 h de estudo (2 blocos) + revisão D+7 + 10 páginas\n\n"+
+"DOMINGO\n"+
+"06h00  Fé; 06h30–07h15 treino do dia + foto\n"+
+"09h00–11h00  Estudo: teoria + revisão D+7\n"+
+"13h00  10 páginas\n"+
+"14h00–17h00  Simulado ou bateria grande de questões (a cada 2 semanas) + revisão D+30\n"+
+"17h30  Revisão semanal do desafio (aba Revisões); cardápio, compras e marmitas; conferir orçamento\n"+
+"21h00  Dormir";
+var ROUTINE="SEGUNDA A SEXTA (moinho 07h30–12h00 / 13h30–17h00)\n"+
+"04h00  Acordar, água, sem celular\n"+
+"04h05–04h20  Fé: oração e leitura sagrada (15 min)\n"+
+"04h30–05h00  Treino do dia (30 min) + foto de progresso. Corrida no escuro: colete refletivo e lanterna\n"+
+"05h05–07h00  Estudo bloco 1 (teoria nova, cabeça descansada)\n"+
+"07h00–07h20  Café da manhã do plano e deslocamento\n"+
+"Água: 4 garrafas de 1 L (até 10h, 13h, 17h e 19h30)\n"+
+"12h00–13h30  Almoço + 10 páginas + 20 min de flashcards / Caderno de Erros\n"+
+"17h30–18h15  Estudo: revisões D+1/D+3 e Caderno de Erros\n"+
+"18h15–18h45  Jantar do plano\n"+
+"19h00–20h30  Estudo bloco 2 (questões da banca + registro de erros)\n"+
+"20h30–20h45  Anotar gastos do dia e fechar o checklist\n"+
+"21h00  Dormir (7 h de sono protegem treino e memória)\n\n"+
+"SÁBADO (moinho até 12h00)\n"+
+"04h00  Acordar; fé e treino do dia + foto, como nos dias úteis\n"+
+"13h30–17h45  4 h de estudo (2 blocos) + revisão D+7 + 10 páginas\n\n"+
+"DOMINGO\n"+
+"06h00  Fé; 06h30–07h00 treino do dia (30 min) + foto\n"+
+"09h00–11h00  Estudo: teoria + revisão D+7\n"+
+"13h00  10 páginas\n"+
+"14h00–17h00  Simulado ou bateria grande de questões (a cada 2 semanas) + revisão D+30\n"+
+"17h30  Revisão semanal do desafio (aba Revisões); cardápio, compras e marmitas; conferir orçamento\n"+
+"21h00  Dormir";
+
+function uid(){return "h"+Math.random().toString(36).slice(2,8)}
+function defaults(){
+  return {
+    v:1, updatedAt:0, mig:{redes2:true,c75:true,r4h:true,est75:true,t1:true,t30:true},
+    startDate:ymd(new Date()),
+    c75:{start:ymd(new Date())},
+    conc:{edital:"2026-12-15",prova:"2027-03-14",cov:[{d:"2026-10-01",p:12}],sims:[],disc:[],marcos:{}},
+    savingsGoal:0,
+    habits:{
+      fisico:[
+        {id:"treino",label:"Treino do dia: 30 min de manhã",type:"check",h75:true},
+        {id:"mobil",label:"Mobilidade / alongamento (10 min)",type:"check"},
+        {id:"sono",label:"Dormi 7 horas ou mais",type:"check"},
+        {id:"foto",label:"Foto de progresso",type:"check",h75:true,from75:true}
+      ],
+      estudo:[
+        {id:"horas",label:"Horas líquidas de estudo",type:"num",unit:"h",target:3,targetWeekend:5,h75:true,min75:3,min75w:3},
+        {id:"quest",label:"Questões resolvidas (FGV/CEBRASPE)",type:"num",unit:"questões",target:30,targetWeekend:60},
+        {id:"erros",label:"Caderno de Erros em dia (D+1/D+3/D+7/D+30)",type:"check"}
+      ],
+      alimentacao:[
+        {id:"agua",label:"Água: 3,8 L no dia",type:"check",h75:true},
+        {id:"dieta75",label:"Plano alimentar 100%: sem refrigerante, doces, frituras ou refeição livre",type:"check",h75:true,from75:true},
+        {id:"planej",label:"Refeições planejadas, sem fast-food ou delivery",type:"check"},
+        {id:"prato",label:"Proteína e vegetais nas refeições principais",type:"check"},
+        {id:"alcool",label:"Sem álcool",type:"check",h75:true}
+      ],
+      fe:[
+        {id:"oracao",label:"Oração e leitura sagrada (15 min)",type:"check",h75:true,from75:true},
+        {id:"leitura",label:"Leitura de não-ficção",type:"num",unit:"páginas",target:10,h75:true,from75:true}
+      ],
+      financas:[
+        {id:"gastos",label:"Registrei todos os gastos do dia",type:"check"},
+        {id:"impulso",label:"Nenhuma compra por impulso",type:"check"},
+        {id:"guardado",label:"Valor guardado hoje",type:"money",unit:"R$"}
+      ],
+      autocontrole:[
+        {id:"porno",label:"Sem pornografia",type:"check"},
+        {id:"masturb",label:"Sem masturbação",type:"check"},
+        {id:"redes",label:"Redes sociais (minutos no dia)",type:"limit",unit:"min",target:15}
+      ]
+    },
+    goals:{fisico:"",estudo:"",alimentacao:"",fe:"",financas:"",autocontrole:""},
+    bench:{},
+    routine:ROUTINE,
+    days:{},
+    reviews:{}
+  };
+}
+var GOAL_HINT={
+  fisico:"Ex.: correr 10 km abaixo do meu tempo atual e treinar 5x por semana.",
+  estudo:"Ex.: fechar o ciclo do edital, 3.000 questões e média acima de 80% nos simulados.",
+  alimentacao:"Ex.: 90 dias com refeições planejadas e sem álcool.",
+  fe:"Ex.: ler Mateus, Marcos, Lucas e Atos 1–7 e terminar 3 livros de não-ficção.",
+  financas:"Ex.: montar reserva de R$ X e zerar parcelas em aberto.",
+  autocontrole:"Ex.: completar os 100 dias sem pornografia, sem masturbação e com redes sociais em até 15 min por dia."
+};
+var BENCH_ROWS=[
+  {id:"t5k",label:"Tempo em 5 km"},
+  {id:"sim",label:"% de acerto em simulado"},
+  {id:"horasSem",label:"Horas líquidas na última semana"},
+  {id:"corpo",label:"Medida corporal (opcional)"},
+  {id:"reserva",label:"Reserva financeira"},
+  {id:"sensacao",label:"Energia / disposição (0–10)"}
+];
+
+// ---------- dates ----------
+function ymd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function parse(s){var p=(s||"").split("-");if(p.length!==3)return new Date();return new Date(+p[0],+p[1]-1,+p[2])}
+function addDays(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x}
+var WD=["dom","seg","ter","qua","qui","sex","sáb"];
+var MO=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+function fmt(d){return WD[d.getDay()]+", "+d.getDate()+" de "+MO[d.getMonth()]}
+function fmtShort(d){return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")}
+function dateOf(n){return addDays(parse(S.startDate),n-1)}
+function todayNum(){
+  var t=new Date();t=new Date(t.getFullYear(),t.getMonth(),t.getDate());
+  return Math.round((t-parse(S.startDate))/864e5)+1;
+}
+function isWeekend(n){var g=dateOf(n).getDay();return g===0||g===6}
+
+// ---------- state & persistence ----------
+var LS="cem-dias-v1", S, sel=null, db=null, docRef=null, saving=false, dirty=false, timer=null, mode="local";
+function loadLocal(){try{var r=localStorage.getItem(LS);if(r)return JSON.parse(r)}catch(e){}return null}
+function saveLocal(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+function merge(base,x){for(var k in x){if(x[k]!==undefined)base[k]=x[k]}base.mig=(x&&x.mig)?x.mig:{};return normalize(base)}
+function normalize(st){
+  var d=defaults();st.habits=st.habits||{};st.goals=st.goals||{};
+  AREAS.forEach(function(a){if(!st.habits[a.id])st.habits[a.id]=d.habits[a.id];if(st.goals[a.id]==null)st.goals[a.id]=""});
+  st.mig=st.mig||{};
+  if(!st.mig.redes2){
+    if(!st.habits.autocontrole.some(function(h){return h.id==="redes"}))st.habits.autocontrole.push({id:"redes",label:"Redes sociais (minutos no dia)",type:"limit",unit:"min",target:15});
+    st.mig.redes2=true;
+  }
+  if(!st.mig.c75){
+    st.c75={start:"2026-10-01"};
+    var H=st.habits,D=d.habits;
+    var find=function(a,id){return (H[a]||[]).filter(function(h){return h.id===id})[0]};
+    var idx=function(a,id){var i=-1;(H[a]||[]).forEach(function(h,j){if(h.id===id)i=j});return i};
+    var tr=find("fisico","treino");
+    if(tr){if(tr.label==="Treino do dia feito (corrida ou força)")tr.label=D.fisico[0].label;tr.h75=true}
+    if(!find("fisico","foto"))H.fisico.push(D.fisico.filter(function(h){return h.id==="foto"})[0]);
+    var ag=find("alimentacao","agua");
+    if(ag){if(ag.label==="Meta de água do dia atingida")ag.label=D.alimentacao[0].label;ag.h75=true}
+    if(!find("alimentacao","dieta75")){var i2=idx("alimentacao","agua");H.alimentacao.splice(i2>=0?i2+1:0,0,D.alimentacao[1])}
+    var al=find("alimentacao","alcool");if(al)al.h75=true;
+    if(st.routine===ROUTINE_OLD)st.routine=ROUTINE;
+    st.mig.c75=true;
+  }
+  if(!st.mig.r4h){
+    if(st.routine===ROUTINE_OLD||st.routine===ROUTINE_450)st.routine=ROUTINE;
+    st.mig.r4h=true;
+  }
+  if(!st.mig.t1){
+    var F=st.habits.fisico||[];
+    st.habits.fisico=F.filter(function(h){return h.id!=="treino2"});
+    var t=st.habits.fisico.filter(function(h){return h.id==="treino"})[0];
+    if(t&&(t.label==="Treino 1: 45 min ao ar livre"||t.label==="Treino do dia feito (corrida ou força)"))t.label="Treino do dia: 45 min de manhã";
+    if(st.routine===ROUTINE_4H)st.routine=ROUTINE;
+    st.mig.t1=true;
+  }
+  if(!st.mig.t30){
+    var t3=(st.habits.fisico||[]).filter(function(h){return h.id==="treino"})[0];
+    if(t3&&/45 min/.test(t3.label))t3.label=t3.label.replace("45 min","30 min");
+    if(st.routine===ROUTINE_45)st.routine=ROUTINE;
+    st.mig.t30=true;
+  }
+  if(!st.mig.est75){
+    var hs=(st.habits.estudo||[]).filter(function(h){return h.id==="horas"})[0];
+    if(hs){hs.h75=true;if(hs.min75==null)hs.min75=3;if(hs.min75w==null)hs.min75w=3}
+    st.mig.est75=true;
+  }
+  if(!st.c75||!st.c75.start)st.c75={start:st.startDate};
+  st.conc=st.conc||d.conc;["cov","sims","disc"].forEach(function(k){if(!Array.isArray(st.conc[k]))st.conc[k]=[]});
+  st.conc.marcos=st.conc.marcos||{};st.conc.edital=st.conc.edital||d.conc.edital;st.conc.prova=st.conc.prova||d.conc.prova;
+  return st;
+}
+S=merge(defaults(),loadLocal()||{});
+
+function setStatus(kind,txt){var el=document.getElementById("status");el.className="status "+kind;el.lastElementChild.textContent=txt}
+function touch(){
+  S.updatedAt=Date.now();
+  saveLocal();
+  if(!docRef){setStatus("","Salvo no celular");return}
+  dirty=true;setStatus("busy","Salvando…");
+  clearTimeout(timer);timer=setTimeout(flush,700);
+}
+function flush(){
+  if(!docRef||saving||!dirty)return;
+  saving=true;dirty=false;
+  docRef.set(JSON.parse(JSON.stringify(S))).then(function(){
+    saving=false;
+    if(dirty){flush()}else setStatus("","Salvo");
+  },function(e){
+    saving=false;
+    if(e&&e.code==="unavailable"){dirty=true;setTimeout(flush,1500+Math.random()*1000);return}
+    docRef=null;setStatus("local","Salvo só neste navegador");
+  });
+}
+function connect(){
+  setStatus("","Salvo no celular");
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+  return;
+  if(!window.claude||!window.claude.use){setStatus("local","Salvo neste navegador");return}
+  window.claude.use("db").then(function(d){
+    if(!d){setStatus("local","Salvo neste navegador");return}
+    db=d;var ref=db.doc("tracker/state");
+    ref.get().then(function(snap){
+      docRef=ref;
+      if(snap.exists){
+        var remote=snap.data();
+        if((remote.updatedAt||0)>=(S.updatedAt||0)){S=merge(defaults(),JSON.parse(JSON.stringify(remote)));saveLocal();renderAll()}
+        else{dirty=true;flush()}
+        setStatus("","Salvo");
+      }else{dirty=true;flush()}
+      ref.onSnapshot(function(s){
+        if(!s.exists||s.metadata.hasPendingWrites||saving||dirty)return;
+        var r=s.data();
+        if((r.updatedAt||0)>(S.updatedAt||0)){
+          var a=document.activeElement;
+          if(a&&(a.tagName==="TEXTAREA"||a.tagName==="INPUT"))return;
+          S=merge(defaults(),JSON.parse(JSON.stringify(r)));saveLocal();renderAll();
+        }
+      },function(){});
+    },function(){setStatus("local","Salvo neste navegador")});
+  },function(){setStatus("local","Salvo neste navegador")});
+}
+
+// ---------- scoring ----------
+function dayData(n){return S.days[n]||{}}
+function ensureDay(n){if(!S.days[n])S.days[n]={c:{},v:{},note:""};var d=S.days[n];d.c=d.c||{};d.v=d.v||{};return d}
+function target(h,n){return (isWeekend(n)&&h.targetWeekend)?+h.targetWeekend:+h.target}
+function start75(){return Math.max(1,Math.round((parse(S.c75.start)-parse(S.startDate))/864e5)+1)}
+function active(h,n){return !h.from75||n>=start75()}
+function habitScore(h,n){
+  if(!active(h,n))return null;
+  var d=dayData(n);
+  if(h.type==="check")return (d.c&&d.c[h.id])?1:0;
+  if(h.type==="num"){var t=target(h,n);var v=+((d.v||{})[h.id]||0);return t>0?Math.min(v/t,1):(v>0?1:0)}
+  if(h.type==="limit"){var raw=(d.v||{})[h.id];if(raw===undefined||raw===""||raw===null)return 0;var lt=target(h,n),x=+raw;if(x<=lt)return 1;return lt>0?Math.max(0,1-(x-lt)/lt):0}
+  return null;
+}
+function areaScore(a,n){
+  var hs=S.habits[a]||[],sum=0,cnt=0;
+  hs.forEach(function(h){var s=habitScore(h,n);if(s!==null){sum+=s;cnt++}});
+  return cnt?sum/cnt:null;
+}
+function dayScore(n){
+  var sum=0,cnt=0;
+  AREAS.forEach(function(a){(S.habits[a.id]||[]).forEach(function(h){var s=habitScore(h,n);if(s!==null){sum+=s;cnt++}})});
+  return cnt?sum/cnt:0;
+}
+function habitStreak(h,upTo){var s=0,st=upTo;if(st>=1&&habitScore(h,st)<1)st=st-1;for(var j=st;j>=1;j--){if(habitScore(h,j)>=1)s++;else break}return s}
+function habitBest(h,upTo){var b=0,c=0;for(var i=1;i<=upTo;i++){if(habitScore(h,i)>=1){c++;if(c>b)b=c}else c=0}return b}
+function findHabit(a,id){return (S.habits[a]||[]).filter(function(h){return h.id===id})[0]}
+function areaDone(a,n){var hs=(S.habits[a]||[]).filter(function(h){return h.type!=="money"});if(!hs.length)return false;return hs.every(function(h){return habitScore(h,n)>=1})}
+function areaStreak(a,upTo){var s=0,st=upTo;if(st>=1&&!areaDone(a,st))st=st-1;for(var j=st;j>=1;j--){if(areaDone(a,j))s++;else break}return s}
+function areaBest(a,upTo){var b=0,c=0;for(var i=1;i<=upTo;i++){if(areaDone(a,i)){c++;if(c>b)b=c}else c=0}return b}
+function rules75(n){var r=[];AREAS.forEach(function(a){(S.habits[a.id]||[]).forEach(function(h){if(h.h75&&h.type!=="money"&&active(h,n))r.push(h)})});return r}
+function min75(h,n){if(h.type!=="num"||h.min75==null||h.min75==="")return null;return (isWeekend(n)&&h.min75w!=null&&h.min75w!=="")?+h.min75w:+h.min75}
+function pass75(h,n){var m=min75(h,n);if(m===null)return habitScore(h,n)>=1;var v=(dayData(n).v||{})[h.id];return v!=null&&v!==""&&+v>=m}
+function done75(n){return rules75(n).filter(function(h){return pass75(h,n)}).length}
+function ok75(n){var r=rules75(n);return r.length>0&&done75(n)===r.length}
+function run75(){
+  var s=start75(),tn=todayNum(),res={s:s,cur:s,attempt:1,best:0,run:0,done:0,fails:[],map:{},notStarted:tn<s};
+  if(res.notStarted)return res;
+  var run=0,cur=s;
+  for(var i=s;i<=tn;i++){
+    var ad=i-cur+1;
+    if(ok75(i)){run++;res.map[i]={ad:ad,ok:true,att:res.attempt};if(run>res.best)res.best=run;if(run===75){res.done=i;break}}
+    else if(i<tn){res.map[i]={ad:ad,ok:false,att:res.attempt};res.fails.push(i);res.attempt++;cur=i+1;run=0}
+    else res.map[i]={ad:ad,pending:true,att:res.attempt};
+  }
+  res.cur=cur;res.run=run;
+  return res;
+}
+// ---------- plano de treinos ----------
+var WEEK={1:"calA",2:"int",3:"calB",4:"cordaT",5:"fart",6:"cordaI",0:"rod"};
+var PH_NAMES=["Adaptação","Construção","Performance"];
+function trCd(n){return n-start75()+1}
+function trPhase(cd){return cd<=21?0:cd<=49?1:2}
+function isDeload(cd){return (cd>=29&&cd<=35)||(cd>=57&&cd<=63)}
+function session(key,cd){
+  var f=trPhase(cd),dl=isDeload(cd),wk=Math.floor((cd-1)/7),vol=dl?2:[3,4,4][f],b1=dl?6:[8,10,12][f],b2=dl?8:[10,15,18][f];
+  var easy={t:"Rodagem leve",light:true,d:"30 min leves no lugar do treino forte (semana leve)."};
+  var circ=function(){return "Aqueça 5 min com mobilidade. Faça os 5 exercícios em circuito, "+vol+" voltas, com 1 min de pausa entre as voltas"+(f===2&&!dl?" e descida lenta de 3 s em cada repetição":"")+". Feche com alongamento até 30 min."};
+  switch(key){
+    case "rod":return {t:"Rodagem leve",light:true,d:"30 min em ritmo de conversa."};
+    case "int":
+      if(dl)return easy;
+      return {t:"Intervalado",d:[
+        "8 min de trote, 5×400 m forte com 2 min de trote entre os tiros, trote até completar 30 min.",
+        wk%2?"8 min de trote, 4×800 m forte com 2 min de trote entre os tiros, trote até completar 30 min.":"8 min de trote, 6×400 m forte com 1 min e 30 s de trote entre os tiros, trote até completar 30 min.",
+        wk%2?"8 min de trote, 3×1 km forte com 2 min de trote entre os tiros, trote até completar 30 min.":"8 min de trote, 5×600 m forte com 1 min e 30 s de trote entre os tiros, trote até completar 30 min."][f]};
+    case "fart":
+      if(dl)return easy;
+      return [
+        {t:"Fartlek",d:"8 min de trote, 5× (1 min forte + 1 min e 30 s leve), trote até completar 30 min."},
+        {t:"Ritmo",d:"8 min de trote, 12 min contínuos no ritmo de 10 km, trote até completar 30 min."},
+        {t:"Ritmo",d:"8 min de trote, 15 a 18 min contínuos no ritmo de meia maratona, trote até completar 30 min."}][f];
+    case "calA":
+      return {t:"Calistenia A: empurrar + core",light:dl,d:circ(),
+        list:[(f>=1&&!dl?"Flexão declinada":"Flexão")+", 8 a 15","Tríceps no banco, 10 a 15","Pike push-up, 6 a 10","Prancha, 40 s","Hollow hold, 25 s"]};
+    case "calB":
+      return {t:"Calistenia B: puxar + pernas",light:dl,d:circ(),
+        list:["Barra fixa ou remada invertida, 5 a 10"+(f>=1&&!dl?" (sem barra completa: negativas, descendo em 5 s)":""),"Agachamento búlgaro, 8 a 12 por perna","Afundo, 10 por perna","Ponte de glúteo unilateral, 12 por perna","Panturrilha em um pé, 15 por perna"]};
+    case "cordaT":
+      return {t:"Corda técnica + mobilidade",light:true,d:"Aqueça 4 min. "+b1+" blocos de 1 min pulando e 1 min parado. Complete até 30 min com mobilidade de tornozelo e quadril."};
+    case "cordaI":
+      return {t:"Corda intervalada + core",light:dl,d:"Aqueça 4 min. "+b2+" blocos de 40 s pulando e 20 s de descanso, com um exercício de core a cada 5 blocos. Complete até 30 min com core e alongamento.",
+        list:["Prancha lateral, 30 s por lado","Abdominal bicicleta, 20","Hollow hold, 25 s"]};
+  }
+  return easy;
+}
+function renderTreino(){
+  var n=sel,box=document.getElementById("treino"),cd=trCd(n);
+  if(cd<1){box.innerHTML="<h3>Treino do dia</h3><p class='foot' style='border:0'>O plano de treinos começa com o 75 Duro, em "+esc(fmt(dateOf(start75())))+".</p>";return}
+  var k=WEEK[dateOf(n).getDay()],f=trPhase(cd),dl=isDeload(cd),x=session(k,cd);
+  var head="Fase "+PH_NAMES[f]+(cd<=75?", dia "+cd+" de 75":", depois dos 75")+(dl?", semana leve":"");
+  box.innerHTML="<h3>Treino do dia<span>"+esc(head)+"</span></h3><div class='tr'><div class='k'>30 min</div><div><b>"+esc(x.t)+"</b>"+(x.light?"<span class='leve'>leve</span>":"")+
+    "<p>"+esc(x.d)+"</p>"+(x.list?"<ul>"+x.list.map(function(i){return "<li>"+esc(i)+"</li>"}).join("")+"</ul>":"")+"</div></div>"+
+    "<p class='foot'>Dor aguda ou em articulação: troque por 30 min de caminhada. Continua valendo para o desafio.</p>";
+}
+function renderPlan(){
+  var WD2=[[1,"Seg"],[2,"Ter"],[3,"Qua"],[4,"Qui"],[5,"Sex"],[6,"Sáb"],[0,"Dom"]];
+  var h="<tr><th>Dia</th><th>Treino do dia (30 min, de manhã)</th></tr>";
+  WD2.forEach(function(x){var k=WEEK[x[0]],a=session(k,1);
+    h+="<tr><td>"+x[1]+"</td><td>"+esc(k==="fart"?"Fartlek / ritmo":a.t)+(a.light?"<span class='leve'>leve</span>":"")+"</td></tr>"});
+  document.getElementById("planWeek").innerHTML=h;
+  var s=start75(),rg=[[1,21],[22,49],[50,75]];
+  var P=[["5×400 m","5× (1 min forte + 1 min 30 s leve)","3 voltas, técnica limpa","8 a 10 blocos"],
+         ["6×400 m e 4×800 m, alternando","12 min contínuos","4 voltas, variações mais difíceis","10 a 15 blocos"],
+         ["5×600 m e 3×1 km, alternando","15 a 18 min contínuos","4 voltas, descida lenta de 3 s","12 a 18 blocos"]];
+  var ph="<tr><th>Fase</th><th>Intervalado</th><th>Fartlek / ritmo</th><th>Calistenia</th><th>Corda</th></tr>";
+  P.forEach(function(r,i){ph+="<tr><td><b>"+PH_NAMES[i]+"</b><br><span class='small'>dias "+rg[i][0]+" a "+rg[i][1]+", "+fmtShort(dateOf(s+rg[i][0]-1))+" a "+fmtShort(dateOf(s+rg[i][1]-1))+"</span></td><td>"+r.join("</td><td>")+"</td></tr>"});
+  document.getElementById("planPhases").innerHTML=ph;
+  var N=[
+    "Semanas leves: dias 29 a 35 ("+fmtShort(dateOf(s+28))+" a "+fmtShort(dateOf(s+34))+") e dias 57 a 63 ("+fmtShort(dateOf(s+56))+" a "+fmtShort(dateOf(s+62))+"). Os 30 minutos continuam; intervalado e ritmo viram rodagem leve e a calistenia cai para 2 voltas.",
+    "Corda e corrida somam impacto na panturrilha e no tendão de Aquiles. Nas duas primeiras semanas, se a panturrilha reclamar, corte blocos de corda antes de mexer na corrida.",
+    "Dor aguda ou em articulação não se força: troque por 30 min de caminhada. Continua valendo para o desafio.",
+    "O treino nunca passa de 30 min: o tempo que sobra é do estudo."];
+  document.getElementById("planNotes").innerHTML=N.map(function(x){return "<li>"+esc(x)+"</li>"}).join("");
+}
+function lastDay(){var r=run75();if(r.done)return Math.max(100,r.done);return Math.max(100,r.cur+74)}
+function phaseOf(n){for(var i=0;i<PHASES.length;i++)if(n>=PHASES[i].from&&n<=PHASES[i].to)return PHASES[i];return null}
+function savedTotal(){
+  var t=0;for(var k in S.days){var v=S.days[k].v||{};AREAS.forEach(function(a){(S.habits[a.id]||[]).forEach(function(h){if(h.type==="money")t+=+(v[h.id]||0)})})}
+  return t;
+}
+function brl(x){return (+x||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+
+// ---------- render: Dia ----------
+function el(tag,attrs,html){var e=document.createElement(tag);if(attrs)for(var k in attrs){if(k==="class")e.className=attrs[k];else if(k==="style")e.setAttribute("style",attrs[k]);else e.setAttribute(k,attrs[k])}if(html!=null)e.innerHTML=html;return e}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+function renderDay(){
+  var tn=todayNum(), n=sel;
+  document.getElementById("bignum").innerHTML=n+(n<=100?"<small>de 100</small>":"<small>além dos 100</small>");
+  var d=dateOf(n);
+  document.getElementById("dateLbl").textContent=fmt(d)+(n===tn?" · hoje":"");
+  var ph=phaseOf(n);document.getElementById("phaseLbl").textContent=ph?ph.txt:"";
+  document.getElementById("prev").disabled=n<=1;
+  document.getElementById("next").disabled=n>=lastDay();
+  var box=document.getElementById("areas");box.innerHTML="";
+  if(n>tn){
+    box.appendChild(el("div",{class:"future"},"Este dia ainda não chegou ("+fmt(d)+"). Foque no de hoje."));
+  }
+  var dd=dayData(n);
+  AREAS.forEach(function(a){
+    var act=(S.habits[a.id]||[]).filter(function(h){return active(h,n)});
+    if(!act.length)return;
+    var card=el("div",{class:"area",style:"--c:"+a.c});
+    var h3=el("h3",null,esc(a.name)+"<span data-area='"+a.id+"'></span>");card.appendChild(h3);
+    act.forEach(function(h){
+      var row=el("div",{class:"item"}),id="i_"+a.id+"_"+h.id,m75=min75(h,n),tg=h.h75?"<span class='t75' title='Regra do 75 Duro"+(m75!==null?": mínimo de "+String(m75).replace(".",",")+" "+esc(h.unit||"")+" para validar o dia":"")+"'>75"+(m75!==null?" · mín. "+String(m75).replace(".",",")+" "+esc(h.unit||""):"")+"</span>":"";
+      if(h.type==="check"){
+        var cb=el("input",{type:"checkbox",id:id});cb.checked=!!(dd.c&&dd.c[h.id]);
+        cb.disabled=n>tn;
+        cb.addEventListener("change",function(){ensureDay(n).c[h.id]=cb.checked;touch();renderScores()});
+        row.appendChild(cb);row.appendChild(el("label",{for:id},esc(h.label)+tg+(a.streak?"<span class='hs' data-hs='"+a.id+"|"+h.id+"'></span>":"")));
+      }else{
+        row.appendChild(el("label",{for:id},esc(h.label)+tg+(a.streak&&h.type!=="money"?"<span class='hs' data-hs='"+a.id+"|"+h.id+"'></span>":"")));
+        var wrap=el("div",{class:"num"});
+        var inp=el("input",{type:"number",id:id,min:"0",step:h.type==="money"?"0.01":(h.unit==="h"?"0.25":"1"),inputmode:"decimal"});
+        var val=(dd.v||{})[h.id];inp.value=(val===undefined||val==="")?"":val;inp.disabled=n>tn;
+        inp.addEventListener("input",function(){var x=inp.value===""?"":+inp.value;ensureDay(n).v[h.id]=x;touch();renderScores()});
+        var hint=h.type==="money"?"R$":h.type==="limit"?("limite "+target(h,n)+" "+(h.unit||"")):("de "+target(h,n)+" "+(h.unit||""));
+        wrap.appendChild(inp);wrap.appendChild(el("small",null,esc(hint)));row.appendChild(wrap);
+      }
+      card.appendChild(row);
+    });
+    box.appendChild(card);
+  });
+  var note=document.getElementById("dayNote");note.value=dd.note||"";note.disabled=n>tn;
+  renderTreino();
+  renderScores();
+}
+function renderScores(){
+  var n=sel,tn=todayNum(),s=n>tn?0:dayScore(n);
+  document.getElementById("dayBar").style.width=Math.round(s*100)+"%";
+  document.getElementById("dayPct").textContent=Math.round(s*100)+"%";
+  AREAS.forEach(function(a){var sp=document.querySelector("[data-area='"+a.id+"']");if(sp){var v=areaScore(a.id,n);sp.textContent=(n>tn||v===null)?"":Math.round(v*100)+"%"}
+  });
+  var up=Math.min(tn,100);
+  document.querySelectorAll("[data-hs]").forEach(function(sp){var k=sp.getAttribute("data-hs").split("|"),h=findHabit(k[0],k[1]);sp.textContent=(!h||up<1)?"":"Sequência: "+habitStreak(h,up)+" dias · recorde: "+habitBest(h,up)});
+  renderGrid();renderStats();render75();renderSideConc();
+}
+function render75(){
+  var r=run75(),n=sel,tn=todayNum(),box=document.getElementById("c75");
+  var cls="c75",num="",b="",sp="";
+  var tot=rules75(n).length,dn=done75(n);
+  if(n<r.s){
+    cls+=" wait";num="–";b="O 75 Duro começa em "+fmt(dateOf(r.s))+".";sp="Até lá, só o controle dos 100 dias vale.";
+  }else if(r.done&&n>r.done){
+    cls+=" ok";num="75<small>/75</small>";b="75 Duro concluído em "+fmt(dateOf(r.done))+".";sp="Os 100 dias seguem até o fim.";
+  }else if(n>tn){
+    var ad=n-r.cur+1;
+    cls+=" wait";num=(ad<=75?ad:"–")+"<small>/75</small>";b=ad<=75?"Será o dia "+ad+" de 75 se nenhum dia falhar até lá.":"Fora da tentativa atual.";sp="Tentativa "+r.attempt+".";
+  }else{
+    var m=r.map[n];
+    if(!m){num="–";b="Fora da contagem.";}
+    else if(m.ok){cls+=" ok";num=m.ad+"<small>/75</small>";b="Dia "+m.ad+" de 75 cumprido.";sp="Tentativa "+m.att+" · "+tot+" de "+tot+" regras.";}
+    else if(m.pending){
+      num=m.ad+"<small>/75</small>";
+      b="Dia "+m.ad+" de 75: "+dn+" de "+tot+" regras feitas.";
+      sp=((tot-dn)===1?"Falta 1 regra":"Faltam "+(tot-dn)+" regras")+" para validar o dia, até a meia-noite.";
+      if(m.ad===1&&m.att>1)sp="Ontem ficou incompleto, então hoje é o novo Dia 1. "+sp;
+    }else{
+      cls+=" fail";num=m.ad+"<small>/75</small>";b="Dia incompleto: "+dn+" de "+tot+" regras.";sp="Tentativa "+m.att+" encerrada. A contagem voltou ao Dia 1 em "+fmt(dateOf(n+1))+".";
+    }
+  }
+  box.className=cls;
+  box.innerHTML="<div class='n'>"+num+"</div><div class='t'><b>"+esc(b)+"</b><span>"+esc(sp)+"</span></div>";
+  // side
+  var g=document.getElementById("g75");
+  if(!g.children.length){for(var k=1;k<=75;k++){(function(k){var bt=el("button",{type:"button"});bt.addEventListener("click",function(){var rr=run75(),t=rr.cur+k-1;if(t<=lastDay()){sel=t;renderDay()}});g.appendChild(bt)})(k)}}
+  var filled=r.done?75:r.run,now=r.notStarted||r.done?0:(tn-r.cur+1);
+  for(var k=1;k<=75;k++){
+    var bt=g.children[k-1],c=[];if(k<=filled)c.push("on");if(k===now)c.push("now");bt.className=c.join(" ");
+    bt.setAttribute("aria-label","Dia "+k+" de 75 — "+fmtShort(dateOf(r.cur+k-1))+(k<=filled?", cumprido":""));
+    bt.title="Dia "+k+" de 75 — "+fmtShort(dateOf(r.cur+k-1));
+  }
+  document.getElementById("s75day").textContent=r.notStarted?0:(r.done?75:now);
+  document.getElementById("s75att").textContent=r.attempt;
+  document.getElementById("s75best").textContent=r.best;
+  var txt;
+  if(r.notStarted)txt="Começa em "+fmt(dateOf(r.s))+" e termina em "+fmt(dateOf(r.s+74))+" se nenhum dia falhar.";
+  else if(r.done)txt="Concluído em "+fmt(dateOf(r.done))+", em "+r.attempt+(r.attempt===1?" tentativa.":" tentativas.");
+  else txt="Termina em "+fmt(dateOf(r.cur+74))+" se nenhum dia falhar."+(r.fails.length?" Último dia incompleto: "+fmtShort(dateOf(r.fails[r.fails.length-1]))+".":"");
+  document.getElementById("s75txt").textContent=txt;
+}
+function renderGrid(){
+  var g=document.getElementById("grid"),tn=todayNum();
+  if(!g.children.length){
+    for(var i=1;i<=100;i++){(function(i){var b=el("button",{type:"button"},String(i));b.addEventListener("click",function(){sel=i;renderDay()});g.appendChild(b)})(i)}
+  }
+  for(var i=1;i<=100;i++){
+    var b=g.children[i-1],cls=[];
+    if(i>tn){cls.push("fut");b.style.removeProperty("--p")}
+    else{var p=Math.round(dayScore(i)*100);b.style.setProperty("--p",p+"%");if(p>=60)cls.push("dark")}
+    if(i===tn)cls.push("today");if(i===sel)cls.push("sel");
+    b.className=cls.join(" ");
+    var d=dateOf(i);b.setAttribute("aria-label","Dia "+i+", "+fmt(d)+(i<=tn?", "+Math.round(dayScore(i)*100)+"%":""));
+    b.title="Dia "+i+" — "+fmtShort(d);
+  }
+  var ps=document.getElementById("phasestrip"),pn=document.getElementById("phasenames");
+  ps.innerHTML="";pn.innerHTML="";
+  var cur=phaseOf(Math.min(Math.max(tn,1),100));
+  PHASES.forEach(function(p){
+    var w=p.to-p.from+1;
+    var d=el("div",{style:"flex:"+w});if(cur===p)d.className="on";ps.appendChild(d);
+    pn.appendChild(el("span",{style:"flex:"+w+(cur===p?";color:var(--ink);font-weight:600":"")},esc(p.name)));
+  });
+}
+function renderStats(){
+  var tn=Math.min(todayNum(),100),won=0,sum=0,cnt=0;
+  for(var i=1;i<=tn;i++){var s=dayScore(i);sum+=s;cnt++;if(s>=.8)won++}
+  var streak=0,start=tn;if(tn>=1&&dayScore(tn)<.8)start=tn-1;
+  for(var j=start;j>=1;j--){if(dayScore(j)>=.8)streak++;else break}
+  document.getElementById("stStreak").textContent=streak;
+  document.getElementById("stWon").textContent=won;
+  document.getElementById("stAvg").textContent=(cnt?Math.round(sum/cnt*100):0)+"%";
+  var rows=document.getElementById("areaRows");rows.innerHTML="";
+  AREAS.forEach(function(a){
+    var t=0,c=0;for(var i=1;i<=tn;i++){var v=areaScore(a.id,i);if(v!==null){t+=v;c++}}
+    var p=c?Math.round(t/c*100):0;
+    rows.appendChild(el("div",{class:"arearow",style:"--c:"+a.c},"<span>"+esc(a.short)+"</span><div class='bar'><span style='width:"+p+"%'></span></div><b>"+p+"%</b>"));
+  });
+}
+
+// ---------- render: Metas ----------
+function renderGoals(){
+  var box=document.getElementById("goalCards");box.innerHTML="";
+  AREAS.forEach(function(a){
+    var c=el("div",{class:"card area-card",style:"--c:"+a.c});
+    c.appendChild(el("h3",null,esc(a.name)));
+    var ta=el("textarea",{rows:"3",placeholder:GOAL_HINT[a.id],"aria-label":"Meta de 100 dias: "+a.name});
+    ta.style.cssText="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);resize:vertical";
+    ta.value=S.goals[a.id]||"";
+    ta.addEventListener("input",function(){S.goals[a.id]=ta.value;touch()});
+    c.appendChild(ta);
+    if(a.id==="financas"){
+      var m=el("div",{class:"money"});
+      var lab=el("label",{for:"sg",class:"small"},"Meta de reserva (R$)");
+      var inp=el("input",{id:"sg",type:"number",min:"0",step:"50",inputmode:"decimal"});
+      inp.style.cssText="width:120px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg)";
+      inp.value=S.savingsGoal||"";
+      var bar=el("div",{class:"bar"},"<span></span>"),info=el("span",{class:"small"});
+      function upd(){var t=savedTotal(),g=+S.savingsGoal||0;bar.firstChild.style.width=(g?Math.min(t/g*100,100):0)+"%";info.textContent=brl(t)+" guardados"+(g?" de "+brl(g):"")}
+      inp.addEventListener("input",function(){S.savingsGoal=inp.value===""?0:+inp.value;touch();upd()});
+      m.appendChild(lab);m.appendChild(inp);m.appendChild(bar);m.appendChild(info);c.appendChild(m);upd();
+    }
+    box.appendChild(c);
+  });
+  var t=document.getElementById("bench");
+  var head="<tr><th>Medida</th><th>Dia 1 ("+fmtShort(dateOf(1))+")</th><th>Dia 50 ("+fmtShort(dateOf(50))+")</th><th>Dia 100 ("+fmtShort(dateOf(100))+")</th></tr>";
+  t.innerHTML=head;
+  BENCH_ROWS.forEach(function(r){
+    var tr=el("tr");tr.appendChild(el("td",null,esc(r.label)));
+    ["d1","d50","d100"].forEach(function(k){
+      var td=el("td"),inp=el("input",{type:"text","aria-label":r.label+" — "+k.replace("d","dia ")});
+      inp.value=(S.bench[r.id]||{})[k]||"";
+      inp.addEventListener("input",function(){S.bench[r.id]=S.bench[r.id]||{};S.bench[r.id][k]=inp.value;touch()});
+      td.appendChild(inp);tr.appendChild(td);
+    });
+    t.appendChild(tr);
+  });
+  var rt=document.getElementById("routine");rt.value=S.routine||"";
+  renderPlan();
+}
+
+// ---------- render: Revisões ----------
+function renderWeeks(){
+  var box=document.getElementById("weeks");box.innerHTML="";
+  var tn=todayNum(),curW=Math.ceil(Math.min(Math.max(tn,1),100)/7);
+  for(var w=1;w<=15;w++){(function(w){
+    var from=(w-1)*7+1,to=Math.min(w*7,100);
+    var done=[],sum=0,cnt=0;for(var i=from;i<=Math.min(to,tn);i++){sum+=dayScore(i);cnt++}
+    var avg=cnt?Math.round(sum/cnt*100)+"%":"—";
+    var r=S.reviews[w]||{};
+    var det=el("details",{class:"week"+(w===curW?" current":"")});
+    if(w===curW||(w===curW-1&&!r.bom))det.open=true;
+    var sm=el("summary",null,"<b>Semana "+w+" · dias "+from+"–"+to+"</b><span>"+fmtShort(dateOf(from))+" a "+fmtShort(dateOf(to))+" · média "+avg+(r.bom||r.travou||r.ajuste?" · revisada":"")+"</span>");
+    det.appendChild(sm);
+    var body=el("div",{class:"body"});
+    [["bom","O que funcionou nesta semana?"],["travou","O que travou ou me sabotou?"],["ajuste","Uma única mudança para a próxima semana"]].forEach(function(q){
+      var f=el("div",{class:"field"}),id="w"+w+q[0];
+      f.appendChild(el("label",{for:id},esc(q[1])));
+      var ta=el("textarea",{id:id,rows:"2"});ta.value=r[q[0]]||"";
+      ta.addEventListener("input",function(){S.reviews[w]=S.reviews[w]||{};S.reviews[w][q[0]]=ta.value;touch()});
+      f.appendChild(ta);body.appendChild(f);
+    });
+    det.appendChild(body);box.appendChild(det);
+  })(w)}
+}
+
+// ---------- render: Ajustes ----------
+function renderSettings(){
+  var sd=document.getElementById("startDate");sd.value=S.startDate;
+  document.getElementById("endLbl").textContent="Termina em "+fmt(dateOf(100))+".";
+  document.getElementById("start75").value=S.c75.start;
+  var hsx=(S.habits.estudo||[]).filter(function(h){return h.id==="horas"})[0];
+  document.getElementById("min75Row").hidden=!(hsx&&hsx.h75);
+  if(hsx){document.getElementById("min75d").value=hsx.min75!=null?hsx.min75:"";document.getElementById("min75w").value=hsx.min75w!=null?hsx.min75w:""}
+  document.getElementById("end75Lbl").textContent="Sem falhas, termina em "+fmt(dateOf(start75()+74))+".";
+  var box=document.getElementById("habitEditor");box.innerHTML="";
+  AREAS.forEach(function(a){
+    var c=el("div",{class:"card area-card",style:"--c:"+a.c+";margin-bottom:12px"});
+    c.appendChild(el("h3",{style:"margin-bottom:10px"},esc(a.name)));
+    c.appendChild(el("div",{class:"hab head"},"<span class='lbl'>Hábito</span><span>Tipo</span><span>Meta</span><span>Meta fim de sem.</span><span style='text-align:center'>75</span><span></span>"));
+    (S.habits[a.id]||[]).forEach(function(h,idx){
+      var r=el("div",{class:"hab"});
+      var l=el("input",{type:"text",class:"lbl","aria-label":"Nome do hábito"});l.value=h.label;
+      l.addEventListener("input",function(){h.label=l.value;touch()});
+      var t=el("select",{"aria-label":"Tipo"});
+      [["check","Sim/não"],["num","Número (meta mínima)"],["limit","Limite máximo"],["money","Valor R$"]].forEach(function(o){var op=el("option",{value:o[0]},o[1]);if(h.type===o[0])op.selected=true;t.appendChild(op)});
+      t.addEventListener("change",function(){h.type=t.value;if((h.type==="num"||h.type==="limit")&&!h.target)h.target=h.type==="limit"?15:1;touch();renderSettings()});
+      var tg=el("input",{type:"number",min:"0",step:"any","aria-label":"Meta"});var hasT=h.type==="num"||h.type==="limit";tg.value=hasT?(h.target||""):"";tg.disabled=!hasT;
+      tg.addEventListener("input",function(){h.target=tg.value===""?0:+tg.value;touch()});
+      var tw=el("input",{type:"number",min:"0",step:"any","aria-label":"Meta de fim de semana"});tw.value=hasT?(h.targetWeekend||""):"";tw.disabled=!hasT;
+      tw.addEventListener("input",function(){h.targetWeekend=tw.value===""?0:+tw.value;touch()});
+      var del=el("button",{type:"button","aria-label":"Remover hábito",title:"Remover"},"✕");
+      del.addEventListener("click",function(){if(confirm("Remover \""+h.label+"\"?")){S.habits[a.id].splice(idx,1);touch();renderSettings()}});
+      var k75=el("input",{type:"checkbox","aria-label":"Regra do 75 Duro",title:"Regra do 75 Duro"});k75.checked=!!h.h75;k75.disabled=h.type==="money";
+      k75.addEventListener("change",function(){h.h75=k75.checked;touch()});
+      [l,t,tg,tw,k75,del].forEach(function(x){r.appendChild(x)});
+      c.appendChild(r);
+    });
+    var add=el("button",{type:"button",class:"btn ghost",style:"margin-top:6px"},"Adicionar hábito");
+    add.addEventListener("click",function(){S.habits[a.id].push({id:uid(),label:"Novo hábito",type:"check"});touch();renderSettings()});
+    c.appendChild(add);box.appendChild(c);
+  });
+}
+
+
+// ---------- concurso ----------
+function today0(){var t=new Date();return new Date(t.getFullYear(),t.getMonth(),t.getDate())}
+function daysTo(s){return Math.round((parse(s)-today0())/864e5)}
+function numOfDate(d){return Math.round((d-parse(S.startDate))/864e5)+1}
+function questOn(d){var n=numOfDate(d);if(n<1)return null;var v=((S.days[n]||{}).v||{}).quest;return v==null||v===""?null:+v}
+function weekStart(d){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate());var g=(x.getDay()+6)%7;return addDays(x,-g)}
+function retaStart(){return addDays(parse(S.conc.prova),-28)}
+function revStart(){return addDays(parse(S.conc.prova),-14)}
+function qTarget(ws){return ws>=retaStart()?400:270}
+function discTarget(ws){if(ws<parse("2026-10-26"))return 0;if(ws<parse("2026-12-28"))return 1;return 2}
+function covMilestones(){return [["2026-10-01",12],["2026-10-31",28],["2026-11-30",45],["2026-12-31",60],["2027-01-31",80],[ymd(retaStart()),100]]}
+function covExpected(d){var m=covMilestones();if(d<=parse(m[0][0]))return m[0][1];for(var i=1;i<m.length;i++){var a=parse(m[i-1][0]),b=parse(m[i][0]);if(d<=b)return m[i-1][1]+(m[i][1]-m[i-1][1])*((d-a)/(b-a))}return 100}
+function covNow(){var c=S.conc.cov.slice().sort(function(a,b){return a.d<b.d?-1:1});return c.length?c[c.length-1]:null}
+function concPhase(d){
+  var ed=parse(S.conc.edital),rs=retaStart(),rv=revStart(),pv=parse(S.conc.prova);
+  if(d>pv)return {t:"Prova feita",p:"Registre a sua nota e avalie o ciclo com a mentoria."};
+  if(d>=rv)return {t:"Revisão final",p:"Nada de conteúdo novo. Só Caderno de Erros, lei seca e revisão D+30. Sono ajustado para o horário da prova."};
+  if(d>=rs)return {t:"Reta final",p:"80% questões e revisão, 20% teoria. Simulado semanal no formato real: básicos de manhã, específicos e discursiva à tarde. Duas discursivas por semana."};
+  if(d>=ed)return {t:"Pós-edital: fechar a cobertura",p:"Raio-x do edital feito no primeiro dia. Peso alto e muita incidência vão a fundo; peso baixo só por questões e resumo, por decisão consciente."};
+  return {t:"Pré-edital: construir a base",p:"Ordem de peso: Contabilidade, Direito Tributário (CTN inteiro), Legislação Tributária (IR, IPI, PIS/Cofins, contribuições, IBS/CBS), Comércio Internacional e Aduaneira, Auditoria, Português FGV. Inglês: 2 sessões de 30 min por semana. Nenhuma ferramenta nova: o tempo é de questão."};
+}
+function marcosList(){
+  var ed=parse(S.conc.edital),pv=parse(S.conc.prova);
+  return [
+    ["diag","Diagnóstico: prova AFRFB 2022 (FGV) completa e cronometrada",parse("2026-10-07")],
+    ["ferias","Pedir férias no moinho para a reta final",parse("2026-10-15")],
+    ["banca","Banca definida: passar a fazer só questões dela",parse("2026-10-31")],
+    ["disc1","Primeira discursiva escrita e corrigida",parse("2026-11-08")],
+    ["raiox","Raio-x do edital: comparar com 2022 e recalcular a cobertura",addDays(ed,3)],
+    ["cargo","Decidir com a mentoria: inscrição para Auditor ou Analista",addDays(ed,14)],
+    ["insc","Inscrição feita e taxa paga",addDays(ed,30)],
+    ["final","Começar a revisão final: nada de conteúdo novo",addDays(pv,-14)],
+    ["local","Conferir o local de prova e testar o trajeto",addDays(pv,-7)]];
+}
+function weekQ(ws){var t=0,any=false;for(var i=0;i<7;i++){var v=questOn(addDays(ws,i));if(v!=null){t+=v;any=true}}return {t:t,any:any}}
+function renderSideConc(){
+  var e=document.getElementById("sideConc");if(!e)return;
+  var ws=weekStart(today0()),q=weekQ(ws).t,tg=qTarget(ws),dp=daysTo(S.conc.prova);
+  e.textContent=q+" de "+tg+" questões nesta semana. "+(dp>=0?dp+" dias até a prova (estimativa).":"");
+}
+function renderConc(){
+  var C=S.conc,td=today0();
+  var de=daysTo(C.edital),dp=daysTo(C.prova);
+  document.getElementById("cEdital").textContent=de>=0?de:"saiu";
+  document.getElementById("cProva").textContent=dp>=0?dp:"–";
+  var ws=weekStart(td),wq=weekQ(ws),tg=qTarget(ws);
+  document.getElementById("cQsem").textContent=wq.t;
+  document.getElementById("cQsemLbl").textContent="de "+tg+" questões nesta semana";
+  var ph=concPhase(td);
+  document.getElementById("cPhase").innerHTML="<span class='small'>Fase atual</span><b>"+esc(ph.t)+"</b><p>"+esc(ph.p)+"</p>";
+  // cobertura
+  var cn=covNow(),ex=covExpected(td),cur=cn?cn.p:0;
+  document.getElementById("covFill").style.width=Math.min(100,cur)+"%";
+  document.getElementById("covMark").style.left="calc("+Math.min(100,ex)+"% - 1px)";
+  var diff=cur-ex,dtx=Math.abs(diff)<1?"no ritmo":(diff>0?(diff.toFixed(0)+" pontos à frente"):(Math.abs(diff).toFixed(0)+" pontos atrás"));
+  document.getElementById("covTxt").innerHTML="<b>"+String(cur).replace(".",",")+"%</b> do edital"+(cn?" (registrado em "+fmtShort(parse(cn.d))+")":"")+". O esperado para hoje é "+ex.toFixed(0)+"%: você está "+dtx+".";
+  document.getElementById("covIn").value="";
+  document.getElementById("covHist").textContent=C.cov.length>1?"Histórico: "+C.cov.slice().sort(function(a,b){return a.d<b.d?-1:1}).slice(-6).map(function(c){return fmtShort(parse(c.d))+" "+String(c.p).replace(".",",")+"%"}).join(", "):"Atualize uma vez por semana, no domingo.";
+  var ct="<tr><th>Até</th><th>Meta de cobertura</th><th>Situação</th></tr>";
+  covMilestones().slice(1).forEach(function(m){var d=parse(m[0]),hit=C.cov.some(function(c){return c.p>=m[1]&&parse(c.d)<=d});
+    ct+="<tr><td>"+fmtShort(d)+"</td><td>"+m[1]+"%</td><td>"+(hit?"atingida":(td>d?"<span style='color:var(--bad)'>não atingida</span>":"em aberto"))+"</td></tr>"});
+  document.getElementById("covTable").innerHTML=ct;
+  // questões
+  var qt="<tr><th>Semana</th><th>Questões</th><th>Meta</th><th style='width:40%'>Progresso</th></tr>",first=weekStart(parse("2026-10-01"));
+  var weeks=[];for(var w=ws;w>=first&&weeks.length<10;w=addDays(w,-7))weeks.push(w);
+  weeks.forEach(function(w){var r=weekQ(w),t=qTarget(w),pc=Math.min(100,r.t/t*100);
+    qt+="<tr><td>"+fmtShort(w)+" a "+fmtShort(addDays(w,6))+(w.getTime()===ws.getTime()?" (atual)":"")+"</td><td>"+r.t+"</td><td>"+t+"</td><td><div class='qbar"+(r.t>=t?" ok":"")+"'><span style='width:"+pc+"%'></span></div></td></tr>"});
+  document.getElementById("qTable").innerHTML=qt;
+  // simulados
+  var sims=C.sims.slice().sort(function(a,b){return a.d<b.d?1:-1});
+  var last=sims[0],interval=td>=retaStart()?7:14,due=last?addDays(parse(last.d),interval):parse("2026-10-07");
+  if(td>=retaStart()&&last&&parse(last.d)<retaStart())due=retaStart();
+  var lateS=due<td;
+  document.getElementById("simTxt").innerHTML=(interval===14?"Um a cada 2 semanas até a reta final; depois, um por semana. ":"Reta final: um simulado por semana. ")+"Próximo até <b"+(lateS?" style='color:var(--bad)'":"")+">"+fmtShort(due)+"</b>"+(lateS?" (atrasado)":"")+".";
+  var sl=document.getElementById("simList");sl.innerHTML="";
+  if(!sims.length)sl.appendChild(el("li",{class:"small"},"Nenhum simulado lançado. O primeiro é o diagnóstico com a prova de 2022."));
+  sims.forEach(function(x){var li=el("li",null,"<span>"+fmtShort(parse(x.d))+": <b>"+x.g+"%</b> geral"+(x.e!=null&&x.e!==""?", "+x.e+"% nos específicos":"")+"</span>");
+    var b=el("button",{type:"button","aria-label":"Apagar simulado"},"×");b.addEventListener("click",function(){C.sims.splice(C.sims.indexOf(x),1);touch();renderConc()});li.appendChild(b);sl.appendChild(li)});
+  // discursivas
+  var dt=discTarget(ws),dw=C.disc.filter(function(x){var d=parse(x.d);return d>=ws&&d<addDays(ws,7)}).length;
+  document.getElementById("discTxt").innerHTML=dt?("Meta desta semana: <b>"+dw+" de "+dt+"</b>."+(dt===1?" Sobe para 2 por semana em janeiro.":"")):"Começam em novembro, uma por semana, com correção.";
+  var dl=document.getElementById("discList");dl.innerHTML="";
+  var disc=C.disc.slice().sort(function(a,b){return a.d<b.d?1:-1});
+  if(!disc.length)dl.appendChild(el("li",{class:"small"},"Nenhuma discursiva lançada."));
+  disc.forEach(function(x){var li=el("li",null,"<span>"+fmtShort(parse(x.d))+": "+esc(x.t||"sem tema")+(x.n!=null&&x.n!==""?" <b>("+x.n+" pts)</b>":"")+"</span>");
+    var b=el("button",{type:"button","aria-label":"Apagar discursiva"},"×");b.addEventListener("click",function(){C.disc.splice(C.disc.indexOf(x),1);touch();renderConc()});li.appendChild(b);dl.appendChild(li)});
+  // marcos
+  var mk=document.getElementById("marcos");mk.innerHTML="";
+  marcosList().forEach(function(m){var done=!!C.marcos[m[0]],late=!done&&m[2]<td,id="mk_"+m[0];
+    var row=el("div",{class:"mk"+(done?" done":"")+(late?" late":"")}),cb=el("input",{type:"checkbox",id:id});cb.checked=done;
+    cb.addEventListener("change",function(){if(cb.checked)C.marcos[m[0]]=ymd(td);else delete C.marcos[m[0]];touch();renderConc()});
+    row.appendChild(cb);row.appendChild(el("label",{for:id},esc(m[1])));row.appendChild(el("span",null,(late?"atrasado, ":"até ")+fmtShort(m[2])));mk.appendChild(row)});
+  document.getElementById("dEdital").value=C.edital;document.getElementById("dProva").value=C.prova;
+  var t0=ymd(td);if(!document.getElementById("simD").value)document.getElementById("simD").value=t0;if(!document.getElementById("discD").value)document.getElementById("discD").value=t0;
+  renderSideConc();
+}
+function renderAll(){
+  var tn=todayNum();
+  if(sel===null)sel=Math.min(Math.max(tn,1),lastDay());
+  document.getElementById("range").textContent="De "+fmt(dateOf(1))+" a "+fmt(dateOf(100));
+  document.getElementById("grid").innerHTML="";
+  renderDay();renderGoals();renderWeeks();renderSettings();renderConc();
+}
+
+// ---------- events ----------
+document.querySelectorAll("nav.tabs button").forEach(function(b){
+  b.addEventListener("click",function(){
+    document.querySelectorAll("nav.tabs button").forEach(function(x){x.setAttribute("aria-selected",x===b?"true":"false")});
+    document.querySelectorAll(".view").forEach(function(v){v.hidden=v.id!=="v-"+b.dataset.tab});
+    if(b.dataset.tab==="dia")renderDay();
+    if(b.dataset.tab==="revisoes")renderWeeks();
+    if(b.dataset.tab==="metas")renderGoals();
+    if(b.dataset.tab==="concurso")renderConc();
+  });
+});
+document.getElementById("prev").addEventListener("click",function(){if(sel>1){sel--;renderDay()}});
+document.getElementById("next").addEventListener("click",function(){if(sel<lastDay()){sel++;renderDay()}});
+document.getElementById("goToday").addEventListener("click",function(){sel=Math.min(Math.max(todayNum(),1),lastDay());renderDay()});
+["min75d","min75w"].forEach(function(id,i){document.getElementById(id).addEventListener("input",function(e){var h=(S.habits.estudo||[]).filter(function(x){return x.id==="horas"})[0];if(!h)return;var v=e.target.value===""?null:+e.target.value;if(i===0)h.min75=v;else h.min75w=v;touch();renderScores()})});
+document.getElementById("start75").addEventListener("change",function(e){if(e.target.value){S.c75.start=e.target.value;touch();renderAll()}});
+document.getElementById("covAdd").addEventListener("click",function(){var v=document.getElementById("covIn").value;if(v==="")return;v=Math.max(0,Math.min(100,+v));var t=ymd(today0());S.conc.cov=S.conc.cov.filter(function(c){return c.d!==t});S.conc.cov.push({d:t,p:v});touch();renderConc()});
+document.getElementById("simAdd").addEventListener("click",function(){var d=document.getElementById("simD").value,g=document.getElementById("simG").value,e=document.getElementById("simE").value;if(!d||g==="")return;S.conc.sims.push({d:d,g:+g,e:e===""?null:+e});document.getElementById("simG").value="";document.getElementById("simE").value="";touch();renderConc()});
+document.getElementById("discAdd").addEventListener("click",function(){var d=document.getElementById("discD").value,t=document.getElementById("discT").value.trim(),n=document.getElementById("discN").value;if(!d)return;S.conc.disc.push({d:d,t:t,n:n===""?null:+n});document.getElementById("discT").value="";document.getElementById("discN").value="";touch();renderConc()});
+document.getElementById("dEdital").addEventListener("change",function(e){if(e.target.value){S.conc.edital=e.target.value;touch();renderConc()}});
+document.getElementById("dProva").addEventListener("change",function(e){if(e.target.value){S.conc.prova=e.target.value;touch();renderConc()}});
+document.getElementById("dayNote").addEventListener("input",function(e){ensureDay(sel).note=e.target.value;touch()});
+document.getElementById("routine").addEventListener("input",function(e){S.routine=e.target.value;touch()});
+document.getElementById("startDate").addEventListener("change",function(e){if(e.target.value){S.startDate=e.target.value;sel=null;touch();renderAll()}});
+document.getElementById("copyJson").addEventListener("click",function(){
+  var txt=JSON.stringify(S,null,2),msg=document.getElementById("dataMsg");
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){msg.textContent="Dados copiados."},function(){msg.textContent="Não foi possível copiar."})}
+  else msg.textContent="Seu navegador não permite copiar daqui.";
+});
+document.getElementById("resetAll").addEventListener("click",function(){
+  if(!confirm("Apagar todos os registros, metas e revisões? Não dá para desfazer."))return;
+  S=defaults();sel=null;touch();renderAll();
+});
+
+function msg(t){document.getElementById("dataMsg").textContent=t}
+function importText(txt){
+  var o;
+  try{o=JSON.parse(txt)}catch(e){msg("Não reconheci esses dados. Copie de novo pelo botão Copiar dados (JSON) do controle antigo.");return}
+  if(!o||typeof o!=="object"||!o.habits||!o.startDate){msg("Esses dados não parecem ser do controle de 100 dias.");return}
+  var n=Object.keys(o.days||{}).length;
+  if(S.updatedAt&&Object.keys(S.days||{}).length&&!confirm("Substituir os registros deste celular pelos importados ("+n+" dias)?"))return;
+  S=merge(defaults(),o);S.updatedAt=Date.now();saveLocal();sel=null;renderAll();
+  try{localStorage.setItem(LS+"-first","ok")}catch(e){}
+  document.getElementById("bnFirst").hidden=true;
+  document.getElementById("importTxt").value="";
+  msg("Pronto: "+n+" dias de registros importados.");
+  setStatus("","Salvo no celular");
+}
+document.getElementById("btnImport").addEventListener("click",function(){importText(document.getElementById("importTxt").value.trim())});
+document.getElementById("importFile").addEventListener("change",function(e){
+  var f=e.target.files&&e.target.files[0];if(!f)return;
+  var r=new FileReader();r.onload=function(){importText(String(r.result))};r.readAsText(f);e.target.value="";
+});
+document.getElementById("dlJson").addEventListener("click",function(){
+  var b=new Blob([JSON.stringify(S,null,2)],{type:"application/json"}),a=document.createElement("a");
+  a.href=URL.createObjectURL(b);a.download="backup-100-dias-"+ymd(new Date())+".json";
+  document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000);
+  msg("Backup baixado. Guarde o arquivo na pasta Downloads ou no Drive.");
+});
+function showTab(t){var b=document.querySelector('nav.tabs button[data-tab="'+t+'"]');if(b)b.click()}
+function firstRun(){
+  var seen=null;try{seen=localStorage.getItem(LS+"-first")}catch(e){}
+  document.getElementById("bnFirst").hidden=!!(seen||S.updatedAt);
+}
+document.getElementById("btnGoImport").addEventListener("click",function(){showTab("ajustes");setTimeout(function(){document.getElementById("importTxt").focus();document.getElementById("importBox").scrollIntoView({block:"center"})},50)});
+document.getElementById("btnDismissFirst").addEventListener("click",function(){try{localStorage.setItem(LS+"-first","ok")}catch(e){}document.getElementById("bnFirst").hidden=true});
+function checkYesterday(){
+  var tn=todayNum(),y=tn-1,bn=document.getElementById("bnYesterday");
+  var d=S.days&&S.days[y];
+  var empty=!d||((!d.c||!Object.keys(d.c).some(function(k){return d.c[k]}))&&(!d.v||!Object.keys(d.v).some(function(k){return d.v[k]!==""&&d.v[k]!=null})));
+  if(y>=1&&y<=100&&empty&&S.updatedAt){document.getElementById("bnYesterdayTxt").innerHTML="<b>O dia "+y+" ficou em branco.</b> Ainda dá tempo de registrar o que você fez ontem.";bn.hidden=false}else bn.hidden=true;
+}
+document.getElementById("btnYesterday").addEventListener("click",function(){sel=todayNum()-1;showTab("dia");renderDay();document.getElementById("bnYesterday").hidden=true});
+var deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e;document.getElementById("bnInstall").hidden=false});
+window.addEventListener("appinstalled",function(){document.getElementById("bnInstall").hidden=true});
+document.getElementById("btnInstall").addEventListener("click",function(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt.userChoice.then(function(){deferredPrompt=null;document.getElementById("bnInstall").hidden=true})});
+document.addEventListener("visibilitychange",function(){if(!document.hidden){renderGrid();checkYesterday()}});
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+
+renderAll();
+connect();
+firstRun();
+checkYesterday();
+})();
+</script>
+</body>
+</html>
