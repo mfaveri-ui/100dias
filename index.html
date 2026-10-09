@@ -207,6 +207,16 @@ table.bench input{width:100%;padding:6px 8px;border:1px solid var(--line);border
 .mk span{font-size:.82rem;color:var(--muted);white-space:nowrap}
 .mk.late span{color:var(--bad);font-weight:600}
 .mk.done label{color:var(--muted);text-decoration:line-through}
+.ses .timer{font-family:var(--display);font-weight:700;font-size:4rem;line-height:1;letter-spacing:.01em;margin:4px 0 2px}
+.ses .timer.done{color:var(--hit)}
+.ses h4{margin:14px 0 4px;font-size:.95rem}
+.ses .row{margin-top:12px}
+.ses .hint{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+.sesmini{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--est);border-radius:10px;padding:10px 16px;margin:0 0 16px}
+.sesmini p{margin:0;flex:1;min-width:180px}
+.pace{margin:10px 0 0}
+.pace .cbar span{background:var(--hit)}
+.pace .cbar.low span{background:var(--ali)}
 .banner{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--ali);border-radius:10px;padding:12px 16px;margin:0 0 16px}
 .banner p{margin:0;flex:1;min-width:200px}
 .banner[hidden]{display:none}
@@ -248,6 +258,7 @@ table.bench input{width:100%;padding:6px 8px;border:1px solid var(--line);border
           </div>
         </div>
         <div class="score"><div class="bar"><span id="dayBar" style="width:0"></span></div><b id="dayPct">0%</b></div>
+        <div class="sesmini" id="sesMini"><p id="sesMiniTxt"></p><button type="button" class="btn" id="sesMiniBtn">Começar sessão</button></div>
         <div class="c75" id="c75" aria-live="polite"></div>
         <div class="treino" id="treino"></div>
         <div id="areas"></div>
@@ -300,12 +311,16 @@ table.bench input{width:100%;padding:6px 8px;border:1px solid var(--line);border
     </div>
     <div class="card cphase" id="cPhase"></div>
 
+    <h3 class="ch" id="sesTitle">Sessão de estudo</h3>
+    <div class="card ses" id="sesCard" aria-live="polite"></div>
+
     <h3 class="ch">Cobertura do edital</h3>
     <div class="card">
       <div class="cbar" aria-hidden="true"><span id="covFill"></span><i id="covMark"></i></div>
       <p id="covTxt" style="margin:8px 0 12px"></p>
       <div class="row"><label for="covIn" class="small">Cobertura hoje</label><input type="number" id="covIn" min="0" max="100" step="0.5" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);width:90px"><span class="small">%</span><button type="button" class="btn" id="covAdd">Registrar</button></div>
       <p class="small" id="covHist" style="margin:10px 0 0"></p>
+      <div class="pace" id="pace"></div>
     </div>
     <div class="tablewrap" style="margin-top:12px"><table class="bench" id="covTable"></table></div>
 
@@ -1153,6 +1168,7 @@ function renderConc(){
   covMilestones().slice(1).forEach(function(m){var d=parse(m[0]),hit=C.cov.some(function(c){return c.p>=m[1]&&parse(c.d)<=d});
     ct+="<tr><td>"+fmtShort(d)+"</td><td>"+m[1]+"%</td><td>"+(hit?"atingida":(td>d?"<span style='color:var(--bad)'>não atingida</span>":"em aberto"))+"</td></tr>"});
   document.getElementById("covTable").innerHTML=ct;
+  renderPace();
   // questões
   var qt="<tr><th>Semana</th><th>Questões</th><th>Meta</th><th style='width:40%'>Progresso</th></tr>",first=weekStart(parse("2026-10-01"));
   var weeks=[];for(var w=ws;w>=first&&weeks.length<10;w=addDays(w,-7))weeks.push(w);
@@ -1275,7 +1291,90 @@ document.getElementById("btnInstall").addEventListener("click",function(){if(!de
 document.addEventListener("visibilitychange",function(){if(!document.hidden){renderGrid();checkYesterday()}});
 if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
 
+
+// ---------- ritmo semanal do edital ----------
+function renderPace(){
+  var box=document.getElementById("pace");if(!box)return;
+  var c=S.conc.cov.slice().sort(function(a,b){return a.d<b.d?-1:1});
+  var last=c.length?c[c.length-1]:null,cur=last?last.p:0;
+  var wk=Math.max(1,(retaStart()-today0())/(7*864e5));
+  var need=Math.max(0,(100-cur)/wk);
+  var html="<h4 style='margin:14px 0 6px;font-size:.95rem'>Ritmo por semana</h4>";
+  var base=null;
+  if(last){for(var i=c.length-2;i>=0;i--){if((parse(last.d)-parse(c[i].d))/864e5>=6){base=c[i];break}}}
+  if(!base){
+    html+="<p class='small' style='margin:0'>Precisa de <b>"+need.toFixed(1).replace(".",",")+"% do edital por semana</b> até o início da reta final ("+fmtShort(retaStart())+"). Registre a cobertura de novo daqui a 7 dias para medir o seu ritmo.</p>";
+  }else{
+    var days=(parse(last.d)-parse(base.d))/864e5,rate=(last.p-base.p)/(days/7);
+    var pct=need>0?Math.min(100,rate/need*100):100,ok=rate>=need-0.05;
+    html+="<div class='cbar"+(ok?"":" low")+"'><span style='width:"+Math.max(0,pct)+"%'></span></div>"+
+      "<p style='margin:8px 0 0'><b>"+(rate>=0?"+":"")+rate.toFixed(1).replace(".",",")+"% por semana</b> (de "+fmtShort(parse(base.d))+" a "+fmtShort(parse(last.d))+"). Necessário: "+need.toFixed(1).replace(".",",")+"% por semana até "+fmtShort(retaStart())+". "+
+      (ok?"Ritmo suficiente.":"Faltam "+(need-rate).toFixed(1).replace(".",",")+" pontos por semana: priorize matéria de peso alto e corte o que é de peso baixo.")+"</p>";
+  }
+  box.innerHTML=html;
+}
+
+// ---------- sessão de estudo ----------
+var SES_KEY=LS+"-ses", ses=null, sesTick=null;
+var SES_PRE=[["desc","Descarga: escrevi no papel tudo o que está na cabeça","2 min"],["cel","Celular em outro cômodo","—"],["agua","Água na mesa","—"],["abre","Abertura: escrevi o que lembro da última sessão, sem olhar","3 min"]];
+var SES_POS=[["fecha","Fechamento: expliquei o tema em 5 linhas ou em voz alta","5 min"],["erros","O que travou foi para o Caderno de Erros","—"]];
+function sesLoad(){try{ses=JSON.parse(localStorage.getItem(SES_KEY)||"null")}catch(e){ses=null}if(!ses||!ses.ph)ses={ph:"pre",chk:{}}}
+function sesSave(){try{localStorage.setItem(SES_KEY,JSON.stringify(ses))}catch(e){}}
+function sesToday(){var n=todayNum();return (n>=1&&n<=100&&S.days[n]&&S.days[n].ses)||0}
+function mmss(ms){var t=Math.max(0,Math.ceil(ms/1000));return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0")}
+function sesList(items){
+  return items.map(function(it){var id="ses_"+it[0],on=!!ses.chk[it[0]];
+    return "<div class='mk"+(on?" done":"")+"'><input type='checkbox' id='"+id+"' data-k='"+it[0]+"'"+(on?" checked":"")+"><label for='"+id+"'>"+esc(it[1])+"</label><span>"+it[2]+"</span></div>"}).join("");
+}
+function renderSes(){
+  var card=document.getElementById("sesCard");if(!card)return;
+  var n=sesToday(),h="";
+  if(ses.ph==="run"&&Date.now()>=ses.end){ses.ph="post";sesSave();try{navigator.vibrate&&navigator.vibrate([400,200,400])}catch(e){}}
+  if(ses.ph==="pre"){
+    h="<p class='small' style='margin:0'>"+(n?n+(n>1?" blocos concluídos":" bloco concluído")+" hoje.":"Nenhum bloco concluído hoje.")+"</p>"+
+      "<h4>Antes de começar</h4>"+sesList(SES_PRE)+
+      "<div class='row'><button type='button' class='btn' data-act='start' data-min='50'>Começar bloco de 50 min</button><button type='button' class='btn ghost' data-act='start' data-min='25'>Bloco curto, 25 min</button></div>";
+  }else if(ses.ph==="run"){
+    h="<p class='small' style='margin:0'>Bloco de "+ses.min+" min em andamento. Uma coisa de cada vez.</p>"+
+      "<div class='timer' id='sesTimer'>"+mmss(ses.end-Date.now())+"</div>"+
+      "<p class='hint'>Termina às "+new Date(ses.end).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})+". O celular vibra no fim se o app estiver aberto.</p>"+
+      "<div class='row'><button type='button' class='btn ghost' data-act='stop'>Encerrar agora</button><button type='button' class='btn ghost' data-act='cancel'>Cancelar bloco</button></div>";
+  }else{
+    h="<div class='timer done'>Bloco feito</div>"+
+      "<p class='hint'>Pausa de 10 min: levante, beba água, olhe pela janela. Sem celular: ele joga informação nova em cima do que acabou de entrar.</p>"+
+      "<h4>Para fechar</h4>"+sesList(SES_POS)+
+      "<div class='row'><button type='button' class='btn' data-act='done'>Concluir sessão</button></div>";
+  }
+  card.innerHTML=h;
+  var mini=document.getElementById("sesMiniTxt");
+  if(mini){mini.innerHTML=ses.ph==="run"?"<b>Bloco em andamento:</b> faltam <span id='sesMiniT'>"+mmss(ses.end-Date.now())+"</span>.":ses.ph==="post"?"<b>Bloco terminou.</b> Falta o fechamento de 5 min.":"<b>Sessão de estudo:</b> "+(n?n+(n>1?" blocos hoje.":" bloco hoje."):"nenhum bloco hoje ainda.");
+    document.getElementById("sesMiniBtn").textContent=ses.ph==="pre"?"Começar sessão":"Ver sessão";}
+  clearInterval(sesTick);
+  if(ses.ph==="run")sesTick=setInterval(function(){
+    var left=ses.end-Date.now();
+    if(left<=0){renderSes();return}
+    var t=document.getElementById("sesTimer");if(t)t.textContent=mmss(left);
+    var m=document.getElementById("sesMiniT");if(m)m.textContent=mmss(left);
+  },1000);
+}
+document.getElementById("sesCard").addEventListener("change",function(e){
+  var k=e.target.getAttribute("data-k");if(!k)return;ses.chk[k]=e.target.checked;sesSave();
+  e.target.parentNode.classList.toggle("done",e.target.checked);
+});
+document.getElementById("sesCard").addEventListener("click",function(e){
+  var b=e.target.closest("button[data-act]");if(!b)return;var a=b.getAttribute("data-act");
+  if(a==="start"){var m=+b.getAttribute("data-min");ses={ph:"run",min:m,start:Date.now(),end:Date.now()+m*60000,chk:ses.chk};}
+  else if(a==="stop"){ses.ph="post";}
+  else if(a==="cancel"){ses={ph:"pre",chk:ses.chk};}
+  else if(a==="done"){var n=todayNum();if(n>=1&&n<=100){var d=ensureDay(n);d.ses=(d.ses||0)+1;touch()}ses={ph:"pre",chk:{}};}
+  sesSave();renderSes();
+});
+document.getElementById("sesMiniBtn").addEventListener("click",function(){showTab("concurso");setTimeout(function(){document.getElementById("sesTitle").scrollIntoView({block:"start"})},50)});
+document.addEventListener("visibilitychange",function(){if(!document.hidden)renderSes()});
+sesLoad();
+
 renderAll();
+renderSes();
 connect();
 firstRun();
 checkYesterday();
