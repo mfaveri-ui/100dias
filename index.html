@@ -207,6 +207,30 @@ table.bench input{width:100%;padding:6px 8px;border:1px solid var(--line);border
 .mk span{font-size:.82rem;color:var(--muted);white-space:nowrap}
 .mk.late span{color:var(--bad);font-weight:600}
 .mk.done label{color:var(--muted);text-decoration:line-through}
+.qw .qwhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin:4px 0 4px}
+.qw .qwhead b{font-size:1rem}
+.qw .qtot{font-size:.85rem;opacity:.75}
+.qrow{display:grid;grid-template-columns:1fr auto auto auto;gap:6px 8px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+.qrow:first-of-type{border-top:0}
+.qrow .qname{grid-column:1/-1;line-height:1.3}
+.qrow .qname small{display:block;font-size:.8rem;opacity:.7}
+.qrow .qname em{font-style:normal;font-size:.78rem;opacity:.6}
+.qrow label{font-size:.78rem;opacity:.75;display:flex;align-items:center;gap:6px}
+.qin::-webkit-inner-spin-button,.qin::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.qin{-moz-appearance:textfield;width:64px;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);text-align:right;font-size:1.05rem}
+.qst{font-size:.82rem;font-weight:600;text-align:right;min-width:84px}
+.qst.ok{color:var(--hit)} .qst.bad{color:var(--bad)}
+.now .qrow{border-color:color-mix(in srgb,var(--bg) 22%,transparent)}
+.now .qin{background:transparent;color:var(--bg);border-color:color-mix(in srgb,var(--bg) 40%,transparent)}
+.now .qst.ok{color:#7fe0b0} .now .qst.bad{color:#ffb4ab}
+.qadd{margin-top:8px;font-size:.85rem}
+.qadd select{padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:inherit;max-width:100%}
+.now .qadd select{background:transparent;border-color:color-mix(in srgb,var(--bg) 40%,transparent)}
+.qedit summary{cursor:pointer;font-weight:600}
+.qe{display:grid;grid-template-columns:1fr 70px 72px 36px;gap:6px;align-items:center;margin-top:6px}
+.qe input,.qe select{padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);width:100%;min-width:0}
+.qe input[type=checkbox]{width:20px;height:20px;justify-self:center}
+.qe.head{font-size:.75rem;color:var(--muted)}
 .nowmeta{margin:0 0 10px;color:var(--muted);font-size:.9rem}
 .now{background:var(--ink);color:var(--bg);border-radius:14px;padding:18px 18px 16px;margin:0 0 16px}
 .now .when{font-size:.88rem;opacity:.75;margin:0}
@@ -362,6 +386,12 @@ table.bench input{width:100%;padding:6px 8px;border:1px solid var(--line);border
 
     <h3 class="ch" id="sesTitle">Sessão de estudo</h3>
     <div class="card ses" id="sesCard" aria-live="polite"></div>
+
+    <h3 class="ch" id="qTitle">Roteiro de questões</h3>
+    <div class="card" id="qCard"></div>
+    <h3 class="ch">Acerto por matéria, últimos 14 dias</h3>
+    <div class="tablewrap"><table class="bench" id="qPerf"></table></div>
+    <details class="card qedit"><summary>Ajustar matérias, pesos e metas</summary><div id="qEdit"></div></details>
 
     <h3 class="ch">Cobertura do edital</h3>
     <div class="card">
@@ -604,6 +634,19 @@ var ROUTINE="SEGUNDA A SEXTA (moinho 07h30–12h00 / 13h30–17h00)\n"+
 "21h00  Dormir";
 
 function uid(){return "h"+Math.random().toString(36).slice(2,8)}
+var QMAT_DEF=[
+  ["cont","Contabilidade Geral e Avançada",5,80],
+  ["dtrib","Direito Tributário",5,80],
+  ["legtrib","Legislação Tributária (IR, IPI, PIS/Cofins, IBS/CBS)",4,75],
+  ["adu","Comércio Internacional e Legislação Aduaneira",4,75],
+  ["port","Língua Portuguesa (FGV)",4,80],
+  ["aud","Auditoria",3,75],
+  ["const","Direito Constitucional",3,80],
+  ["adm","Direito Administrativo",3,80],
+  ["agp","Administração Geral e Pública",2,75],
+  ["rl","Raciocínio Lógico",2,75],
+  ["ti","TI e Fluência em Dados",2,70],
+  ["ing","Inglês",1,70]];
 function defaults(){
   return {
     v:1, updatedAt:0, mig:{redes2:true,c75:true,r4h:true,est75:true,t1:true,t30:true},
@@ -736,6 +779,7 @@ function normalize(st){
     st.mig.est75=true;
   }
   if(!st.c75||!st.c75.start)st.c75={start:st.startDate};
+  if(!Array.isArray(st.qmat)||!st.qmat.length)st.qmat=QMAT_DEF.map(function(x){return {id:x[0],name:x[1],peso:x[2],meta:x[3],on:true}});
   st.conc=st.conc||d.conc;["cov","sims","disc"].forEach(function(k){if(!Array.isArray(st.conc[k]))st.conc[k]=[]});
   st.conc.marcos=st.conc.marcos||{};st.conc.edital=st.conc.edital||d.conc.edital;st.conc.prova=st.conc.prova||d.conc.prova;
   return st;
@@ -1221,6 +1265,7 @@ function renderConc(){
     ct+="<tr><td>"+fmtShort(d)+"</td><td>"+m[1]+"%</td><td>"+(hit?"atingida":(td>d?"<span style='color:var(--bad)'>não atingida</span>":"em aberto"))+"</td></tr>"});
   document.getElementById("covTable").innerHTML=ct;
   renderPace();
+  renderQ();
   // questões
   var qt="<tr><th>Semana</th><th>Questões</th><th>Meta</th><th style='width:40%'>Progresso</th></tr>",first=weekStart(parse("2026-10-01"));
   var weeks=[];for(var w=ws;w>=first&&weeks.length<10;w=addDays(w,-7))weeks.push(w);
@@ -1435,6 +1480,103 @@ document.getElementById("sesMiniBtn").addEventListener("click",function(){showTa
 document.addEventListener("visibilitychange",function(){if(!document.hidden)renderSes()});
 sesLoad();
 
+
+// ---------- roteiro diário de questões ----------
+function qMat(){return (S.qmat||[]).filter(function(m){return m.on!==false})}
+function qById(id){return (S.qmat||[]).filter(function(m){return m.id===id})[0]}
+function qTotalTarget(n){var h=findH("quest");return h?(target(h,n)||30):30}
+function qStats(id,n,win){var q=0,a=0;for(var i=Math.max(1,n-win);i<n;i++){var r=((S.days[i]||{}).qr||{})[id];if(r&&+r.q>0){q+=+r.q;a+=+(r.a||0)}}return {q:q,a:a,acc:q?a/q*100:null}}
+function qSince(id,n){for(var i=n-1;i>=Math.max(1,n-30);i--){var d=S.days[i]||{};var r=(d.qr||{})[id];if((r&&+r.q>0)||(d.qp||[]).some(function(x){return x.s===id}))return n-i}return 30}
+function qBuild(n){
+  var T=qTotalTarget(n),blocks=Math.max(1,Math.round(T/5)),cap=T>=50?6:4,ms=qMat();if(!ms.length)return [];
+  var info={};
+  ms.forEach(function(m){var st=qStats(m.id,n,14),since=qSince(m.id,n),f=1.15,why="";
+    if(st.q>=5){var def=Math.max(0,(+m.meta||75)-st.acc);f=1+def/100*3;if(def>=5)why="abaixo da meta: "+Math.round(st.acc)+"% de "+m.meta+"%"}
+    var g=1+0.12*Math.min(since,10);if(!why&&since>=4)why=since>=30?"ainda sem questões registradas":"há "+since+" dias sem questões";
+    if(!why)why=(+m.peso>=4?"peso alto no edital":"rodízio das matérias");
+    info[m.id]={p:(+m.peso||1)*f*g,why:why,alloc:0,m:m}});
+  var chosen=[];
+  for(var b=0;b<blocks;b++){
+    var best=null,bv=-1;
+    ms.forEach(function(m){var x=info[m.id];if(chosen.length>=cap&&chosen.indexOf(m.id)<0)return;var v=x.p/(1+x.alloc);if(v>bv){bv=v;best=m.id}});
+    info[best].alloc++;if(chosen.indexOf(best)<0)chosen.push(best);
+  }
+  var rest=T-blocks*5;
+  var plan=chosen.map(function(id){return {s:id,q:info[id].alloc*5,why:info[id].why}});
+  if(rest&&plan.length)plan[0].q+=rest;
+  plan.sort(function(a,b){return b.q-a.q});
+  return plan;
+}
+function qPlan(n){if(n<1||n>lastDay())return [];var d=S.days[n];if(d&&Array.isArray(d.qp)&&d.qp.length)return d.qp;var p=qBuild(n);if(n===todayNum()&&p.length){ensureDay(n).qp=p;saveLocal()}return p}
+function qNeed(q,id){var m=qById(id);return Math.ceil((+q||0)*((m?+m.meta:75)||75)/100)}
+function qRowState(n,id,planQ){
+  var r=((dayData(n).qr)||{})[id]||{},q=r.q===undefined||r.q===""?null:+r.q,a=r.a===undefined||r.a===""?null:+r.a;
+  if(q===null)return {t:"—",c:""};
+  var need=qNeed(q,id);
+  if(planQ&&q<planQ){var fq=planQ-q;return {t:fq===1?"falta 1 questão":"faltam "+fq+" questões",c:""}}
+  if(a===null)return {t:"lance as certas",c:""};
+  var fa=need-a;return a>=need?{t:"✓ meta batida",c:"ok"}:{t:fa===1?"faltou 1 acerto":"faltaram "+fa+" acertos",c:"bad"};
+}
+function qTotals(n){var qr=dayData(n).qr||{},q=0,a=0;Object.keys(qr).forEach(function(k){q+=+(qr[k].q||0);a+=+(qr[k].a||0)});return {q:q,a:a}}
+function qHeadTxt(n){var t=qTotals(n),T=qTotalTarget(n);return t.q+" de "+T+" feitas"+(t.q?" · acerto "+Math.round(t.a/t.q*100)+"%":"")}
+function qWidget(n,compact){
+  var plan=qPlan(n);if(!plan.length)return "<p class='small'>Ative ao menos uma matéria em Concurso, Ajustar matérias.</p>";
+  var qr=dayData(n).qr||{},ids=plan.map(function(x){return x.s});
+  Object.keys(qr).forEach(function(k){if(ids.indexOf(k)<0&&qById(k))ids.push(k)});
+  var h="<div class='qw' data-qn='"+n+"'><div class='qwhead'><b>Questões de hoje</b><span class='qtot' data-qtot='"+n+"'>"+qHeadTxt(n)+"</span></div>";
+  ids.forEach(function(id){
+    var m=qById(id);if(!m)return;var pl=plan.filter(function(x){return x.s===id})[0],pq=pl?pl.q:0,r=qr[id]||{},st=qRowState(n,id,pq);
+    var sub=pq?(pq+" questões · acertar no mínimo "+qNeed(pq,id)+" ("+m.meta+"%)"):"extra · meta "+m.meta+"%";
+    h+="<div class='qrow'><div class='qname'>"+esc(m.name)+"<small>"+esc(sub)+"</small>"+(pl&&pl.why&&!compact?"<em>"+esc(pl.why)+"</em>":"")+"</div>"+
+      "<label>feitas<input class='qin' type='number' inputmode='numeric' min='0' data-qs='"+id+"' data-qf='q' data-qp='"+pq+"' data-qd='"+n+"' value='"+(r.q==null?"":r.q)+"'></label>"+
+      "<label>certas<input class='qin' type='number' inputmode='numeric' min='0' data-qs='"+id+"' data-qf='a' data-qp='"+pq+"' data-qd='"+n+"' value='"+(r.a==null?"":r.a)+"'></label>"+
+      "<span class='qst "+st.c+"' data-qst='"+n+"|"+id+"'>"+st.t+"</span></div>";
+  });
+  var others=qMat().filter(function(m){return ids.indexOf(m.id)<0});
+  if(others.length)h+="<div class='qadd'><select data-qadd='"+n+"' aria-label='Registrar outra matéria'><option value=''>+ registrar outra matéria</option>"+others.map(function(m){return "<option value='"+m.id+"'>"+esc(m.name)+"</option>"}).join("")+"</select></div>";
+  return h+"</div>";
+}
+document.addEventListener("change",function(e){
+  var t=e.target;
+  if(t.matches("select[data-qadd]")){var n=+t.getAttribute("data-qadd"),id=t.value;if(!id)return;var d=ensureDay(n);d.qr=d.qr||{};d.qr[id]=d.qr[id]||{q:"",a:""};touch();renderNow();renderQ();return}
+  if(!t.matches("input[data-qs]"))return;
+  e.stopPropagation();
+  var n2=+t.getAttribute("data-qd"),id2=t.getAttribute("data-qs"),f=t.getAttribute("data-qf"),pq=+t.getAttribute("data-qp")||0;
+  if(n2<1)return;var d2=ensureDay(n2);d2.qr=d2.qr||{};d2.qr[id2]=d2.qr[id2]||{};
+  var v=t.value===""?"":Math.max(0,Math.round(+t.value));d2.qr[id2][f]=v;
+  var tt=qTotals(n2);d2.v.quest=tt.q||"";
+  touch();
+  document.querySelectorAll("[data-qtot='"+n2+"']").forEach(function(x){x.textContent=qHeadTxt(n2)});
+  var st=qRowState(n2,id2,pq);
+  document.querySelectorAll("[data-qst='"+n2+"|"+id2+"']").forEach(function(x){x.textContent=st.t;x.className="qst "+st.c});
+  document.querySelectorAll("input[data-qs='"+id2+"'][data-qf='"+f+"'][data-qd='"+n2+"']").forEach(function(x){if(x!==t)x.value=v});
+},true);
+function renderQ(){
+  var card=document.getElementById("qCard");if(!card)return;
+  var n=todayNum();
+  card.innerHTML=(n>=1&&n<=lastDay()?qWidget(n,false):"<p class='small'>O roteiro começa com o desafio.</p>")+
+    "<p class='small' style='margin:10px 0 0'>Como o roteiro é montado: matérias de peso maior aparecem mais vezes, as que estão abaixo da meta ganham mais questões e as que ficaram dias sem treino voltam primeiro. O roteiro do dia fica fixo depois de criado.</p>";
+  var tn=Math.max(1,Math.min(n,lastDay())),rows="<tr><th>Matéria</th><th>Questões</th><th>Acerto</th><th>Meta</th><th>Situação</th></tr>";
+  (S.qmat||[]).filter(function(m){return m.on!==false}).forEach(function(m){var st=qStats(m.id,tn+1,14);
+    var sit=st.q<5?"<span class='small'>poucos dados</span>":(st.acc>=m.meta?"<span style='color:var(--hit)'>na meta</span>":"<span style='color:var(--bad)'>"+Math.round(m.meta-st.acc)+" pts abaixo</span>");
+    rows+="<tr><td>"+esc(m.name)+"</td><td>"+st.q+"</td><td>"+(st.acc==null?"–":Math.round(st.acc)+"%")+"</td><td>"+m.meta+"%</td><td>"+sit+"</td></tr>"});
+  document.getElementById("qPerf").innerHTML=rows;
+  var ed="<div class='qe head'><span>Matéria</span><span>Peso (1–5)</span><span>Meta %</span><span>Ativa</span></div>";
+  (S.qmat||[]).forEach(function(m,i){ed+="<div class='qe'><input type='text' data-qe='name' data-qi='"+i+"' value='"+esc(m.name)+"' aria-label='Nome da matéria'><select data-qe='peso' data-qi='"+i+"' aria-label='Peso'>"+[1,2,3,4,5].map(function(v){return "<option"+(+m.peso===v?" selected":"")+">"+v+"</option>"}).join("")+"</select><input type='number' min='0' max='100' data-qe='meta' data-qi='"+i+"' value='"+m.meta+"' aria-label='Meta de acerto'><input type='checkbox' data-qe='on' data-qi='"+i+"'"+(m.on!==false?" checked":"")+" aria-label='Ativa'></div>"});
+  ed+="<div class='row' style='margin-top:12px'><button type='button' class='btn ghost' id='qAddMat'>Adicionar matéria</button><button type='button' class='btn ghost' id='qRedo'>Refazer roteiro de hoje</button></div>"+
+    "<p class='small' style='margin:8px 0 0'>Quando o edital sair, ajuste os pesos pelo número de questões de cada matéria.</p>";
+  document.getElementById("qEdit").innerHTML=ed;
+}
+document.getElementById("qEdit").addEventListener("change",function(e){
+  var t=e.target,i=t.getAttribute("data-qi"),k=t.getAttribute("data-qe");if(i==null)return;var m=S.qmat[+i];
+  if(k==="on")m.on=t.checked;else if(k==="peso")m.peso=+t.value;else if(k==="meta")m.meta=Math.max(0,Math.min(100,+t.value||0));else m.name=t.value||m.name;
+  touch();renderQ();
+});
+document.getElementById("qEdit").addEventListener("click",function(e){
+  if(e.target.id==="qAddMat"){S.qmat.push({id:"m"+Math.random().toString(36).slice(2,7),name:"Nova matéria",peso:2,meta:75,on:true});touch();renderQ()}
+  if(e.target.id==="qRedo"){var n=todayNum();if(S.days[n]){delete S.days[n].qp;touch()}renderQ();renderNow()}
+});
+
 // ---------- AGORA: o que fazer neste momento ----------
 var BL_WEEK=[
   {f:"04:00",t:"04:05",ti:"Acordar",d:"Água e nada de celular. Comece antes do mundo.",h:["sono"]},
@@ -1478,6 +1620,7 @@ function hPending(h,n){if(h.type==="money")return false;if(h.type==="limit"){var
 function blHabits(b,n){return (b.h||[]).map(findH).filter(function(h){return h&&active(h,n)})}
 function blDone(b,n){var hs=blHabits(b,n);return hs.length>0&&hs.every(function(h){return h.type==="money"||!hPending(h,n)})}
 function hctl(h,n){
+  if(h.id==="quest")return qWidget(n,true);
   var v=(dayData(n).v||{})[h.id],c=(dayData(n).c||{})[h.id],r75=h.h75&&h.type!=="money"?" · regra do 75":"";
   if(h.type==="check")return "<label class='hrow'><input type='checkbox' data-h='"+h.id+"'"+(c?" checked":"")+"><span class='lbl'>"+esc(h.label)+(r75?"<small>Regra do 75</small>":"")+"</span></label>";
   var hint=h.type==="money"?"R$":h.type==="limit"?"limite "+target(h,n)+" "+(h.unit||""):"de "+target(h,n)+" "+(h.unit||"");
