@@ -1,5 +1,5 @@
 // Funciona offline: guarda o app no celular e usa a cópia guardada sem internet.
-const VERSION = "v1-2026-10-08";
+const VERSION = "v2-2026-10-28";
 const APP = "app-" + VERSION;
 const FONTS = "fonts-v1";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-maskable-512.png"];
