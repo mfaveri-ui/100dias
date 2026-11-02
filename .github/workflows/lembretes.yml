@@ -1,0 +1,56 @@
+name: Lembretes diários
+
+on:
+  schedule:
+    # Horários em UTC (Brasília + 3 h), disparados 3 min antes para compensar a fila do GitHub
+    - cron: "27 5 * * *"      # 02h30 acordar
+    - cron: "52 5 * * 1-6"    # 02h55 treino
+    - cron: "27 6 * * 1-6"    # 03h30 estudo
+    - cron: "57 5 * * 0"      # 03h00 estudo (domingo)
+    - cron: "7 8 * * 1-5"     # 05h10 questões
+    - cron: "57 8 * * 0"      # 06h00 corrida (domingo)
+    - cron: "57 11 * * 0"     # 09h00 questões (domingo)
+    - cron: "57 12 * * *"     # 10h00 água
+    - cron: "57 14 * * 1-6"   # 12h00 fim do jejum
+    - cron: "27 16 * * 0,6"   # 13h30 leitura (dom) / questões (sáb)
+    - cron: "27 17 * * 0"     # 14h30 caderno de erros (domingo)
+    - cron: "57 19 * * 0"     # 17h00 revisão da semana (domingo)
+    - cron: "27 20 * * 1-5"   # 17h30 revisões
+    - cron: "27 22 * * *"     # 19h30 fechar o dia
+  workflow_dispatch:
+    inputs:
+      slot:
+        description: "Aviso para testar: acordar, treino, estudo, questoes, agua, almoco, leitura, revisao, semanal ou fechar"
+        required: false
+        default: "fechar"
+
+permissions:
+  contents: write
+
+jobs:
+  enviar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-save --no-audit --no-fund web-push@3.6.7
+      - name: Enviar aviso
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          SLOT: ${{ github.event.inputs.slot }}
+        run: node push/enviar.js
+      - name: Manter o agendamento ativo
+        if: github.event_name == 'schedule'
+        run: |
+          # O GitHub pausa agendamentos de repositórios sem atividade por 60 dias.
+          # Um registro por semana, no domingo à noite, evita a pausa.
+          if [ "$(TZ=America/Sao_Paulo date +%u)" = "7" ] && [ "$(TZ=America/Sao_Paulo date +%H)" -ge 19 ]; then
+            date -u +%FT%TZ > push/ultimo-envio.txt
+            git config user.name "lembretes-100dias"
+            git config user.email "lembretes@users.noreply.github.com"
+            git add push/ultimo-envio.txt
+            git commit -m "Registro semanal dos lembretes" && git push || true
+          fi
