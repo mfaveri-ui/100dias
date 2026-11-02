@@ -555,6 +555,10 @@ button.vid{background:none;cursor:pointer;font-family:inherit}
     <p class="lead">Marcação (sim/não) conta 1 ponto se feita. Número conta proporcional à meta mínima. Limite máximo vale 1 ponto se ficar dentro do limite e perde pontos conforme passa; em branco conta zero, então registre mesmo quando for 0 (meta de fim de semana vale para sábado e domingo). Valor em R$ não entra na nota; soma na reserva.</p>
     <div id="habitEditor"></div>
 
+    <h2 class="section-title">Notificações</h2>
+    <p class="lead">O app avisa nos horários da rotina e cobra só o que ainda falta no dia: treino, questões do roteiro, leitura, regras do 75 e o fechamento às 19h15.</p>
+    <div class="card" id="notifCard"></div>
+
     <h2 class="section-title">Dados</h2>
     <p class="lead">Seus registros ficam guardados só neste celular, sem login. Baixe um backup de vez em quando, principalmente antes de trocar de aparelho ou limpar os dados do navegador.</p>
     <div class="row">
@@ -859,7 +863,12 @@ function isWeekend(n){var g=dateOf(n).getDay();return g===0||g===6}
 // ---------- state & persistence ----------
 var LS="cem-dias-v1", S, sel=null, db=null, docRef=null, saving=false, dirty=false, timer=null, mode="local";
 function loadLocal(){try{var r=localStorage.getItem(LS);if(r)return JSON.parse(r)}catch(e){}return null}
-function saveLocal(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+function saveLocal(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}idbPut()}
+// cópia dos dados para o service worker montar as notificações com o que falta
+var idbT=null;
+function idbPut(){clearTimeout(idbT);idbT=setTimeout(function(){try{var rq=indexedDB.open("cem-dias",1);
+  rq.onupgradeneeded=function(){rq.result.createObjectStore("kv")};
+  rq.onsuccess=function(){try{var db=rq.result,tx=db.transaction("kv","readwrite");tx.objectStore("kv").put(JSON.parse(JSON.stringify(S)),"S");tx.oncomplete=function(){db.close()}}catch(e){}}}catch(e){}},300)}
 function merge(base,x){for(var k in x){if(x[k]!==undefined)base[k]=x[k]}base.mig=(x&&x.mig)?x.mig:{};return normalize(base)}
 function normalize(st){
   var d=defaults();st.habits=st.habits||{};st.goals=st.goals||{};
@@ -2045,6 +2054,40 @@ document.getElementById("v-agora").addEventListener("click",function(e){
 });
 setInterval(function(){var v=document.getElementById("v-agora");if(!v.hidden&&!(document.activeElement&&document.activeElement.matches("input")))renderNow()},60000);
 document.addEventListener("visibilitychange",function(){if(!document.hidden)renderNow()});
+
+// ---------- notificações ----------
+var VAPID_PUBLIC="BOVOm8924fp6bq16sMXwzYna1eEcGu59NiZNBJ1mp8Fb4It1_qd5uW_1QLrUK5cMcK5b9f0DpMlvOsIJh58Rq4U";
+function b64u(s){var p="=".repeat((4-s.length%4)%4),b=atob((s+p).replace(/-/g,"+").replace(/_/g,"/")),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
+function notifSupported(){return "serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window}
+function renderNotif(sub){
+  var c=document.getElementById("notifCard");if(!c)return;
+  if(!notifSupported()){c.innerHTML="<p class='small' style='margin:0'>Este navegador não aceita notificações de app. No Android, use o app instalado pelo Chrome.</p>";return}
+  var perm=Notification.permission,h="";
+  if(perm==="denied"){h="<p style='margin:0'><b>Notificações bloqueadas.</b> Libere em Configurações do Android → Apps → 100 dias → Notificações, e volte aqui.</p>"}
+  else if(!sub){h="<p style='margin:0 0 10px'>Ainda não ativadas neste celular.</p><div class='row'><button type='button' class='btn' id='nOn'>Ativar notificações</button></div>"}
+  else{
+    var code=JSON.stringify(sub);
+    h="<p style='margin:0 0 6px'><b>Ativadas neste celular.</b> Falta um passo: envie o código abaixo para o Claude, na conversa em que você pediu as notificações. Ele liga este celular ao disparador diário.</p>"+
+      "<textarea id='nCode' readonly rows='4' style='width:100%;font-family:ui-monospace,monospace;font-size:.72rem;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg)'>"+esc(code)+"</textarea>"+
+      "<div class='row' style='margin-top:8px'><button type='button' class='btn' id='nCopy'>Copiar código</button><button type='button' class='btn ghost' id='nTest'>Testar agora</button><button type='button' class='btn ghost' id='nOff'>Desativar</button></div><p class='small' id='nMsg' style='margin:8px 0 0'></p>";
+  }
+  c.innerHTML=h;
+}
+function notifRefresh(){if(!notifSupported()){renderNotif(null);return}navigator.serviceWorker.ready.then(function(r){return r.pushManager.getSubscription()}).then(function(s){renderNotif(s?s.toJSON():null)}).catch(function(){renderNotif(null)})}
+document.getElementById("notifCard").addEventListener("click",function(e){
+  var id=e.target.id,msg=function(t){var m=document.getElementById("nMsg");if(m)m.textContent=t};
+  if(id==="nOn"){
+    Notification.requestPermission().then(function(p){
+      if(p!=="granted"){notifRefresh();return}
+      return navigator.serviceWorker.ready.then(function(r){return r.pushManager.getSubscription().then(function(s){return s||r.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(VAPID_PUBLIC)})})}).then(function(s){idbPut();renderNotif(s.toJSON())});
+    }).catch(function(err){var c=document.getElementById("notifCard");c.insertAdjacentHTML("beforeend","<p class='small' style='color:var(--bad)'>Não foi possível ativar: "+esc(String(err&&err.message||err))+"</p>")});
+  }
+  if(id==="nCopy"){var t=document.getElementById("nCode");if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t.value).then(function(){msg("Código copiado. Cole na conversa com o Claude.")},function(){t.select();msg("Selecione e copie o texto acima.")});else{t.select();msg("Selecione e copie o texto acima.")}}
+  if(id==="nTest"){idbPut();setTimeout(function(){navigator.serviceWorker.ready.then(function(r){(r.active||navigator.serviceWorker.controller).postMessage({type:"teste",s:"fechar"});msg("Enviado. A notificação aparece em alguns segundos.")})},500)}
+  if(id==="nOff"){navigator.serviceWorker.ready.then(function(r){return r.pushManager.getSubscription()}).then(function(s){return s&&s.unsubscribe()}).then(notifRefresh)}
+});
+notifRefresh();
+idbPut();
 
 
 // ---------- player de vídeo ----------
