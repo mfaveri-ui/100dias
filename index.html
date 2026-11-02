@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>100 dias + 75 Duro</title>
+<title>100 dias</title>
 <meta name="theme-color" content="#15212C">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -336,7 +336,7 @@ button.vid{background:none;cursor:pointer;font-family:inherit}
 <div class="wrap">
   <header class="top">
     <div>
-      <h1>100 dias + 75 Duro</h1>
+      <h1>100 dias</h1>
       <p id="range">Controle de objetivos</p>
     </div>
     <div style="display:flex;gap:10px;align-items:center"><button type="button" class="sbtn" id="btnSearch" aria-label="Buscar no app">🔍 Buscar</button><div class="status local" id="status"><i></i><span>Carregando…</span></div></div>
@@ -403,7 +403,7 @@ button.vid{background:none;cursor:pointer;font-family:inherit}
         </div>
         <div class="score"><div class="bar"><span id="dayBar" style="width:0"></span></div><b id="dayPct">0%</b></div>
         <div class="sesmini" id="sesMini"><p id="sesMiniTxt"></p><button type="button" class="btn" id="sesMiniBtn">Começar sessão</button></div>
-        <div class="c75" id="c75" aria-live="polite"></div>
+        <div class="c75" id="c75" aria-live="polite" hidden></div>
         <div class="motiv" id="motivDay"></div>
         <div class="treino" id="treino"></div>
         <div class="fa" id="faDay"></div>
@@ -434,14 +434,10 @@ button.vid{background:none;cursor:pointer;font-family:inherit}
         </div>
         <div id="areaRows"></div>
 
-        <h2 class="h75">75 Duro</h2>
+        <div hidden>
         <div class="g75" id="g75"></div>
-        <div class="stats">
-          <div class="stat"><b id="s75day">0</b><span>dia atual de 75</span></div>
-          <div class="stat"><b id="s75att">1</b><span>tentativa</span></div>
-          <div class="stat"><b id="s75best">0</b><span>recorde de dias seguidos</span></div>
+        <b id="s75day"></b><b id="s75att"></b><b id="s75best"></b><p id="s75txt"></p>
         </div>
-        <p class="small" id="s75txt"></p>
         <h2 class="h75">Concurso</h2>
         <p class="small" id="sideConc"></p>
       </aside>
@@ -543,20 +539,21 @@ button.vid{background:none;cursor:pointer;font-family:inherit}
     <h2 class="section-title">Início do desafio</h2>
     <div class="row"><input type="date" id="startDate" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"><span class="small" id="endLbl"></span></div>
 
-    <h2 class="section-title">75 Duro</h2>
+    <div hidden>
     <p class="lead">Os hábitos com a caixa 75 marcada são as regras. Todos cumpridos validam o dia. Se um dia fechar incompleto, a contagem volta ao Dia 1 no dia seguinte, sozinha.</p>
     <div class="row"><label for="start75" class="small">Início do 75 Duro</label><input type="date" id="start75" style="padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"><span class="small" id="end75Lbl"></span></div>
 
     <div class="row" id="min75Row"><span class="small">Mínimo de estudo para validar o dia no 75:</span>
       <label class="small" for="min75d">dias úteis</label><input type="number" id="min75d" min="0" step="0.5" style="width:80px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"><span class="small">h</span>
       <label class="small" for="min75w">sábado e domingo</label><input type="number" id="min75w" min="0" step="0.5" style="width:80px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"><span class="small">h</span></div>
+    </div>
 
     <h2 class="section-title">Hábitos diários</h2>
     <p class="lead">Marcação (sim/não) conta 1 ponto se feita. Número conta proporcional à meta mínima. Limite máximo vale 1 ponto se ficar dentro do limite e perde pontos conforme passa; em branco conta zero, então registre mesmo quando for 0 (meta de fim de semana vale para sábado e domingo). Valor em R$ não entra na nota; soma na reserva.</p>
     <div id="habitEditor"></div>
 
     <h2 class="section-title">Notificações</h2>
-    <p class="lead">O app avisa nos horários da rotina e cobra só o que ainda falta no dia: treino, questões do roteiro, leitura, regras do 75 e o fechamento às 19h15.</p>
+    <p class="lead">O app avisa nos horários da rotina e cobra só o que ainda falta no dia: treino, questões do roteiro, leitura, água e o fechamento às 19h30.</p>
     <div class="card" id="notifCard"></div>
 
     <h2 class="section-title">Dados</h2>
@@ -1015,7 +1012,7 @@ function findHabit(a,id){return (S.habits[a]||[]).filter(function(h){return h.id
 function areaDone(a,n){var hs=(S.habits[a]||[]).filter(function(h){return h.type!=="money"});if(!hs.length)return false;return hs.every(function(h){return habitScore(h,n)>=1})}
 function areaStreak(a,upTo){var s=0,st=upTo;if(st>=1&&!areaDone(a,st))st=st-1;for(var j=st;j>=1;j--){if(areaDone(a,j))s++;else break}return s}
 function areaBest(a,upTo){var b=0,c=0;for(var i=1;i<=upTo;i++){if(areaDone(a,i)){c++;if(c>b)b=c}else c=0}return b}
-function rules75(n){var r=[];AREAS.forEach(function(a){(S.habits[a.id]||[]).forEach(function(h){if(h.h75&&h.type!=="money"&&active(h,n))r.push(h)})});return r}
+function rules75(n){return [];var r=[];AREAS.forEach(function(a){(S.habits[a.id]||[]).forEach(function(h){if(h.h75&&h.type!=="money"&&active(h,n))r.push(h)})});return r}
 function min75(h,n){if(h.type!=="num"||h.min75==null||h.min75==="")return null;return (isWeekend(n)&&h.min75w!=null&&h.min75w!=="")?+h.min75w:+h.min75}
 function pass75(h,n){var m=min75(h,n);if(m===null)return habitScore(h,n)>=1;var v=(dayData(n).v||{})[h.id];return v!=null&&v!==""&&+v>=m}
 function done75(n){return rules75(n).filter(function(h){return pass75(h,n)}).length}
@@ -1114,9 +1111,9 @@ function session(key,cd){
 }
 function renderTreino(){
   var n=sel,box=document.getElementById("treino"),cd=trCd(n);
-  if(cd<1){box.innerHTML="<h3>Treino do dia</h3><p class='foot' style='border:0'>O plano de treinos começa com o 75 Duro, em "+esc(fmt(dateOf(start75())))+".</p>";return}
+  if(cd<1){box.innerHTML="<h3>Treino do dia</h3><p class='foot' style='border:0'>O plano de treinos começa em "+esc(fmt(dateOf(start75())))+".</p>";return}
   var k=WEEK[dateOf(n).getDay()],f=trPhase(cd),dl=isDeload(cd),x=session(k,cd);
-  var head="Fase "+PH_NAMES[f]+(cd<=75?", dia "+cd+" de 75":", depois dos 75")+(dl?", semana leve":"");
+  var head="Fase "+PH_NAMES[f]+(cd<=75?", dia "+cd+" do plano":", manutenção")+(dl?", semana leve":"");
   box.innerHTML="<h3>Treino do dia<span>"+esc(head)+"</span></h3><div class='tr'><div class='k'>30 min</div><div><b>"+esc(x.t)+"</b>"+(x.light?"<span class='leve'>leve</span>":"")+
     "<p>"+esc(x.d)+"</p>"+(x.list?"<ul class='exl'>"+x.list.map(function(i){var k=exVid(i);return "<li><span>"+esc(i)+"</span>"+(k?vbtn(k):"")+"</li>"}).join("")+"</ul>":"")+
     (x.vids?"<div class='vids'><span class='small'>Vídeos da sessão</span>"+x.vids.map(vthumb).join("")+"</div>":"")+"</div></div>"+
@@ -1143,7 +1140,7 @@ function renderPlan(){
     "O treino nunca passa de 30 min: o tempo que sobra é do estudo."];
   document.getElementById("planNotes").innerHTML=N.map(function(x){return "<li>"+esc(x)+"</li>"}).join("");
 }
-function lastDay(){var r=run75();if(r.done)return Math.max(100,r.done);return Math.max(100,r.cur+74)}
+function lastDay(){return 100}
 function phaseOf(n){for(var i=0;i<PHASES.length;i++)if(n>=PHASES[i].from&&n<=PHASES[i].to)return PHASES[i];return null}
 function savedTotal(){
   var t=0;for(var k in S.days){var v=S.days[k].v||{};AREAS.forEach(function(a){(S.habits[a.id]||[]).forEach(function(h){if(h.type==="money")t+=+(v[h.id]||0)})})}
@@ -1174,7 +1171,7 @@ function renderDay(){
     var card=el("div",{class:"area",style:"--c:"+a.c});
     var h3=el("h3",null,esc(a.name)+"<span data-area='"+a.id+"'></span>");card.appendChild(h3);
     act.forEach(function(h){
-      var row=el("div",{class:"item"}),id="i_"+a.id+"_"+h.id,m75=min75(h,n),tg=h.h75?"<span class='t75' title='Regra do 75 Duro"+(m75!==null?": mínimo de "+String(m75).replace(".",",")+" "+esc(h.unit||"")+" para validar o dia":"")+"'>75"+(m75!==null?" · mín. "+String(m75).replace(".",",")+" "+esc(h.unit||""):"")+"</span>":"";
+      var row=el("div",{class:"item"}),id="i_"+a.id+"_"+h.id,m75=min75(h,n),tg=false?"<span class='t75' title='Regra do 75 Duro"+(m75!==null?": mínimo de "+String(m75).replace(".",",")+" "+esc(h.unit||"")+" para validar o dia":"")+"'>75"+(m75!==null?" · mín. "+String(m75).replace(".",",")+" "+esc(h.unit||""):"")+"</span>":"";
       if(h.type==="check"){
         var cb=el("input",{type:"checkbox",id:id});cb.checked=!!(dd.c&&dd.c[h.id]);
         cb.disabled=n>tn;
@@ -1207,7 +1204,7 @@ function renderScores(){
   document.querySelectorAll("[data-hs]").forEach(function(sp){var k=sp.getAttribute("data-hs").split("|"),h=findHabit(k[0],k[1]);sp.textContent=(!h||up<1)?"":"Sequência: "+habitStreak(h,up)+" dias · recorde: "+habitBest(h,up)});
   renderGrid();renderStats();render75();renderSideConc();
 }
-function render75(){
+function render75(){return;
   var r=run75(),n=sel,tn=todayNum(),box=document.getElementById("c75");
   var cls="c75",num="",b="",sp="";
   var tot=rules75(n).length,dn=done75(n);
@@ -1369,7 +1366,7 @@ function renderSettings(){
   AREAS.forEach(function(a){
     var c=el("div",{class:"card area-card",style:"--c:"+a.c+";margin-bottom:12px"});
     c.appendChild(el("h3",{style:"margin-bottom:10px"},esc(a.name)));
-    c.appendChild(el("div",{class:"hab head"},"<span class='lbl'>Hábito</span><span>Tipo</span><span>Meta</span><span>Meta fim de sem.</span><span style='text-align:center'>75</span><span></span>"));
+    c.appendChild(el("div",{class:"hab head"},"<span class='lbl'>Hábito</span><span>Tipo</span><span>Meta</span><span>Meta fim de sem.</span><span></span><span></span>"));
     (S.habits[a.id]||[]).forEach(function(h,idx){
       var r=el("div",{class:"hab"});
       var l=el("input",{type:"text",class:"lbl","aria-label":"Nome do hábito"});l.value=h.label;
@@ -1383,7 +1380,7 @@ function renderSettings(){
       tw.addEventListener("input",function(){h.targetWeekend=tw.value===""?0:+tw.value;touch()});
       var del=el("button",{type:"button","aria-label":"Remover hábito",title:"Remover"},"✕");
       del.addEventListener("click",function(){if(confirm("Remover \""+h.label+"\"?")){S.habits[a.id].splice(idx,1);touch();renderSettings()}});
-      var k75=el("input",{type:"checkbox","aria-label":"Regra do 75 Duro",title:"Regra do 75 Duro"});k75.checked=!!h.h75;k75.disabled=h.type==="money";
+      var k75=el("input",{type:"checkbox","aria-label":"Regra do 75 Duro",title:"Regra do 75 Duro"});k75.checked=!!h.h75;k75.disabled=h.type==="money";k75.style.visibility="hidden";
       k75.addEventListener("change",function(){h.h75=k75.checked;touch()});
       [l,t,tg,tw,k75,del].forEach(function(x){r.appendChild(x)});
       c.appendChild(r);
@@ -1554,7 +1551,7 @@ var MOT=[
 "Faça hoje o que o Marcos aprovado agradeceria em março.",
 "Menos ferramenta nova, mais questão resolvida.",
 "Orgulho é chegar às 20h sabendo que fez o que prometeu.",
-"Cada regra cumprida do 75 prova que você cumpre o que decide.",
+"Cada hábito cumprido prova que você cumpre o que decide.",
 "Não pare no meio. O ponto que decide a vaga pode estar na próxima página."];
 function dayKey(d){return Math.floor((new Date(d.getFullYear(),d.getMonth(),d.getDate())-new Date(2026,0,1))/864e5)}
 function motivFor(n){var d=dateOf(n);return MOT[((dayKey(d)%MOT.length)+MOT.length)%MOT.length]}
@@ -1933,7 +1930,7 @@ var BL_SAT=BL_MORNING.concat([
   {f:"12:00",t:"13:30",ti:"Almoço e leitura",d:"Fim do jejum: arroz, feijão, proteína e salada. Depois, 10 páginas.",h:["jejum","leitura"]},
   {f:"13:30",t:"15:30",ti:"Estudo: bloco da tarde 1",d:"Matéria de peso alto: teoria e questões.",k:"study"},
   {f:"15:45",t:"17:45",ti:"Estudo: bloco da tarde 2",d:"Revisão D+7 e Caderno de Erros.",h:["erros"],k:"study"},
-  {f:"17:45",t:"18:30",ti:"Jantar",d:"Proteína, fruta e pão integral. Sem refeição livre no 75. Garrafa 4 até 18h30.",h:["dieta75","planej","prato"]},
+  {f:"17:45",t:"18:30",ti:"Jantar",d:"Proteína, fruta e pão integral. Garrafa 4 até 18h30.",h:["dieta75","planej","prato"]},
   {f:"18:30",t:"19:30",ti:"Tempo livre",d:"Descanso de verdade também faz parte. Longe das telas, se der."},
   BL_CLOSE]);
 var BL_SUN=[
@@ -1944,7 +1941,7 @@ var BL_SUN=[
   {f:"06:00",t:"06:35",ti:"Treino do dia",k:"treino",h:["treino","mobil","foto"]},
   {f:"06:35",t:"09:00",ti:"Família e descanso",d:"Banho e tempo com a família. Jejum segue até as 12h."},
   {f:"09:00",t:"12:00",ti:"Simulado ou bateria de questões",d:"A cada duas semanas, simulado cronometrado. Depois, revisão D+30.",h:["quest","erros"],k:"study"},
-  {f:"12:00",t:"13:30",ti:"Almoço e descanso",d:"Fim do jejum: arroz, feijão, proteína e salada. Sem refeição livre no 75.",h:["jejum","dieta75"]},
+  {f:"12:00",t:"13:30",ti:"Almoço e descanso",d:"Fim do jejum: arroz, feijão, proteína e salada.",h:["jejum","dieta75"]},
   {f:"13:30",t:"14:30",ti:"Leitura e cochilo",d:"10 páginas de não-ficção. Cochilo de até 20 minutos, se precisar.",h:["leitura"]},
   {f:"14:30",t:"16:30",ti:"Caderno de Erros e discursiva",d:"Reincidências primeiro. Uma discursiva por semana.",k:"study"},
   {f:"17:00",t:"18:00",ti:"Revisão da semana",d:"Revisão semanal, cobertura do edital, cardápio, compras e backup.",k:"weekly"},
@@ -1959,11 +1956,11 @@ function blHabits(b,n){return (b.h||[]).map(findH).filter(function(h){return h&&
 function blDone(b,n){var hs=blHabits(b,n);return hs.length>0&&hs.every(function(h){return h.type==="money"||!hPending(h,n)})}
 function hctl(h,n){
   if(h.id==="quest")return qWidget(n,true);
-  var v=(dayData(n).v||{})[h.id],c=(dayData(n).c||{})[h.id],r75=h.h75&&h.type!=="money"?" · regra do 75":"";
+  var v=(dayData(n).v||{})[h.id],c=(dayData(n).c||{})[h.id],r75="";
   if(h.type==="check")return "<label class='hrow'><input type='checkbox' data-h='"+h.id+"'"+(c?" checked":"")+"><span class='lbl'>"+esc(h.label)+(r75?"<small>Regra do 75</small>":"")+"</span></label>";
   var hint=h.type==="money"?"R$":h.type==="limit"?"limite "+target(h,n)+" "+(h.unit||""):"de "+target(h,n)+" "+(h.unit||"");
-  var m=min75(h,n);if(m!==null)hint+=", mín. "+String(m).replace(".",",")+" no 75";
-  return "<label class='hrow'><span class='lbl'>"+esc(h.label)+"<small>"+esc(hint)+(h.h75&&m===null&&h.type!=="money"?" · regra do 75":"")+"</small></span><input type='number' inputmode='decimal' min='0' step='"+(h.type==="money"?"0.01":(h.unit==="h"?"0.25":"1"))+"' data-hv='"+h.id+"' value='"+(v===undefined||v===null?"":v)+"' aria-label='"+esc(h.label)+"'></label>";
+  var m=null;
+  return "<label class='hrow'><span class='lbl'>"+esc(h.label)+"<small>"+esc(hint)+""+"</small></span><input type='number' inputmode='decimal' min='0' step='"+(h.type==="money"?"0.01":(h.unit==="h"?"0.25":"1"))+"' data-hv='"+h.id+"' value='"+(v===undefined||v===null?"":v)+"' aria-label='"+esc(h.label)+"'></label>";
 }
 function nowState(){
   var d=new Date(),g=d.getDay(),m=d.getHours()*60+d.getMinutes();
@@ -1985,8 +1982,7 @@ function renderNow(){
   if(n>last){card.innerHTML="<h2>Desafio concluído</h2><p class='desc'>Veja o histórico completo na aba Dia.</p>";extra.innerHTML="";todo.innerHTML="";return}
   // linha de contexto
   var r=run75(),mt="Dia "+n+" de "+(last>100?last:100);
-  if(!r.notStarted&&!r.done){var ad=n-r.cur+1,rl=rules75(n);mt+=" · 75 Duro: dia "+ad+", "+done75(n)+" de "+rl.length+" regras"}
-  mt+=" · hoje "+Math.round(dayScore(n)*100)+"%";
+    mt+=" · hoje "+Math.round(dayScore(n)*100)+"%";
   meta.textContent=mt;
   var st=nowState(),h="";
   if(ses.ph==="run"||ses.ph==="post"){h=sesBlockHTML()}
@@ -2107,7 +2103,7 @@ function renderVLib(){var g={},o=["Calistenia","Core","Corrida","Corda","Mobilid
 function nrm(t){return String(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase()}
 function snip(t,q){var n=nrm(t),i=n.indexOf(q);if(i<0)return esc(t.slice(0,120));var a=Math.max(0,i-40),b=Math.min(t.length,i+q.length+80);
   return (a>0?"…":"")+esc(t.slice(a,i))+"<mark>"+esc(t.slice(i,i+q.length))+"</mark>"+esc(t.slice(i+q.length,b))+(b<t.length?"…":"")}
-var SFUN=[["Backup dos dados","ajustes","baixar backup importar exportar dados"],["Cobertura do edital","concurso","edital porcentagem cobertura"],["Simulados","concurso","simulado nota"],["Discursivas","concurso","discursiva redação"],["Marcos até a prova","concurso","marcos prazos férias inscrição"],["Revisão semanal","revisoes","revisão semana perguntas"],["Metas e rotina-base","metas","rotina horário metas medições"],["Plano de treinos","metas","treino plano progressão fases semana leve"],["Vídeos dos treinos","videos","vídeo youtube exercício"],["Ajustes: hábitos e datas","ajustes","hábito data início 75 mínimo estudo"]];
+var SFUN=[["Backup dos dados","ajustes","baixar backup importar exportar dados"],["Cobertura do edital","concurso","edital porcentagem cobertura"],["Simulados","concurso","simulado nota"],["Discursivas","concurso","discursiva redação"],["Marcos até a prova","concurso","marcos prazos férias inscrição"],["Revisão semanal","revisoes","revisão semana perguntas"],["Metas e rotina-base","metas","rotina horário metas medições"],["Plano de treinos","metas","treino plano progressão fases semana leve"],["Vídeos dos treinos","videos","vídeo youtube exercício"],["Ajustes: hábitos e datas","ajustes","hábito data início"]];
 function doSearch(){
   var raw=document.getElementById("srchIn").value.trim(),q=nrm(raw),ul=document.getElementById("srchRes"),info=document.getElementById("srchInfo");
   if(q.length<2){ul.innerHTML="";info.textContent="Busca em notas do dia, metas da Família Aprovada, revisões, discursivas, hábitos, treinos, vídeos, rotina e funções do app.";return}

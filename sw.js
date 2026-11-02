@@ -1,6 +1,6 @@
 // Funciona offline: guarda o app no celular e usa a cópia guardada sem internet.
 // Também recebe os avisos diários e monta o texto com o que ainda falta no dia.
-const VERSION = "v5-2026-11-02";
+const VERSION = "v6-2026-11-02";
 const APP = "app-" + VERSION;
 const FONTS = "fonts-v1";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-maskable-512.png"];
@@ -122,15 +122,13 @@ function compose(slot, S) {
       return { title: "🍽️ Fim do jejum", body: "Almoço do plano." + (P("leitura") ? " Depois, 10 páginas e 20 min de flashcards." : " Leitura já feita ✓") + (P("jejum") ? " Marque o jejum no app." : "") };
     case "leitura":
       if (!P("leitura")) return { title: "✓ Leitura já feita", body: "10 páginas registradas." };
-      return { title: "📖 10 páginas", body: "Regra do 75. Registre no app." };
+      return { title: "📖 10 páginas", body: "Leitura do dia. Registre no app." };
     case "revisao":
       return { title: "📚 Revisões e Caderno de Erros", body: (P("erros") ? "Reincidências primeiro, depois quase-erros." : "Caderno de Erros já marcado ✓") + " Nada de matéria nova." };
     case "semanal":
       return { title: "🗓️ Revisão da semana", body: "Revisão semanal, cobertura do edital e backup. Depois, cardápio e marmitas." };
     case "fechar": default: {
       const pend = allHabits(S).filter(h => pending(h, C));
-      const miss = allHabits(S).filter(h => fail75(h, C));
-      if (miss.length) return { title: "⚠️ Faltam " + miss.length + (miss.length > 1 ? " regras" : " regra") + " do 75", body: miss.slice(0, 4).map(h => short(h.label)).join(" · ") + ". Sem elas, a contagem volta ao dia 1." };
       if (pend.length) return { title: "🔥 Faltam " + pend.length + " itens para fechar o dia", body: pend.slice(0, 4).map(h => short(h.label)).join(" · ") + (pend.length > 4 ? "…" : "") };
       return { title: "✓ Dia " + C.n + " vencido", body: "Tudo registrado. Durma às 20h." };
     }
