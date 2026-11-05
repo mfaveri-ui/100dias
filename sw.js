@@ -1,6 +1,6 @@
 // Funciona offline: guarda o app no celular e usa a cópia guardada sem internet.
 // Também recebe os avisos diários e monta o texto com o que ainda falta no dia.
-const VERSION = "v6-2026-11-02";
+const VERSION = "v7-2026-11-05";
 const APP = "app-" + VERSION;
 const FONTS = "fonts-v1";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-maskable-512.png"];

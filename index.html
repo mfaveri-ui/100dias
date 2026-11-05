@@ -330,6 +330,37 @@ button.vid{background:none;cursor:pointer;font-family:inherit}
 .banner[hidden]{display:none}
 #importBox textarea{width:100%;min-height:110px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-family:ui-monospace,monospace;font-size:.8rem}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Foco mental */
+.urge{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--auc);border-radius:10px;padding:14px 16px;margin:0 0 16px}
+.urge>div:first-child{flex:1;min-width:200px}
+.urge.on{display:block}
+.urge .timer{font-family:var(--display);font-weight:700;font-size:4rem;line-height:1;color:var(--auc);margin:2px 0}
+.urge .timer.done{color:var(--hit)}
+.urge h4{margin:14px 0 4px;font-size:.95rem}
+.urge .hint{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+.urge .planlist{margin-bottom:4px}
+.urge .field{margin-top:12px}
+.fcgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:520px){.fcgrid{grid-template-columns:1fr}}
+.field select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.fcplan{display:flex;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line)}
+.fcplan:first-child{border-top:0}
+.fcplan input{flex:1;min-width:0;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.fcplan button{border:0;background:none;color:var(--muted);cursor:pointer;font-size:1.2rem;line-height:1;padding:4px 6px}
+.fcbar{display:grid;grid-template-columns:120px 1fr 28px;gap:10px;align-items:center;margin:6px 0;font-size:.9rem}
+.fcbar .bar{height:8px;background:var(--cell);border-radius:4px;overflow:hidden}
+.fcbar .bar span{display:block;height:100%;background:var(--auc)}
+.fcbar b{text-align:right;font-family:var(--display);font-size:1.05rem}
+.fctag{display:inline-block;font-size:.74rem;padding:0 6px;border-radius:4px;margin-left:6px;font-weight:600;vertical-align:1px}
+.fctag.ok{background:color-mix(in srgb,var(--hit) 18%,transparent);color:var(--hit)}
+.fctag.no{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
+.fcsub{font-size:.78rem;color:var(--muted);margin:14px 0 2px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.fcsub:first-child{margin-top:0}
+.fclog li>div{flex:1;min-width:0}
+.fclog li small{display:block;color:var(--muted);font-size:.82rem}
+.mk label small{display:block;color:var(--muted);font-size:.82rem}
+.week .body p{margin:0}
 </style>
 </head>
 <body>
@@ -364,6 +395,7 @@ button.vid{background:none;cursor:pointer;font-family:inherit}
       <div class="card" id="nowTodo"></div>
     </div>
     <p class="small" style="margin:14px 0 0"><button type="button" class="linkbtn" data-go="dia">Ver o dia completo, com notas e histórico</button></p>
+    <p class="small" style="margin:8px 0 0">Bateu vontade? <button type="button" class="linkbtn" data-go="foco" data-urge="1">Iniciar o timer de 15 min</button></p>
   </section>
 
   <section class="view" id="v-busca" hidden>
@@ -385,8 +417,38 @@ button.vid{background:none;cursor:pointer;font-family:inherit}
       <button type="button" class="morebtn" data-go="metas"><b>Metas e rotina</b><span>Metas dos 100 dias, medições e a rotina-base</span></button>
       <button type="button" class="morebtn" data-go="revisoes"><b>Revisões semanais</b><span>Três perguntas a cada 7 dias</span></button>
       <button type="button" class="morebtn" data-go="videos"><b>Vídeos dos treinos</b><span>Execução de cada exercício, corrida, corda e mobilidade</span></button>
+      <button type="button" class="morebtn" data-go="foco"><b>Foco mental</b><span>Timer para quando a vontade vier, gatilhos, ambiente e o guia</span></button>
       <button type="button" class="morebtn" data-go="ajustes"><b>Ajustes e backup</b><span>Datas, hábitos, importar e baixar seus dados</span></button>
     </div>
+  </section>
+
+  <section class="view" id="v-foco" hidden>
+    <button type="button" class="backbtn" data-go="mais">‹ Mais</button>
+    <h2 class="section-title" style="margin-top:0">Foco mental</h2>
+    <p class="lead">Menos estímulo sexual no dia a dia, mais mente livre para o estudo e para o que você escolhe. A sexualidade é saudável; o alvo aqui é o excesso: pornografia, conteúdo sensual no feed e pensamentos que invadem a hora do foco.</p>
+    <div class="stats" id="fcStats"></div>
+    <div class="urge" id="fcUrge"></div>
+    <h3 class="ch">Meus planos “se… então…”</h3>
+    <p class="small" style="margin:0 0 8px">Decida antes o que fazer quando a vontade vier. Eles aparecem no timer.</p>
+    <div class="card" id="fcPlanos"></div>
+    <h3 class="ch">Registrar uma vontade</h3>
+    <div class="card">
+      <div class="fcgrid">
+        <div class="field"><label for="fcG">O que provocou</label><select id="fcG"></select></div>
+        <div class="field"><label for="fcI">Intensidade</label><select id="fcI"><option value="1">1 · fraca</option><option value="2">2</option><option value="3" selected>3 · média</option><option value="4">4</option><option value="5">5 · muito forte</option></select></div>
+        <div class="field"><label for="fcQ">Quando</label><input type="datetime-local" id="fcQ"></div>
+        <div class="field"><label for="fcR">Como terminou</label><select id="fcR"><option value="venci">Venci</option><option value="recai">Recaí</option></select></div>
+      </div>
+      <div class="field" style="margin-top:10px"><label for="fcO">O que eu fiz ou aprendi</label><input id="fcO" placeholder="Ex.: levantei, fiz flexões e fui estudar"></div>
+      <div class="row" style="margin-top:12px"><button type="button" class="btn" id="fcAdd">Registrar</button><span class="small" id="fcMsg"></span></div>
+    </div>
+    <h3 class="ch">O que os registros mostram</h3>
+    <div class="card" id="fcResumo"></div>
+    <h3 class="ch">Preparar o ambiente</h3>
+    <p class="small" style="margin:0 0 8px">Faça uma vez. Cortar a oferta é o passo que mais ajuda.</p>
+    <div class="card" id="fcSetup"></div>
+    <h3 class="ch">O guia, passo a passo</h3>
+    <div id="fcGuia"></div>
   </section>
 
   <section class="view" id="v-dia" hidden>
@@ -589,6 +651,33 @@ var AREAS=[
   {id:"fe",name:"Fé e leitura",short:"Fé e leitura",c:"var(--fe)"},
   {id:"financas",name:"Finanças",short:"Finanças",c:"var(--fin)"},
   {id:"autocontrole",name:"Autocontrole",short:"Autocontrole",c:"var(--auc)",streak:true}
+];
+var FOCO_SETUP=[
+  ["blqCel","Bloqueador de conteúdo adulto no celular","Filtro do próprio Android ou um app bloqueador."],
+  ["dns","DNS com filtro","No Android: Configurações → Rede → DNS privado → adult-filter-dns.cleanbrowsing.org. No roteador: OpenDNS FamilyShield."],
+  ["blqPc","Bloqueador no computador","Extensão de navegador ou filtro do sistema."],
+  ["feeds","Feeds limpos (Instagram, TikTok, YouTube)","Deixar de seguir perfis que estimulam e marcar “não tenho interesse”. O algoritmo se ajusta em poucos dias."],
+  ["quarto","Lugar fixo para o celular carregar fora do quarto","É o passo de maior impacto para a maioria das pessoas."],
+  ["planos","Planos “se… então…” escritos","Na seção acima."],
+  ["pessoa","Uma pessoa de confiança para prestar contas","Amigo, mentor ou grupo de apoio."]
+];
+var FOCO_TRIG=["Cansaço","Tédio","Estresse","Solidão","Ansiedade","Celular na cama","Redes sociais","Tempo livre sem plano","Outro"];
+var FOCO_PLANOS=[
+  "Se a vontade vier à noite, então levanto, bebo água e faço 20 flexões.",
+  "Se eu pegar o celular sem motivo, então abro o material de estudo por 10 minutos.",
+  "Se eu estiver cansado ou estressado, então saio para caminhar 10 minutos ou tomo um banho."
+];
+var FOCO_REDIR=["Levantar e mudar de cômodo","20 flexões ou 1 minuto de prancha","Beber um copo de água","Respirar 4 segundos inspirando e 6 expirando, por 2 minutos","Abrir o material de estudo por 10 minutos","Ler um trecho da leitura sagrada","Sair para caminhar","Mandar mensagem para alguém"];
+var FOCO_GUIA=[
+  ["Defina o alvo com clareza","Escreva o que exatamente você quer cortar: pornografia, rolagem de conteúdo sensual, fantasias durante o estudo. Meta vaga (“parar de pensar nisso”) não funciona; meta concreta (“zero pornografia e zero conteúdo sensual no celular por 30 dias”) funciona."],
+  ["Mapeie seus gatilhos por uma semana","Registre cada vontade nesta página: horário, o que provocou e como terminou. Os gatilhos mais comuns são cansaço, tédio, estresse, solidão, celular na cama tarde da noite e intervalos sem atividade definida."],
+  ["Corte a oferta no ambiente","Bloqueador no celular e no PC, DNS com filtro, feeds limpos e celular fora do quarto. Use o checklist “Preparar o ambiente”."],
+  ["Crie planos “se… então…”","Decida antes o que fazer quando a vontade vier, para não negociar com você mesmo na hora. Seus planos ficam salvos aqui e aparecem no timer."],
+  ["Não brigue com o pensamento, redirecione","Tentar “não pensar” reforça o pensamento. Perceba, nomeie mentalmente (“isso é só um impulso”) e leve a atenção para algo físico ou que exija concentração. Uma vontade intensa costuma passar em 10 a 20 minutos se você não alimentar: é para isso que serve o timer."],
+  ["Ocupe a energia","Treino, sono no horário e blocos de estudo bem definidos reduzem a ociosidade mental, que é onde esses pensamentos crescem. Os horários soltos, principalmente à noite, merecem um plano fixo."],
+  ["Registre e trate recaídas como dados","Marque os itens do Autocontrole todo dia. Se escorregar, não zere a motivação: registre o gatilho, ajuste o ambiente ou o plano e siga no dia seguinte. O “já estraguei tudo” causa mais recaídas do que o deslize em si."],
+  ["Tenha alguém de confiança","Contar a um amigo, mentor ou grupo de apoio aumenta muito a adesão. Prestar contas a alguém ajuda."],
+  ["Saiba quando buscar ajuda profissional","Se houver perda de controle, prejuízo no trabalho, no relacionamento ou no sono, ou muitas tentativas frustradas de parar, procure um psicólogo com experiência em comportamento sexual compulsivo. É tratável, e a terapia cognitivo-comportamental costuma dar bons resultados."]
 ];
 var PHASES=[
   {from:1,to:21,name:"Fundação",txt:"Fundação (dias 1–21): instalar os hábitos, sem heroísmo."},
@@ -815,7 +904,9 @@ function defaults(){
       autocontrole:[
         {id:"porno",label:"Sem pornografia",type:"check"},
         {id:"masturb",label:"Sem masturbação",type:"check"},
-        {id:"redes",label:"Redes sociais (minutos no dia)",type:"limit",unit:"min",target:15}
+        {id:"redes",label:"Redes sociais (minutos no dia)",type:"limit",unit:"min",target:15},
+        {id:"celquarto",label:"Celular fora do quarto à noite",type:"check"},
+        {id:"feedlimpo",label:"Sem conteúdo sensual nas redes",type:"check"}
       ]
     },
     goals:{fisico:"",estudo:"",alimentacao:"",fe:"",financas:"",autocontrole:""},
@@ -925,6 +1016,16 @@ function normalize(st){
     if(hs){hs.h75=true;if(hs.min75==null)hs.min75=3;if(hs.min75w==null)hs.min75w=3}
     st.mig.est75=true;
   }
+  if(!st.mig.foco1){
+    var AC=st.habits.autocontrole=st.habits.autocontrole||[];
+    var t1=new Date(),sd1=(st.startDate||"").split("-"),fN1=sd1.length===3?Math.round((new Date(t1.getFullYear(),t1.getMonth(),t1.getDate())-new Date(+sd1[0],sd1[1]-1,+sd1[2]))/864e5)+1:1;
+    if(!AC.some(function(h){return h.id==="celquarto"}))AC.push({id:"celquarto",label:"Celular fora do quarto à noite",type:"check",fromN:Math.max(1,fN1)});
+    if(!AC.some(function(h){return h.id==="feedlimpo"}))AC.push({id:"feedlimpo",label:"Sem conteúdo sensual nas redes",type:"check",fromN:Math.max(1,fN1)});
+    st.mig.foco1=true;
+  }
+  st.foco=st.foco||{};if(!st.foco.setup||typeof st.foco.setup!=="object")st.foco.setup={};
+  if(!Array.isArray(st.foco.planos))st.foco.planos=FOCO_PLANOS.slice();
+  if(!Array.isArray(st.foco.log))st.foco.log=[];
   if(!st.c75||!st.c75.start)st.c75={start:st.startDate};
   if(!Array.isArray(st.qmat)||!st.qmat.length)st.qmat=QMAT_DEF.map(function(x){return {id:x[0],name:x[1],peso:x[2],meta:x[3],on:true}});
   st.conc=st.conc||d.conc;["cov","sims","disc"].forEach(function(k){if(!Array.isArray(st.conc[k]))st.conc[k]=[]});
@@ -1188,6 +1289,7 @@ function renderDay(){
       }
       card.appendChild(row);
     });
+    if(a.id==="autocontrole")card.appendChild(el("p",{class:"small",style:"margin:8px 0 2px"},"<button type='button' class='linkbtn' data-go='foco'>Abrir Foco mental: timer, gatilhos e guia</button>"));
     box.appendChild(card);
   });
   var note=document.getElementById("dayNote");note.value=dd.note||"";note.disabled=n>tn;
@@ -1647,12 +1749,13 @@ function openView(v,tab){
   if(v==="concurso")renderConc();
   if(v==="ajustes")renderSettings();
   if(v==="videos")renderVLib();
+  if(v==="foco")renderFoco();
   if(v==="busca")setTimeout(function(){var i=document.getElementById("srchIn");i.focus();doSearch()},50);
   window.scrollTo(0,0);
 }
 document.querySelectorAll("nav.tabs button").forEach(function(b){b.addEventListener("click",function(){openView(b.dataset.tab)})});
 document.addEventListener("click",function(e){var g=e.target.closest("[data-go]");if(!g)return;var v=g.getAttribute("data-go");
-  if(v==="metas"||v==="revisoes"||v==="ajustes"||v==="videos")openView(v,"mais");else openView(v)});
+  if(v==="metas"||v==="revisoes"||v==="ajustes"||v==="videos"||v==="foco")openView(v,"mais");else openView(v)});
 document.getElementById("prev").addEventListener("click",function(){if(sel>1){sel--;renderDay()}});
 document.getElementById("next").addEventListener("click",function(){if(sel<lastDay()){sel++;renderDay()}});
 document.getElementById("goToday").addEventListener("click",function(){sel=Math.min(Math.max(todayNum(),1),lastDay());renderDay()});
@@ -1702,7 +1805,7 @@ document.getElementById("dlJson").addEventListener("click",function(){
   msg("Backup baixado. Guarde o arquivo na pasta Downloads ou no Drive.");
 });
 function showTab(t){
-  if(t==="metas"||t==="revisoes"||t==="ajustes"){openView(t,"mais");return}
+  if(t==="metas"||t==="revisoes"||t==="ajustes"||t==="foco"){openView(t,"mais");return}
   var b=document.querySelector('nav.tabs button[data-tab="'+t+'"]');if(b)b.click()}
 function firstRun(){
   var seen=null;try{seen=localStorage.getItem(LS+"-first")}catch(e){}
@@ -2103,7 +2206,7 @@ function renderVLib(){var g={},o=["Calistenia","Core","Corrida","Corda","Mobilid
 function nrm(t){return String(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase()}
 function snip(t,q){var n=nrm(t),i=n.indexOf(q);if(i<0)return esc(t.slice(0,120));var a=Math.max(0,i-40),b=Math.min(t.length,i+q.length+80);
   return (a>0?"…":"")+esc(t.slice(a,i))+"<mark>"+esc(t.slice(i,i+q.length))+"</mark>"+esc(t.slice(i+q.length,b))+(b<t.length?"…":"")}
-var SFUN=[["Backup dos dados","ajustes","baixar backup importar exportar dados"],["Cobertura do edital","concurso","edital porcentagem cobertura"],["Simulados","concurso","simulado nota"],["Discursivas","concurso","discursiva redação"],["Marcos até a prova","concurso","marcos prazos férias inscrição"],["Revisão semanal","revisoes","revisão semana perguntas"],["Metas e rotina-base","metas","rotina horário metas medições"],["Plano de treinos","metas","treino plano progressão fases semana leve"],["Vídeos dos treinos","videos","vídeo youtube exercício"],["Ajustes: hábitos e datas","ajustes","hábito data início"]];
+var SFUN=[["Backup dos dados","ajustes","baixar backup importar exportar dados"],["Cobertura do edital","concurso","edital porcentagem cobertura"],["Simulados","concurso","simulado nota"],["Discursivas","concurso","discursiva redação"],["Marcos até a prova","concurso","marcos prazos férias inscrição"],["Revisão semanal","revisoes","revisão semana perguntas"],["Metas e rotina-base","metas","rotina horário metas medições"],["Plano de treinos","metas","treino plano progressão fases semana leve"],["Vídeos dos treinos","videos","vídeo youtube exercício"],["Ajustes: hábitos e datas","ajustes","hábito data início"],["Foco mental","foco","foco mental vontade gatilho timer bloqueador ambiente plano autocontrole pornografia guia"]];
 function doSearch(){
   var raw=document.getElementById("srchIn").value.trim(),q=nrm(raw),ul=document.getElementById("srchRes"),info=document.getElementById("srchInfo");
   if(q.length<2){ul.innerHTML="";info.textContent="Busca em notas do dia, metas da Família Aprovada, revisões, discursivas, hábitos, treinos, vídeos, rotina e funções do app.";return}
@@ -2132,7 +2235,98 @@ document.getElementById("btnSearch").addEventListener("click",function(){openVie
 document.getElementById("srchRes").addEventListener("click",function(e){var b=e.target.closest("[data-sres]");if(!b)return;var r=this._r[+b.getAttribute("data-sres")];if(!r)return;var a=r.act.split(":");
   if(a[0]==="day"){sel=Math.min(Math.max(+a[1],1),lastDay());openView("dia")}
   else if(a[0]==="vid")openVid(a[1]);
-  else if(a[0]==="view"){var v=a[1];if(v==="metas"||v==="revisoes"||v==="ajustes"||v==="videos")openView(v,"mais");else openView(v)}});
+  else if(a[0]==="view"){var v=a[1];if(v==="metas"||v==="revisoes"||v==="ajustes"||v==="videos"||v==="foco")openView(v,"mais");else openView(v)}});
+// ---------- foco mental ----------
+function FC(){if(!S.foco)S.foco={setup:{},planos:FOCO_PLANOS.slice(),log:[]};var f=S.foco;f.setup=f.setup||{};f.planos=f.planos||[];f.log=f.log||[];return f}
+function fcStreak(id){var tn=Math.min(todayNum(),100);if(tn<1)return {cur:0,best:0};
+  var c=function(j){var x=S.days[j];return !!(x&&x.c&&x.c[id])};
+  var cur=0,st=c(tn)?tn:tn-1;for(var j=st;j>=1;j--){if(c(j))cur++;else break}
+  var best=0,run=0;for(var k=1;k<=tn;k++){if(c(k)){run++;if(run>best)best=run}else run=0}
+  return {cur:cur,best:best}}
+var URGE_KEY=LS+"-urge",urgeMem=null,urgeT=null;
+function urgeEnd(){var v=urgeMem;try{var r=localStorage.getItem(URGE_KEY);if(r!==null)v=+r||null}catch(e){}return v}
+function urgeSet(v){urgeMem=v;try{if(v)localStorage.setItem(URGE_KEY,String(v));else localStorage.removeItem(URGE_KEY)}catch(e){}}
+function fcOpts(sel){return FOCO_TRIG.map(function(t){return "<option"+(t===sel?" selected":"")+">"+esc(t)+"</option>"}).join("")}
+function fcTime(t){var d=new Date(t);return fmtShort(d)+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
+function fcLocalNow(){var d=new Date();return ymd(d)+"T"+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
+function fcAddLog(o){o.t=o.t||Date.now();FC().log.push(o);touch()}
+function renderFoco(){renderFcStats();renderUrge();renderFcPlanos();renderFcForm();renderFcResumo();renderFcSetup();renderFcGuia()}
+function renderFcStats(){
+  var p=fcStreak("porno"),m=fcStreak("masturb"),L=FC().log,w=L.filter(function(x){return x.r==="venci"}).length;
+  document.getElementById("fcStats").innerHTML=
+    "<div class='stat'><b>"+p.cur+"</b><span>dias seguidos sem pornografia · melhor "+p.best+"</span></div>"+
+    "<div class='stat'><b>"+m.cur+"</b><span>dias seguidos sem masturbação · melhor "+m.best+"</span></div>"+
+    "<div class='stat'><b>"+w+(L.length?"<small style='font-size:.5em;color:var(--muted)'>/"+L.length+"</small>":"")+"</b><span>vontades vencidas</span></div>";
+}
+function renderUrge(){
+  var box=document.getElementById("fcUrge"),end=urgeEnd();clearInterval(urgeT);
+  if(!end){box.className="urge";
+    box.innerHTML="<div><b>Bateu vontade agora?</b><p class='small' style='margin:2px 0 0'>Uma vontade forte costuma passar em 10 a 20 minutos se você não alimentar. Inicie o timer e siga um dos seus planos.</p></div><button type='button' class='btn' id='fcUrgeGo'>Iniciar timer de 15 min</button>";return}
+  var li=function(x){return "<li>"+esc(x)+"</li>"},pl=FC().planos.filter(function(x){return x&&x.trim()});
+  box.className="urge on";
+  box.innerHTML="<div class='timer' id='fcUrgeT'>15:00</div><p class='hint' id='fcUrgeH'>Não brigue com o pensamento: perceba, nomeie (“é só um impulso”) e leve a atenção para algo físico. Ele passa.</p>"+
+    (pl.length?"<h4>Seus planos</h4><ul class='planlist'>"+pl.map(li).join("")+"</ul>":"")+
+    "<h4>Faça uma destas agora</h4><ul class='planlist'>"+FOCO_REDIR.map(li).join("")+"</ul>"+
+    "<div class='field'><label for='fcUrgeG'>O que provocou?</label><select id='fcUrgeG'>"+fcOpts()+"</select></div>"+
+    "<div class='row' style='margin-top:12px'><button type='button' class='btn' id='fcUrgeWin'>Passou, venci</button><button type='button' class='btn ghost' id='fcUrgeLost'>Recaí</button><button type='button' class='btn ghost' id='fcUrgeX'>Cancelar</button></div>";
+  var tick=function(){var t=document.getElementById("fcUrgeT");if(!t){clearInterval(urgeT);return}
+    var s=Math.max(0,Math.round((end-Date.now())/1000));
+    if(s===0){t.textContent="Venceu";t.classList.add("done");document.getElementById("fcUrgeH").textContent="15 minutos passados. Registre como foi e volte para o que estava fazendo.";clearInterval(urgeT);return}
+    t.textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
+  tick();urgeT=setInterval(tick,1000);
+}
+function renderFcPlanos(){
+  var P=FC().planos,h=P.map(function(p,i){return "<div class='fcplan'><input data-pi='"+i+"' value='"+esc(p).replace(/'/g,"&#39;")+"' aria-label='Plano "+(i+1)+"'><button type='button' data-pdel='"+i+"' aria-label='Apagar plano'>×</button></div>"}).join("");
+  document.getElementById("fcPlanos").innerHTML=(h||"<p class='small' style='margin:0'>Nenhum plano ainda.</p>")+"<div class='row' style='margin-top:10px'><button type='button' class='btn ghost' id='fcPAdd'>+ Adicionar plano</button></div>";
+}
+function renderFcForm(){
+  var g=document.getElementById("fcG");if(!g.options.length)g.innerHTML=fcOpts();
+  document.getElementById("fcQ").value=fcLocalNow();
+}
+function renderFcResumo(){
+  var L=FC().log,box=document.getElementById("fcResumo");
+  if(!L.length){box.innerHTML="<p class='small' style='margin:0'>Ainda sem registros. Use o timer ou o formulário quando a vontade vier; em uma semana os padrões aparecem.</p>";return}
+  var w=L.filter(function(x){return x.r==="venci"}).length,cg={},cp={"Madrugada (0–5h)":0,"Manhã (6–11h)":0,"Tarde (12–17h)":0,"Noite (18–23h)":0},pk=Object.keys(cp);
+  L.forEach(function(x){cg[x.g||"Outro"]=(cg[x.g||"Outro"]||0)+1;var hr=new Date(x.t).getHours();cp[pk[hr<6?0:hr<12?1:hr<18?2:3]]++});
+  var bars=function(o,lim){var ks=Object.keys(o).filter(function(k){return o[k]>0}).sort(function(a,b){return o[b]-o[a]});if(lim)ks=ks.slice(0,lim);var mx=ks.length?o[ks[0]]:1;
+    return ks.map(function(k){return "<div class='fcbar'><span>"+esc(k)+"</span><div class='bar'><span style='width:"+Math.round(o[k]/mx*100)+"%'></span></div><b>"+o[k]+"</b></div>"}).join("")};
+  var last=L.map(function(x,i){return {x:x,i:i}}).sort(function(a,b){return b.x.t-a.x.t}).slice(0,10);
+  box.innerHTML="<p style='margin:0 0 4px'><b>"+w+" de "+L.length+"</b> vontades vencidas ("+Math.round(w/L.length*100)+"%).</p>"+
+    "<div class='fcsub'>Gatilhos mais comuns</div>"+bars(cg,5)+
+    "<div class='fcsub'>Horários</div>"+bars(cp)+
+    "<div class='fcsub'>Últimos registros</div><ul class='clist fclog'>"+last.map(function(o){var x=o.x;
+      return "<li><div>"+fcTime(x.t)+" · "+esc(x.g||"Outro")+(x.i?" · intensidade "+x.i:"")+"<span class='fctag "+(x.r==="venci"?"ok'>venci":"no'>recaí")+"</span>"+(x.f?"<small>"+esc(x.f)+"</small>":"")+"</div><button type='button' data-fdel='"+o.i+"' aria-label='Apagar registro'>×</button></li>"}).join("")+"</ul>"+
+    (L.some(function(x){return x.r!=="venci"})?"<p class='small' style='margin:10px 0 0'>Recaída é dado: veja o gatilho e o horário, ajuste o ambiente ou um plano e siga.</p>":"");
+}
+function renderFcSetup(){
+  var st=FC().setup,done=FOCO_SETUP.filter(function(x){return st[x[0]]}).length;
+  document.getElementById("fcSetup").innerHTML=
+    "<div class='row' style='margin-bottom:6px'><div class='qbar"+(done===FOCO_SETUP.length?" ok":"")+"' style='flex:1'><span style='width:"+Math.round(done/FOCO_SETUP.length*100)+"%'></span></div><span class='small'>"+done+" de "+FOCO_SETUP.length+"</span></div>"+
+    FOCO_SETUP.map(function(x){return "<div class='mk"+(st[x[0]]?" done":"")+"'><input type='checkbox' id='fcs_"+x[0]+"' data-fs='"+x[0]+"'"+(st[x[0]]?" checked":"")+"><label for='fcs_"+x[0]+"'>"+esc(x[1])+(x[2]?"<small>"+esc(x[2])+"</small>":"")+"</label></div>"}).join("");
+}
+function renderFcGuia(){
+  var b=document.getElementById("fcGuia");if(b.children.length)return;
+  b.innerHTML=FOCO_GUIA.map(function(g,i){return "<details class='week'><summary><b>"+(i+1)+". "+esc(g[0])+"</b><span>›</span></summary><div class='body'><p>"+esc(g[1])+"</p></div></details>"}).join("")+
+    "<p class='small' style='margin:10px 0 0'><b>O que esperar:</b> as 2 a 4 primeiras semanas costumam ser as mais difíceis. Com o ambiente limpo e os novos hábitos, a frequência e a força dos pensamentos tendem a cair bastante, e o foco melhora.</p>";
+}
+(function(){
+  var v=document.getElementById("v-foco");
+  v.addEventListener("click",function(e){var t=e.target,id=t.id;
+    if(id==="fcUrgeGo"){urgeSet(Date.now()+15*60e3);renderUrge();return}
+    if(id==="fcUrgeWin"||id==="fcUrgeLost"){var g=document.getElementById("fcUrgeG");fcAddLog({g:g?g.value:"Outro",r:id==="fcUrgeWin"?"venci":"recai",f:"Timer de 15 min"});urgeSet(null);renderFoco();return}
+    if(id==="fcUrgeX"){urgeSet(null);renderUrge();return}
+    if(id==="fcPAdd"){FC().planos.push("Se …, então …");touch();renderFcPlanos();var ins=document.querySelectorAll("#fcPlanos input[data-pi]");if(ins.length){var last=ins[ins.length-1];last.focus();last.select()}return}
+    if(id==="fcAdd"){var q=document.getElementById("fcQ").value,tt=q?new Date(q).getTime():Date.now();if(!isFinite(tt))tt=Date.now();
+      fcAddLog({t:tt,g:document.getElementById("fcG").value,i:+document.getElementById("fcI").value,r:document.getElementById("fcR").value,f:document.getElementById("fcO").value.trim()});
+      document.getElementById("fcO").value="";document.getElementById("fcMsg").textContent="Registrado.";setTimeout(function(){var m=document.getElementById("fcMsg");if(m)m.textContent=""},2500);
+      renderFcStats();renderFcResumo();renderFcForm();return}
+    var pd=t.closest("[data-pdel]");if(pd){FC().planos.splice(+pd.getAttribute("data-pdel"),1);touch();renderFcPlanos();return}
+    var fd=t.closest("[data-fdel]");if(fd){if(!confirm("Apagar este registro?"))return;FC().log.splice(+fd.getAttribute("data-fdel"),1);touch();renderFcStats();renderFcResumo();return}
+  });
+  v.addEventListener("input",function(e){var t=e.target;if(t.hasAttribute("data-pi")){FC().planos[+t.getAttribute("data-pi")]=t.value;touch()}});
+  v.addEventListener("change",function(e){var t=e.target;if(t.hasAttribute("data-fs")){FC().setup[t.getAttribute("data-fs")]=t.checked;touch();renderFcSetup()}});
+  document.addEventListener("click",function(e){if(e.target.closest("[data-urge]")){if(!urgeEnd())urgeSet(Date.now()+15*60e3);renderUrge();document.getElementById("fcUrge").scrollIntoView({block:"start"})}});
+})();
 faBind("faNow",function(){return todayNum()});
 faBind("faDay",function(){return sel});
 renderAll();
