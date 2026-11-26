@@ -1,6 +1,6 @@
 // Funciona offline: guarda o app no celular e usa a cópia guardada sem internet.
 // Também recebe os avisos diários e monta o texto com o que ainda falta no dia.
-const VERSION = "v7-2026-11-05";
+const VERSION = "v8-2026-11-26";
 const APP = "app-" + VERSION;
 const FONTS = "fonts-v1";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-maskable-512.png"];
@@ -67,8 +67,18 @@ function ctx(S) {
 }
 function allHabits(S) { const H = S.habits || {}; let r = []; Object.keys(H).forEach(k => { r = r.concat(H[k] || []); }); return r; }
 function findH(S, id) { return allHabits(S).filter(h => h.id === id)[0]; }
-function tgt(h, C) { return (C.we && h.targetWeekend) ? +h.targetWeekend : +h.target; }
-function active(h, C) { return !h.from75 || C.n >= C.s75; }
+function tgt(h, C) {
+  if (h.prevT && C.n <= h.prevT.u) return (C.we && h.prevT.tw) ? +h.prevT.tw : +h.prevT.t;
+  if (h.tdow && C.n >= (h.tdowFrom || 1) && h.tdow[C.dow] != null && h.tdow[C.dow] !== "") return +h.tdow[C.dow];
+  return (C.we && h.targetWeekend) ? +h.targetWeekend : +h.target;
+}
+function active(h, C) {
+  if (h.from75 && C.n < C.s75) return false;
+  if (h.fromN && C.n < h.fromN) return false;
+  if (h.untilN != null && C.n > h.untilN) return false;
+  if (h.dows && C.n >= (h.dowsFrom || 1) && h.dows.indexOf(C.dow) < 0) return false;
+  return true;
+}
 function pending(h, C) {
   if (!h || !active(h, C) || h.type === "money") return false;
   const v = C.v[h.id];
@@ -87,12 +97,14 @@ function fail75(h, C) {
   return pending(h, C);
 }
 function short(label) { return String(label || "").split(":")[0].split("(")[0].trim(); }
-const TREINO = { 1: "Calistenia A", 2: "Corrida intervalada", 3: "Calistenia B", 4: "Corda intervalada", 5: "Calistenia C", 6: "Corda técnica", 0: "Corrida do domingo" };
+const TREINO = { 2: ["🏃 Treino: corrida de qualidade", "40–45 min. Aquecimento de 10 min antes dos tiros. Ainda escuro: colete refletivo e lanterna."],
+  4: ["💪 Treino: força + corrida leve", "45–50 min: circuito de força e 10–15 min de corrida leve no fim."],
+  0: ["🏃 Treino: longão", "60–75 min em ritmo de conversa. Água antes e depois."] };
 
 function compose(slot, S) {
   const app = "Toque para abrir o app.";
   if (!S || !S.startDate) {
-    const G = { acordar: ["⏰ Bom dia", "Água e nada de celular."], fechar: ["🔥 Fechar o dia", "Registre o que falta no app."] };
+    const G = { acordar: ["⏰ Bom dia", "Luz forte, água e 5 min de movimento."], fechar: ["🔥 Fechar o dia", "Registre o que falta no app."] };
     const g = G[slot] || ["100 dias", "Hora de mais uma etapa da rotina."];
     return { title: g[0], body: g[1] + " " + app };
   }
@@ -100,37 +112,43 @@ function compose(slot, S) {
   if (C.n < 1) return { title: "O desafio ainda não começou", body: "Ajuste a data de início em Mais → Ajustes." };
   switch (slot) {
     case "acordar":
-      return { title: "⏰ Dia " + C.n + " de 100. Bom dia", body: "Água e nada de celular." + (P("oracao") ? " Depois, 15 min de oração e leitura sagrada." : "") };
-    case "treino":
-      if (!P("treino")) return { title: "✓ Treino já marcado", body: P("foto") ? "Só falta a foto de progresso." : "Siga para o estudo." };
-      return { title: "🏃 " + (TREINO[C.dow] || "Treino do dia") + ": 30 min", body: "Depois, foto de progresso. Marque no app ao terminar." + (C.dow === 2 ? " Corrida no escuro: colete refletivo e lanterna." : "") };
+      return { title: "⏰ Dia " + C.n + ". Ativação", body: "Luz mais forte da casa, copo d'água, Alpha GPC e 5 min de movimento. Celular longe. Comece a estudar até 02h45." };
     case "estudo":
-      return { title: "📚 Estudo: teoria nova", body: "Celular em outro cômodo. Abra o app para cronometrar o bloco." };
+      return { title: "📚 Estudo principal até 05h30", body: (P("engrenar") ? "Comece pela tarefa que você deixou definida ontem. " : "") + "Pausa de 5 min a cada 50–60 min." };
+    case "treino": {
+      if (!P("treino")) return { title: "✓ Treino já marcado", body: "Banho, refeição e bom dia de trabalho." };
+      const t = TREINO[C.dow] || ["🏃 Treino do dia", "Marque no app ao terminar."];
+      return { title: t[0], body: t[1] + " Dia apertado: corte o treino, nunca o sono." };
+    }
     case "questoes": {
       const qp = C.d.qp || [], qr = C.d.qr || {}, mats = S.qmat || [];
       const nm = id => { const m = mats.filter(x => x.id === id)[0]; return m ? String(m.name).split(" (")[0].split(" e ")[0] : id; };
       const tot = qp.reduce((a, x) => a + (+x.q || 0), 0) || tgt(H("quest") || {}, C) || 30;
       const feitas = Object.keys(qr).reduce((a, k) => a + (+(qr[k].q || 0)), 0);
-      if (feitas >= tot) return { title: "✓ Questões do dia feitas", body: feitas + " questões registradas." };
+      const pre = C.dow === 6 ? "Estudo extra: bateria de questões. " : "Estudo extra: questões, lei seca ou flashcards. ";
+      if (feitas >= tot) return { title: "✓ Questões do dia feitas", body: pre + feitas + " questões registradas." };
       const lista = qp.length ? qp.map(x => nm(x.s) + " " + x.q).join(" · ") : "Abra o app para ver o roteiro do dia.";
-      return { title: "🎯 " + (feitas ? "Faltam " + (tot - feitas) + " questões" : tot + " questões de hoje"), body: lista };
+      return { title: "🎯 " + (feitas ? "Faltam " + (tot - feitas) + " questões" : tot + " questões de hoje"), body: pre + lista };
     }
     case "agua":
       if (!P("agua")) return { title: "✓ Água do dia marcada", body: "Siga firme." };
-      return { title: "💧 Água: 1ª garrafa até as 10h", body: "Meta do dia: 3,8 L em 4 garrafas." };
-    case "almoco":
-      return { title: "🍽️ Fim do jejum", body: "Almoço do plano." + (P("leitura") ? " Depois, 10 páginas e 20 min de flashcards." : " Leitura já feita ✓") + (P("jejum") ? " Marque o jejum no app." : "") };
-    case "leitura":
-      if (!P("leitura")) return { title: "✓ Leitura já feita", body: "10 páginas registradas." };
-      return { title: "📖 10 páginas", body: "Leitura do dia. Registre no app." };
+      return { title: "💧 Água", body: "Meta: 2,5 a 3 L no dia. Garrafa sempre por perto." };
+    case "almoco": {
+      const tr = C.dow === 0 || C.dow === 2 || C.dow === 4;
+      return { title: "🍽️ Almoço e suplementos", body: "Proteína, arroz, feijão e salada, sem exagero. Q10, vitamina D+K e creatina" + (tr ? "" : " + farinha de beterraba") + "." + (C.we ? "" : " Depois, 30 min de questões curtas ou flashcards.") };
+    }
+    case "tarde":
+      return C.dow === 6
+        ? { title: "📝 Simulado ou bateria de questões", body: "14h às 17h. Matérias de maior peso, no estilo da banca." }
+        : { title: "📚 Estudo da tarde", body: "Caderno de Erros, revisões D+7/D+30 ou discursiva. Depois, tempo livre sem culpa." };
     case "revisao":
-      return { title: "📚 Revisões e Caderno de Erros", body: (P("erros") ? "Reincidências primeiro, depois quase-erros." : "Caderno de Erros já marcado ✓") + " Nada de matéria nova." };
+      return { title: "📚 Caderno de Erros e véspera", body: "Magnésio. " + (P("erros") ? "30 min de Caderno de Erros, reincidências primeiro. " : "Caderno de Erros já marcado ✓ ") + (P("tarefa") ? "Depois, defina a 1ª tarefa de amanhã." : "") };
     case "semanal":
-      return { title: "🗓️ Revisão da semana", body: "Revisão semanal, cobertura do edital e backup. Depois, cardápio e marmitas." };
+      return { title: "🗓️ Revisão da semana", body: "Magnésio. 15 min: horas, acertos por matéria e o que ajustar. Deixe a 1ª tarefa de segunda definida." };
     case "fechar": default: {
       const pend = allHabits(S).filter(h => pending(h, C));
       if (pend.length) return { title: "🔥 Faltam " + pend.length + " itens para fechar o dia", body: pend.slice(0, 4).map(h => short(h.label)).join(" · ") + (pend.length > 4 ? "…" : "") };
-      return { title: "✓ Dia " + C.n + " vencido", body: "Tudo registrado. Durma às 20h." };
+      return { title: "✓ Dia " + C.n + " vencido", body: "Tudo registrado. Telas desligadas e cama às 19h30." };
     }
   }
 }

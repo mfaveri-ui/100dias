@@ -414,9 +414,9 @@ button.vid{background:none;cursor:pointer;font-family:inherit}
 
   <section class="view" id="v-mais" hidden>
     <div class="morelist">
-      <button type="button" class="morebtn" data-go="metas"><b>Metas e rotina</b><span>Metas dos 100 dias, medições e a rotina-base</span></button>
+      <button type="button" class="morebtn" data-go="metas"><b>Metas e rotina</b><span>Metas, medições, plano de treinos e a rotina-base</span></button>
       <button type="button" class="morebtn" data-go="revisoes"><b>Revisões semanais</b><span>Três perguntas a cada 7 dias</span></button>
-      <button type="button" class="morebtn" data-go="videos"><b>Vídeos dos treinos</b><span>Execução de cada exercício, corrida, corda e mobilidade</span></button>
+      <button type="button" class="morebtn" data-go="videos"><b>Vídeos dos treinos</b><span>Execução dos exercícios de força, corrida e mobilidade</span></button>
       <button type="button" class="morebtn" data-go="foco"><b>Foco mental</b><span>Timer para quando a vontade vier, gatilhos, ambiente e o guia</span></button>
       <button type="button" class="morebtn" data-go="ajustes"><b>Ajustes e backup</b><span>Datas, hábitos, importar e baixar seus dados</span></button>
     </div>
@@ -577,7 +577,7 @@ button.vid{background:none;cursor:pointer;font-family:inherit}
     <div class="tablewrap"><table class="bench" id="bench"></table></div>
 
     <h2 class="section-title">Plano de treinos</h2>
-    <p class="lead">Um treino por dia, 30 minutos, logo depois da fé: corrida 2 vezes por semana, calistenia 3 e corda 2. Cada exercício tem um vídeo de execução no YouTube. Perna pesada nunca na véspera de treino forte de corrida. O estudo para o concurso vem primeiro.</p>
+    <p class="lead">Três treinos por semana, às 05h30, depois do estudo principal: corrida de qualidade na terça, força + corrida leve na quinta e longão no domingo. Nos outros dias, só 5 minutos de ativação ao acordar. O treino dá energia e sono bom; o estudo para o concurso vem primeiro.</p>
     <div class="tablewrap"><table class="bench" id="planWeek"></table></div>
     <h3 style="margin:22px 0 8px;font-size:1.05rem">Progressão</h3>
     <div class="tablewrap"><table class="bench" id="planPhases"></table></div>
@@ -585,7 +585,7 @@ button.vid{background:none;cursor:pointer;font-family:inherit}
     <ul class="planlist" id="planNotes"></ul>
 
     <h2 class="section-title">Rotina-base</h2>
-    <p class="lead">Ponto de partida montado em volta do turno no moinho. Ajuste à vontade; é o que você consulta quando o dia sair do trilho.</p>
+    <p class="lead">Rotina de novembro/2026: acordar às 02h30, estudo principal de madrugada, 3 treinos por semana e dormir às 19h30. Ajuste à vontade; é o que você consulta quando o dia sair do trilho.</p>
     <div class="field"><textarea id="routine" rows="16"></textarea></div>
   </section>
 
@@ -615,7 +615,7 @@ button.vid{background:none;cursor:pointer;font-family:inherit}
     <div id="habitEditor"></div>
 
     <h2 class="section-title">Notificações</h2>
-    <p class="lead">O app avisa nos horários da rotina e cobra só o que ainda falta no dia: treino, questões do roteiro, leitura, água e o fechamento às 19h30.</p>
+    <p class="lead">O app avisa nos horários da rotina e cobra só o que ainda falta no dia: ativação às 02h30, estudo principal, treino (ter, qui e dom) ou estudo extra às 05h30, água, almoço e suplementos, Caderno de Erros às 18h e o fechamento às 19h.</p>
     <div class="card" id="notifCard"></div>
 
     <h2 class="section-title">Dados</h2>
@@ -823,7 +823,7 @@ var ROUTINE_230="SEGUNDA A SEXTA (moinho 07h30–12h00 / 13h30–17h00)\n"+
 "14h30–16h30  Caderno de Erros e discursiva\n"+
 "17h00–18h00  Revisão semanal do desafio; cardápio, compras e marmitas\n"+
 "20h00  Dormir";
-var ROUTINE="SEGUNDA A SEXTA (moinho 07h30–12h00 / 13h30–17h00)\n"+
+var ROUTINE_OCT="SEGUNDA A SEXTA (moinho 07h30–12h00 / 13h30–17h00)\n"+
 "02h30  Acordar, água, sem celular\n"+
 "02h35–02h50  Fé: oração e leitura sagrada (15 min)\n"+
 "02h55–03h30  Treino do dia (30 min) + foto de progresso\n"+
@@ -851,7 +851,42 @@ var ROUTINE="SEGUNDA A SEXTA (moinho 07h30–12h00 / 13h30–17h00)\n"+
 "17h00–18h00  Revisão semanal do desafio; cardápio, compras e marmitas\n"+
 "20h00  Dormir";
 
+var ROUTINE="SEGUNDA A SEXTA (moinho 07h30–12h00 / 13h30–17h00)\n"+
+"02h30–02h40  Ativação: luz forte, água, Alpha GPC e 5 min de movimento. Celular longe\n"+
+"02h40–02h55  Revisão leve: flashcards ou Caderno de Erros (aquece o cérebro)\n"+
+"02h55–05h30  ESTUDO PRINCIPAL: teoria nova + questões difíceis (pausa a cada 50–60 min)\n"+
+"05h30–06h30  Seg, qua e sex: estudo extra (questões, lei seca ou flashcards)\n"+
+"             Ter: TREINO de qualidade · Qui: TREINO de força + corrida leve\n"+
+"06h30–07h30  Banho, refeição e deslocamento\n"+
+"12h00–13h30  Almoço + Q10, vitamina D+K e creatina + 30 min de estudo leve\n"+
+"17h00–18h00  Família e jantar (até 18h)\n"+
+"18h00–19h00  Magnésio + Caderno de Erros (30 min) + definir a 1ª tarefa de amanhã\n"+
+"19h00–19h30  Fechar o dia, desligar telas, celular fora do quarto\n"+
+"19h30  Dormir (7 h na cama)\n\n"+
+"SÁBADO (moinho até 12h00)\n"+
+"02h30–05h30  Igual aos dias úteis: ativação, revisão leve e estudo principal\n"+
+"05h30–06h30  Estudo extra: bateria de questões\n"+
+"12h00–14h00  Almoço, suplementos e descanso\n"+
+"14h00–17h00  Simulado ou bateria de questões\n"+
+"17h00–19h30  Jantar até 18h, Caderno de Erros, véspera e fechar o dia\n\n"+
+"DOMINGO\n"+
+"02h30–05h30  Ativação, revisão leve e estudo principal\n"+
+"05h30–06h45  TREINO: longão (60–75 min, ritmo de conversa)\n"+
+"06h45–12h00  Família e descanso\n"+
+"12h00–13h30  Almoço em família + suplementos\n"+
+"14h00–16h00  Estudo + Caderno de Erros; depois, tempo livre\n"+
+"18h00–19h00  Magnésio + revisão semanal (15 min) + planejar a semana\n"+
+"19h30  Dormir\n\n"+
+"REGRAS DE OURO\n"+
+"Sono de 7 h é inegociável: se dormir tarde, acorde mais tarde.\n"+
+"Mínimo de 30 min de estudo por dia, mesmo em dia ruim.\n"+
+"Doente = modo manutenção: dormir mais, só revisão, sem treino intenso, sem jejum.\n"+
+"Dia apertado: corte o treino; preserve o estudo e o sono.";
 function uid(){return "h"+Math.random().toString(36).slice(2,8)}
+// horas de estudo planejadas por dia da semana (0 = domingo), conforme a rotina de nov/2026
+var TDOW_HORAS={0:5.1,1:4.8,2:3.8,3:4.8,4:3.8,5:4.8,6:7.3};
+// hábitos da rotina atual; o resto fica só no histórico
+var KEEP_2611={sono:1,ativacao:1,treino:1,engrenar:1,horas:1,quest:1,erros:1,tarefa:1,agua:1,prato:1,cafe:1,jantar:1,supl:1,porno:1,masturb:1,celquarto:1,feedlimpo:1};
 var QMAT_DEF=[
   ["cont","Contabilidade Geral e Avançada",5,80],
   ["dtrib","Direito Tributário",5,80],
@@ -867,44 +902,36 @@ var QMAT_DEF=[
   ["ing","Inglês",1,70]];
 function defaults(){
   return {
-    v:1, updatedAt:0, mig:{redes2:true,c75:true,r4h:true,est75:true,t1:true,t30:true,h230:true,jj:true},
+    v:1, updatedAt:0, mig:{redes2:true,c75:true,r4h:true,est75:true,t1:true,t30:true,h230:true,jj:true,foco1:true,r2611:true},
     startDate:ymd(new Date()),
     c75:{start:ymd(new Date())},
     conc:{edital:"2026-12-15",prova:"2027-03-14",cov:[{d:"2026-10-01",p:12}],sims:[],disc:[],marcos:{}},
     savingsGoal:0,
     habits:{
       fisico:[
-        {id:"treino",label:"Treino do dia: 30 min de manhã",type:"check",h75:true},
-        {id:"mobil",label:"Mobilidade / alongamento (10 min)",type:"check"},
-        {id:"sono",label:"Dormi no horário (20h00 às 02h30)",type:"check"},
-        {id:"foto",label:"Foto de progresso",type:"check",h75:true,from75:true}
+        {id:"sono",label:"Dormi no horário (19h30 às 02h30)",type:"check"},
+        {id:"ativacao",label:"Ativação ao acordar: luz, água e 5 min de movimento",type:"check"},
+        {id:"treino",label:"Treino do dia (ter: qualidade · qui: força · dom: longão)",type:"check",dows:[0,2,4]}
       ],
       estudo:[
-        {id:"horas",label:"Horas líquidas de estudo",type:"num",unit:"h",target:3,targetWeekend:5,h75:true,min75:3,min75w:3},
+        {id:"engrenar",label:"Comecei a estudar até 02h45 (protocolo da manhã)",type:"check"},
+        {id:"horas",label:"Horas líquidas de estudo",type:"num",unit:"h",target:4.8,targetWeekend:7.3,tdow:TDOW_HORAS},
         {id:"quest",label:"Questões resolvidas (FGV/CEBRASPE)",type:"num",unit:"questões",target:30,targetWeekend:60},
-        {id:"erros",label:"Caderno de Erros em dia (D+1/D+3/D+7/D+30)",type:"check"}
+        {id:"erros",label:"Caderno de Erros em dia (30 min · D+1/D+3/D+7/D+30)",type:"check"},
+        {id:"tarefa",label:"Deixei a 1ª tarefa de amanhã definida e o material aberto",type:"check"}
       ],
       alimentacao:[
-        {id:"agua",label:"Água: 3,8 L no dia",type:"check",h75:true},
-        {id:"dieta75",label:"Plano alimentar 100%: sem refrigerante, doces, frituras ou refeição livre",type:"check",h75:true,from75:true},
-        {id:"jejum",label:"Jejum até 12h (só água, café preto ou chá sem açúcar)",type:"check"},
-        {id:"planej",label:"Refeições planejadas, sem fast-food ou delivery",type:"check"},
-        {id:"prato",label:"Proteína e vegetais nas refeições principais",type:"check"},
-        {id:"alcool",label:"Sem álcool",type:"check",h75:true}
+        {id:"agua",label:"Água: 2,5 a 3 L no dia",type:"check"},
+        {id:"prato",label:"Proteína em todas as refeições; almoço sem exagero",type:"check"},
+        {id:"cafe",label:"Café só até o almoço",type:"check"},
+        {id:"jantar",label:"Jantar até 18h",type:"check"},
+        {id:"supl",label:"Suplementos nos horários (Alpha GPC · almoço · magnésio)",type:"check"}
       ],
-      fe:[
-        {id:"oracao",label:"Oração e leitura sagrada (15 min)",type:"check",h75:true,from75:true},
-        {id:"leitura",label:"Leitura de não-ficção",type:"num",unit:"páginas",target:10,h75:true,from75:true}
-      ],
-      financas:[
-        {id:"gastos",label:"Registrei todos os gastos do dia",type:"check"},
-        {id:"impulso",label:"Nenhuma compra por impulso",type:"check"},
-        {id:"guardado",label:"Valor guardado hoje",type:"money",unit:"R$"}
-      ],
+      fe:[],
+      financas:[],
       autocontrole:[
         {id:"porno",label:"Sem pornografia",type:"check"},
         {id:"masturb",label:"Sem masturbação",type:"check"},
-        {id:"redes",label:"Redes sociais (minutos no dia)",type:"limit",unit:"min",target:15},
         {id:"celquarto",label:"Celular fora do quarto à noite",type:"check"},
         {id:"feedlimpo",label:"Sem conteúdo sensual nas redes",type:"check"}
       ]
@@ -912,25 +939,25 @@ function defaults(){
     goals:{fisico:"",estudo:"",alimentacao:"",fe:"",financas:"",autocontrole:""},
     bench:{},
     routine:ROUTINE,
+    foodOpt:"",
     days:{},
     reviews:{}
   };
 }
 var GOAL_HINT={
-  fisico:"Ex.: correr 10 km abaixo do meu tempo atual e treinar 5x por semana.",
+  fisico:"Ex.: 3 treinos por semana sem falhar e acordar às 02h30 com 7 h de sono.",
   estudo:"Ex.: fechar o ciclo do edital, 3.000 questões e média acima de 80% nos simulados.",
-  alimentacao:"Ex.: 90 dias com refeições planejadas e sem álcool.",
+  alimentacao:"Ex.: 2,5 L de água todo dia, jantar até 18h e suplementos sem falhar.",
   fe:"Ex.: ler Mateus, Marcos, Lucas e Atos 1–7 e terminar 3 livros de não-ficção.",
   financas:"Ex.: montar reserva de R$ X e zerar parcelas em aberto.",
-  autocontrole:"Ex.: completar os 100 dias sem pornografia, sem masturbação e com redes sociais em até 15 min por dia."
+  autocontrole:"Ex.: completar os 100 dias sem pornografia e sem masturbação, com o celular fora do quarto."
 };
 var BENCH_ROWS=[
   {id:"t5k",label:"Tempo em 5 km"},
   {id:"sim",label:"% de acerto em simulado"},
   {id:"horasSem",label:"Horas líquidas na última semana"},
   {id:"corpo",label:"Medida corporal (opcional)"},
-  {id:"reserva",label:"Reserva financeira"},
-  {id:"sensacao",label:"Energia / disposição (0–10)"}
+    {id:"sensacao",label:"Energia / disposição (0–10)"}
 ];
 
 // ---------- dates ----------
@@ -973,7 +1000,7 @@ function normalize(st){
     var idx=function(a,id){var i=-1;(H[a]||[]).forEach(function(h,j){if(h.id===id)i=j});return i};
     var tr=find("fisico","treino");
     if(tr){if(tr.label==="Treino do dia feito (corrida ou força)")tr.label=D.fisico[0].label;tr.h75=true}
-    if(!find("fisico","foto"))H.fisico.push(D.fisico.filter(function(h){return h.id==="foto"})[0]);
+    
     var ag=find("alimentacao","agua");
     if(ag){if(ag.label==="Meta de água do dia atingida")ag.label=D.alimentacao[0].label;ag.h75=true}
     if(!find("alimentacao","dieta75")){var i2=idx("alimentacao","agua");H.alimentacao.splice(i2>=0?i2+1:0,0,D.alimentacao[1])}
@@ -1023,6 +1050,30 @@ function normalize(st){
     if(!AC.some(function(h){return h.id==="feedlimpo"}))AC.push({id:"feedlimpo",label:"Sem conteúdo sensual nas redes",type:"check",fromN:Math.max(1,fN1)});
     st.mig.foco1=true;
   }
+  if(!st.mig.r2611){
+    // Nov/2026: rotina nova (acordar 02h30, 3 treinos por semana, protocolo da manhã, alimentação e suplementos).
+    // Hábitos fora da rotina param de contar a partir de hoje, mas o histórico deles fica guardado.
+    var t2=new Date(),sd2=(st.startDate||"").split("-"),N=sd2.length===3?Math.round((new Date(t2.getFullYear(),t2.getMonth(),t2.getDate())-new Date(+sd2[0],sd2[1]-1,+sd2[2]))/864e5)+1:1;N=Math.max(1,N);
+    var DH=d.habits,SH=st.habits,seen={};
+    AREAS.forEach(function(a){
+      var cur=(SH[a.id]||[]).filter(function(h){return h&&h.id});
+      cur.forEach(function(h){seen[h.id]=1;if(!KEEP_2611[h.id]){if(!h.untilN||h.untilN>N-1)h.untilN=N-1}});
+      var live=[];
+      (DH[a.id]||[]).forEach(function(nd){
+        var h=cur.filter(function(x){return x.id===nd.id})[0];
+        if(h){h.label=nd.label;delete h.untilN;delete h.h75;delete h.from75;
+          if(nd.id==="treino"){h.dows=[0,2,4];h.dowsFrom=N}
+          if(nd.id==="horas"){if(N>1)h.prevT={u:N-1,t:+h.target||0,tw:+h.targetWeekend||0};h.tdow=JSON.parse(JSON.stringify(TDOW_HORAS));h.tdowFrom=N;h.target=4.8;h.targetWeekend=7.3}
+        }else{h=JSON.parse(JSON.stringify(nd));h.fromN=N;if(h.dows)h.dowsFrom=N;if(h.tdow)h.tdowFrom=N}
+        live.push(h);
+      });
+      var old=cur.filter(function(h){return live.indexOf(h)<0});
+      SH[a.id]=live.concat(old);
+    });
+    st.routine=ROUTINE;
+    st.trStart=ymd(t2);
+    st.mig.r2611=true;st._migSave=true;
+  }
   st.foco=st.foco||{};if(!st.foco.setup||typeof st.foco.setup!=="object")st.foco.setup={};
   if(!Array.isArray(st.foco.planos))st.foco.planos=FOCO_PLANOS.slice();
   if(!Array.isArray(st.foco.log))st.foco.log=[];
@@ -1033,6 +1084,7 @@ function normalize(st){
   return st;
 }
 S=merge(defaults(),loadLocal()||{});
+if(S._migSave){delete S._migSave;if(loadLocal())saveLocal()}
 
 function setStatus(kind,txt){var el=document.getElementById("status");el.className="status "+kind;el.lastElementChild.textContent=txt}
 function touch(){
@@ -1086,9 +1138,12 @@ function connect(){
 // ---------- scoring ----------
 function dayData(n){return S.days[n]||{}}
 function ensureDay(n){if(!S.days[n])S.days[n]={c:{},v:{},note:""};var d=S.days[n];d.c=d.c||{};d.v=d.v||{};return d}
-function target(h,n){return (isWeekend(n)&&h.targetWeekend)?+h.targetWeekend:+h.target}
+function target(h,n){if(h.prevT&&n<=h.prevT.u)return (isWeekend(n)&&h.prevT.tw)?+h.prevT.tw:+h.prevT.t;if(h.tdow&&n>=(h.tdowFrom||1)){var x=h.tdow[dateOf(n).getDay()];if(x!=null&&x!=="")return +x}return (isWeekend(n)&&h.targetWeekend)?+h.targetWeekend:+h.target}
 function start75(){return Math.max(1,Math.round((parse(S.c75.start)-parse(S.startDate))/864e5)+1)}
-function active(h,n){return (!h.from75||n>=start75())&&(!h.fromN||n>=h.fromN)}
+function active(h,n){if(h.from75&&n<start75())return false;if(h.fromN&&n<h.fromN)return false;if(h.untilN!=null&&n>h.untilN)return false;if(h.dows&&n>=(h.dowsFrom||1)&&h.dows.indexOf(dateOf(n).getDay())<0)return false;return true}
+// hábito em uso hoje ou daqui para a frente (os aposentados ficam só no histórico)
+function live(h){return h&&(h.untilN==null||h.untilN>=todayNum())}
+function areaLive(a){return (S.habits[a.id]||[]).some(live)}
 function habitScore(h,n){
   if(!active(h,n))return null;
   var d=dayData(n);
@@ -1131,8 +1186,8 @@ function run75(){
   res.cur=cur;res.run=run;
   return res;
 }
-// ---------- plano de treinos ----------
-var WEEK={1:"calA",2:"int",3:"calB",4:"cordaI",5:"calC",6:"cordaT",0:"fart"};
+// ---------- plano de treinos (3 por semana) ----------
+var WEEK={0:"longao",1:"ativ",2:"qual",3:"ativ",4:"forca",5:"ativ",6:"ativ"};
 var VIDS={
  flexao:{id:"Azw6BZ8-wSM",t:"Como fazer a flexão de braço",c:"Projeto Calistenia",len:"5:55",g:"Calistenia"},
  flexdecl:{id:"bpjqDjXBv-M",t:"Flexão declinada",c:"Adrenalina Training",len:"0:25",g:"Calistenia"},
@@ -1156,9 +1211,6 @@ var VIDS={
  intervalado:{id:"mnbWdhuNcJI",t:"Treino de tiro ou intervalado: como fazer",c:"Corrida na Veia",len:"6:25",g:"Corrida"},
  fartlek:{id:"-KXQSW9mGG4",t:"Fartlek: o que é e como fazer",c:"RV Corrida de Rua",len:"5:49",g:"Corrida"},
  alongcorrida:{id:"5pQQR8YRPzY",t:"8 alongamentos pós-corrida",c:"Tiago Mecabo",len:"6:30",g:"Corrida"},
- cordatec:{id:"bB2BMeZTygg",t:"Pular corda para iniciantes: forma e erros",c:"PedroFelipeFit",len:"9:30",g:"Corda"},
- cordazero:{id:"i1NnSbOlMPI",t:"Pular corda do zero",c:"Priscilla Toledo",len:"10:47",g:"Corda"},
- cordatreino:{id:"5p-1Vu1MOS0",t:"Treino de 20 minutos pulando corda",c:"Paula Diniz",len:"20:28",g:"Corda"},
  aquecimento:{id:"oGaeSlWwnos",t:"Aquecimento de 5 minutos em casa",c:"Olena Starodubets",len:"6:40",g:"Mobilidade"},
  mobcorrida:{id:"OY1N4qaZdDw",t:"Mobilidade essencial para corrida",c:"Corrida na Veia",len:"9:16",g:"Mobilidade"}
 };
@@ -1166,79 +1218,62 @@ var EXV={"Flexão declinada":"flexdecl","Flexão":"flexao","Tríceps no banco":"
 function exVid(item){var k=Object.keys(EXV).sort(function(a,b){return b.length-a.length});for(var i=0;i<k.length;i++)if(item.indexOf(k[i])===0)return EXV[k[i]];return null}
 function vbtn(key,label){var v=VIDS[key];if(!v)return "";return "<button type='button' class='vid' data-vid='"+key+"' aria-label='Ver vídeo: "+esc(v.t)+"'>▶ "+esc(label||"vídeo")+"</button>"}
 function vthumb(key){var v=VIDS[key];if(!v)return "";return "<button type='button' class='vthumb' data-vid='"+key+"'><img src='https://i.ytimg.com/vi/"+v.id+"/mqdefault.jpg' alt='' loading='lazy' width='120' height='68'><span><b>"+esc(v.t)+"</b><small>"+esc(v.c)+" · "+esc(v.len)+"</small></span></button>"}
-var PH_NAMES=["Adaptação","Construção","Performance"];
-function trCd(n){return n-start75()+1}
+var PH_NAMES=["Base","Construção","Performance"];
+function trStartN(){return S.trStart?numOfDate(parse(S.trStart)):start75()}
+function trCd(n){return n-trStartN()+1}
 function trPhase(cd){return cd<=21?0:cd<=49?1:2}
 function isDeload(cd){return (cd>=29&&cd<=35)||(cd>=57&&cd<=63)}
 function session(key,cd){
-  var f=trPhase(cd),dl=isDeload(cd),wk=Math.floor((cd-1)/7),vol=dl?2:[3,4,4][f],b1=dl?6:[8,10,12][f],b2=dl?8:[10,15,18][f];
+  if(cd<1)cd=1;
+  var f=trPhase(cd),dl=isDeload(cd),wk=Math.floor((cd-1)/7);
   var RUNV=["educativos","alongcorrida"];
-  var easy={t:"Rodagem leve",light:true,d:"30 min leves no lugar do treino forte (semana leve).",vids:RUNV};
-  var circ=function(){return "Aqueça 5 min com mobilidade. Faça os 5 exercícios em circuito, "+vol+" voltas, com 1 min de pausa entre as voltas"+(f===2&&!dl?" e descida lenta de 3 s em cada repetição":"")+". Feche com alongamento até 30 min."};
-  var CALV=["aquecimento"];
-  var CORV=["cordatec","cordatreino"];
   switch(key){
-    case "rod":return {t:"Rodagem leve",light:true,d:"30 min em ritmo de conversa.",vids:RUNV};
-    case "int":
-      if(dl)return easy;
-      return {t:"Corrida: intervalado",d:[
-        "8 min de trote, 5×400 m forte com 2 min de trote entre os tiros, trote até completar 30 min.",
-        wk%2?"8 min de trote, 4×800 m forte com 2 min de trote entre os tiros, trote até completar 30 min.":"8 min de trote, 6×400 m forte com 1 min e 30 s de trote entre os tiros, trote até completar 30 min.",
-        wk%2?"8 min de trote, 3×1 km forte com 2 min de trote entre os tiros, trote até completar 30 min.":"8 min de trote, 5×600 m forte com 1 min e 30 s de trote entre os tiros, trote até completar 30 min."][f]+" Às 03h ainda é noite: rua iluminada, colete refletivo e lanterna. Sem rota segura, troque por corda intervalada.",
-        vids:["intervalado"].concat(RUNV)};
-    case "fart":
-      if(dl)return {t:"Corrida: rodagem leve",light:true,d:"30 min leves, já com a luz do dia (semana leve).",vids:RUNV};
-      return [
-        {t:"Corrida: fartlek",d:"8 min de trote, 5× (1 min forte + 1 min e 30 s leve), trote até completar 30 min.",vids:["fartlek"].concat(RUNV)},
-        {t:"Corrida: ritmo",d:"8 min de trote, 12 min contínuos no ritmo de 10 km, trote até completar 30 min.",vids:RUNV},
-        {t:"Corrida: ritmo",d:"8 min de trote, 15 a 18 min contínuos no ritmo de meia maratona, trote até completar 30 min.",vids:RUNV}][f];
-    case "calA":
-      return {t:"Calistenia A: empurrar + core",light:dl,d:circ(),vids:CALV,
-        list:[(f>=1&&!dl?"Flexão declinada":"Flexão")+", 8 a 15","Tríceps no banco, 10 a 15","Pike push-up, 6 a 10","Prancha, 40 s","Hollow hold, 25 s"]};
-    case "calB":
-      return {t:"Calistenia B: puxar + pernas",light:dl,d:circ(),vids:CALV,
-        list:["Barra fixa ou remada invertida, 5 a 10"+(f>=1&&!dl?" (sem barra completa: negativas, descendo em 5 s)":""),"Agachamento búlgaro, 8 a 12 por perna","Afundo, 10 por perna","Ponte de glúteo unilateral, 12 por perna","Panturrilha em um pé, 15 por perna"]};
-    case "calC":
-      return {t:"Calistenia C: circuito corpo todo",light:dl,d:"Aqueça 4 min. Faça os 5 exercícios em sequência, 1 min de pausa entre as voltas, e repita até fechar 30 min"+(dl?", em ritmo moderado.":"."),vids:CALV,
-        list:["Burpee, 10","Agachamento, 20","Flexão, 12","Remada invertida, 10","Mountain climber, 30 s"]};
-    case "cordaT":
-      return {t:"Corda técnica + mobilidade",light:true,d:"Aqueça 4 min. "+b1+" blocos de 1 min pulando e 1 min parado. Complete até 30 min com mobilidade de tornozelo e quadril.",
-        vids:CORV.concat(["mobcorrida"])};
-    case "cordaI":
-      return {t:"Corda intervalada + core",light:dl,d:"Aqueça 4 min. "+b2+" blocos de 40 s pulando e 20 s de descanso, com um exercício de core a cada 5 blocos. Complete até 30 min com core e alongamento.",vids:CORV,
-        list:["Prancha lateral, 30 s por lado","Abdominal bicicleta, 20","Hollow hold, 25 s"]};
+    case "qual":
+      if(dl)return {t:"Corrida leve (semana leve)",dur:"40 min",light:true,d:"40 min em ritmo de conversa, sem tiros.",vids:RUNV};
+      return {t:wk%2&&f>0?"Corrida: ritmo":"Corrida: intervalado",dur:"40–45 min",d:[
+        "10 min de trote, 6×400 m forte com 2 min de trote entre os tiros, trote até completar 40 min.",
+        wk%2?"10 min de trote, 20 min contínuos no ritmo de 10 km, trote até completar 45 min.":"10 min de trote, 5×800 m forte com 2 min de trote entre os tiros, trote até completar 45 min.",
+        wk%2?"10 min de trote, 25 min contínuos no ritmo de meia maratona, trote até completar 45 min.":"10 min de trote, 4×1 km forte com 2 min de trote entre os tiros, trote até completar 45 min."][f]+" Às 05h30 ainda pode estar escuro: rua iluminada, colete refletivo e lanterna.",
+        vids:(wk%2&&f>0?["mobcorrida"]:["intervalado"]).concat(RUNV)};
+    case "forca":
+      var vol=dl?2:[3,3,4][f];
+      return {t:"Força (corpo todo) + corrida leve",dur:"45–50 min",light:dl,d:"Aqueça 5 min. Faça os exercícios em circuito, "+vol+" voltas, 1 min de pausa entre as voltas"+(f===2&&!dl?", descendo devagar (3 s) em cada repetição":"")+". Feche com 10 a 15 min de corrida leve.",vids:["aquecimento"],
+        list:[(f>=1&&!dl?"Agachamento búlgaro, 8 a 12 por perna":"Agachamento, 15 a 20"),(f>=1&&!dl?"Flexão declinada, 8 a 15":"Flexão, 8 a 15"),"Remada invertida, 8 a 12","Ponte de glúteo unilateral, 12 por perna","Panturrilha em um pé, 15 por perna","Prancha, 40 s"]};
+    case "longao":
+      if(dl)return {t:"Longão curto (semana leve)",dur:"45 min",light:true,d:"45 min em ritmo de conversa.",vids:RUNV};
+      return {t:"Corrida longa",dur:["60 min","65–70 min","70–75 min"][f],d:"Ritmo confortável, em que dá para conversar. Água antes e depois. Alongue no fim.",vids:["mobcorrida"].concat(RUNV)};
   }
-  return easy;
+  return {t:"Ativação (não é treino)",dur:"5 min",light:true,d:"Ao acordar: polichinelos, agachamentos e alongamento por 5 minutos. Hoje o horário das 05h30 é do estudo extra.",vids:["aquecimento"]};
 }
 function renderTreino(){
   var n=sel,box=document.getElementById("treino"),cd=trCd(n);
-  if(cd<1){box.innerHTML="<h3>Treino do dia</h3><p class='foot' style='border:0'>O plano de treinos começa em "+esc(fmt(dateOf(start75())))+".</p>";return}
-  var k=WEEK[dateOf(n).getDay()],f=trPhase(cd),dl=isDeload(cd),x=session(k,cd);
-  var head="Fase "+PH_NAMES[f]+(cd<=75?", dia "+cd+" do plano":", manutenção")+(dl?", semana leve":"");
-  box.innerHTML="<h3>Treino do dia<span>"+esc(head)+"</span></h3><div class='tr'><div class='k'>30 min</div><div><b>"+esc(x.t)+"</b>"+(x.light?"<span class='leve'>leve</span>":"")+
-    "<p>"+esc(x.d)+"</p>"+(x.list?"<ul class='exl'>"+x.list.map(function(i){var k=exVid(i);return "<li><span>"+esc(i)+"</span>"+(k?vbtn(k):"")+"</li>"}).join("")+"</ul>":"")+
-    (x.vids?"<div class='vids'><span class='small'>Vídeos da sessão</span>"+x.vids.map(vthumb).join("")+"</div>":"")+"</div></div>"+
-    "<p class='foot'>Os vídeos tocam dentro do app e precisam de internet. Todos estão em Mais, Vídeos dos treinos. Dor aguda ou em articulação: troque por 30 min de caminhada. Continua valendo para o desafio.</p>";
+  var k=WEEK[dateOf(n).getDay()],f=trPhase(Math.max(cd,1)),dl=isDeload(cd),x=session(k,cd);
+  var head=(k==="ativ"?"Dia sem treino":"Fase "+PH_NAMES[f]+(cd>=1?", dia "+cd+" do plano":"")+(dl?", semana leve":""));
+  box.innerHTML="<h3>Treino do dia<span>"+esc(head)+"</span></h3><div class='tr'><div class='k'>"+esc(x.dur)+"</div><div><b>"+esc(x.t)+"</b>"+(x.light?"<span class='leve'>leve</span>":"")+
+    "<p>"+esc(x.d)+"</p>"+(x.list?"<ul class='exl'>"+x.list.map(function(i){var kk=exVid(i);return "<li><span>"+esc(i)+"</span>"+(kk?vbtn(kk):"")+"</li>"}).join("")+"</ul>":"")+
+    (x.vids?"<div class='vids'><span class='small'>Vídeos</span>"+x.vids.map(vthumb).join("")+"</div>":"")+"</div></div>"+
+    "<p class='foot'>Treinos na terça, quinta e domingo. Dor aguda ou em articulação: troque por caminhada. Gripado ou com febre: sem treino intenso. Dia apertado: corte o treino, nunca o sono.</p>";
 }
 function renderPlan(){
   var WD2=[[1,"Seg"],[2,"Ter"],[3,"Qua"],[4,"Qui"],[5,"Sex"],[6,"Sáb"],[0,"Dom"]];
-  var h="<tr><th>Dia</th><th>Treino do dia (30 min, de manhã)</th></tr>";
+  var h="<tr><th>Dia</th><th>Treino</th><th>Duração</th></tr>";
   WD2.forEach(function(x){var k=WEEK[x[0]],a=session(k,1);
-    h+="<tr><td>"+x[1]+"</td><td>"+esc(k==="fart"?"Corrida: fartlek / ritmo (06h00, com luz)":a.t)+(a.light?"<span class='leve'>leve</span>":"")+"</td></tr>"});
+    h+="<tr><td>"+x[1]+"</td><td>"+esc(k==="ativ"?"Ativação de 5 min ao acordar (sem treino)":a.t)+(k==="ativ"?"<span class='leve'>estudo</span>":"")+"</td><td>"+esc(k==="longao"?"60–75 min":a.dur)+"</td></tr>"});
   document.getElementById("planWeek").innerHTML=h;
-  var s=start75(),rg=[[1,21],[22,49],[50,75]];
-  var P=[["5×400 m","5× (1 min forte + 1 min 30 s leve)","3 voltas, técnica limpa","8 a 10 blocos"],
-         ["6×400 m e 4×800 m, alternando","12 min contínuos","4 voltas, variações mais difíceis","10 a 15 blocos"],
-         ["5×600 m e 3×1 km, alternando","15 a 18 min contínuos","4 voltas, descida lenta de 3 s","12 a 18 blocos"]];
-  var ph="<tr><th>Fase</th><th>Intervalado</th><th>Fartlek / ritmo</th><th>Calistenia</th><th>Corda</th></tr>";
-  P.forEach(function(r,i){ph+="<tr><td><b>"+PH_NAMES[i]+"</b><br><span class='small'>dias "+rg[i][0]+" a "+rg[i][1]+", "+fmtShort(dateOf(s+rg[i][0]-1))+" a "+fmtShort(dateOf(s+rg[i][1]-1))+"</span></td><td>"+r.join("</td><td>")+"</td></tr>"});
+  var s=trStartN(),rg=[[1,21],[22,49],[50,100]];
+  var P=[["6×400 m","3 voltas, versões básicas","60 min"],
+         ["5×800 m e 20 min no ritmo de 10 km, alternando","3 voltas, búlgaro e flexão declinada","65–70 min"],
+         ["4×1 km e 25 min no ritmo de meia, alternando","4 voltas, descida lenta de 3 s","70–75 min"]];
+  var ph="<tr><th>Fase</th><th>Qualidade (ter)</th><th>Força (qui)</th><th>Longão (dom)</th></tr>";
+  P.forEach(function(r,i){ph+="<tr><td><b>"+PH_NAMES[i]+"</b><br><span class='small'>a partir de "+fmtShort(dateOf(s+rg[i][0]-1))+"</span></td><td>"+r.join("</td><td>")+"</td></tr>"});
   document.getElementById("planPhases").innerHTML=ph;
   var N=[
-    "Semanas leves: dias 29 a 35 ("+fmtShort(dateOf(s+28))+" a "+fmtShort(dateOf(s+34))+") e dias 57 a 63 ("+fmtShort(dateOf(s+56))+" a "+fmtShort(dateOf(s+62))+"). Os 30 minutos continuam; intervalado e ritmo viram rodagem leve e a calistenia cai para 2 voltas.",
-    "Corda e corrida somam impacto na panturrilha e no tendão de Aquiles. Nas duas primeiras semanas, se a panturrilha reclamar, corte blocos de corda antes de mexer na corrida.",
-    "Dor aguda ou em articulação não se força: troque por 30 min de caminhada. Continua valendo para o desafio.",
-    "Corrida de terça às 03h é no escuro: rua iluminada, colete refletivo, lanterna e avise alguém do trajeto. Sem rota segura, troque por corda intervalada.",
-    "O treino nunca passa de 30 min: o tempo que sobra é do estudo."];
+    "Primeira semana depois da gripe: mesmos treinos com metade da intensidade. Se a frequência cardíaca estiver alta para o mesmo esforço, o corpo ainda não se recuperou.",
+    "Semanas leves: "+fmtShort(dateOf(s+28))+" a "+fmtShort(dateOf(s+34))+" e "+fmtShort(dateOf(s+56))+" a "+fmtShort(dateOf(s+62))+". Sem tiros; força com 2 voltas; longão de 45 min.",
+    "Nos dias sem treino, 5 min de ativação ao acordar (polichinelos, agachamentos, alongamento) e pausas a cada 50–60 min de estudo.",
+    "Gripado ou com febre: sem treino intenso. Sintomas só do pescoço para cima permitem caminhada leve.",
+    "Dor aguda ou em articulação não se força: troque por caminhada.",
+    "Dia apertado: corte o treino e preserve o estudo e o sono. O treino serve à aprovação, não o contrário."];
   document.getElementById("planNotes").innerHTML=N.map(function(x){return "<li>"+esc(x)+"</li>"}).join("");
 }
 function lastDay(){return 100}
@@ -1382,7 +1417,7 @@ function renderStats(){
   document.getElementById("stWon").textContent=won;
   document.getElementById("stAvg").textContent=(cnt?Math.round(sum/cnt*100):0)+"%";
   var rows=document.getElementById("areaRows");rows.innerHTML="";
-  AREAS.forEach(function(a){
+  AREAS.filter(areaLive).forEach(function(a){
     var t=0,c=0;for(var i=1;i<=tn;i++){var v=areaScore(a.id,i);if(v!==null){t+=v;c++}}
     var p=c?Math.round(t/c*100):0;
     rows.appendChild(el("div",{class:"arearow",style:"--c:"+a.c},"<span>"+esc(a.short)+"</span><div class='bar'><span style='width:"+p+"%'></span></div><b>"+p+"%</b>"));
@@ -1392,7 +1427,7 @@ function renderStats(){
 // ---------- render: Metas ----------
 function renderGoals(){
   var box=document.getElementById("goalCards");box.innerHTML="";
-  AREAS.forEach(function(a){
+  AREAS.filter(areaLive).forEach(function(a){
     var c=el("div",{class:"card area-card",style:"--c:"+a.c});
     c.appendChild(el("h3",null,esc(a.name)));
     var ta=el("textarea",{rows:"3",placeholder:GOAL_HINT[a.id],"aria-label":"Meta de 100 dias: "+a.name});
@@ -1465,11 +1500,12 @@ function renderSettings(){
   if(hsx){document.getElementById("min75d").value=hsx.min75!=null?hsx.min75:"";document.getElementById("min75w").value=hsx.min75w!=null?hsx.min75w:""}
   document.getElementById("end75Lbl").textContent="Sem falhas, termina em "+fmt(dateOf(start75()+74))+".";
   var box=document.getElementById("habitEditor");box.innerHTML="";
-  AREAS.forEach(function(a){
+  AREAS.filter(areaLive).forEach(function(a){
     var c=el("div",{class:"card area-card",style:"--c:"+a.c+";margin-bottom:12px"});
     c.appendChild(el("h3",{style:"margin-bottom:10px"},esc(a.name)));
     c.appendChild(el("div",{class:"hab head"},"<span class='lbl'>Hábito</span><span>Tipo</span><span>Meta</span><span>Meta fim de sem.</span><span></span><span></span>"));
     (S.habits[a.id]||[]).forEach(function(h,idx){
+      if(!live(h))return;
       var r=el("div",{class:"hab"});
       var l=el("input",{type:"text",class:"lbl","aria-label":"Nome do hábito"});l.value=h.label;
       l.addEventListener("input",function(){h.label=l.value;touch()});
@@ -1477,18 +1513,18 @@ function renderSettings(){
       [["check","Sim/não"],["num","Número (meta mínima)"],["limit","Limite máximo"],["money","Valor R$"]].forEach(function(o){var op=el("option",{value:o[0]},o[1]);if(h.type===o[0])op.selected=true;t.appendChild(op)});
       t.addEventListener("change",function(){h.type=t.value;if((h.type==="num"||h.type==="limit")&&!h.target)h.target=h.type==="limit"?15:1;touch();renderSettings()});
       var tg=el("input",{type:"number",min:"0",step:"any","aria-label":"Meta"});var hasT=h.type==="num"||h.type==="limit";tg.value=hasT?(h.target||""):"";tg.disabled=!hasT;
-      tg.addEventListener("input",function(){h.target=tg.value===""?0:+tg.value;touch()});
+      tg.addEventListener("input",function(){h.target=tg.value===""?0:+tg.value;delete h.tdow;touch()});
       var tw=el("input",{type:"number",min:"0",step:"any","aria-label":"Meta de fim de semana"});tw.value=hasT?(h.targetWeekend||""):"";tw.disabled=!hasT;
-      tw.addEventListener("input",function(){h.targetWeekend=tw.value===""?0:+tw.value;touch()});
+      tw.addEventListener("input",function(){h.targetWeekend=tw.value===""?0:+tw.value;delete h.tdow;touch()});
       var del=el("button",{type:"button","aria-label":"Remover hábito",title:"Remover"},"✕");
-      del.addEventListener("click",function(){if(confirm("Remover \""+h.label+"\"?")){S.habits[a.id].splice(idx,1);touch();renderSettings()}});
+      del.addEventListener("click",function(){if(confirm("Tirar \""+h.label+"\" da rotina? O histórico dele fica guardado.")){if(h.fromN&&h.fromN>=todayNum())S.habits[a.id].splice(idx,1);else h.untilN=todayNum()-1;touch();renderSettings()}});
       var k75=el("input",{type:"checkbox","aria-label":"Regra do 75 Duro",title:"Regra do 75 Duro"});k75.checked=!!h.h75;k75.disabled=h.type==="money";k75.style.visibility="hidden";
       k75.addEventListener("change",function(){h.h75=k75.checked;touch()});
       [l,t,tg,tw,k75,del].forEach(function(x){r.appendChild(x)});
       c.appendChild(r);
     });
     var add=el("button",{type:"button",class:"btn ghost",style:"margin-top:6px"},"Adicionar hábito");
-    add.addEventListener("click",function(){S.habits[a.id].push({id:uid(),label:"Novo hábito",type:"check"});touch();renderSettings()});
+    add.addEventListener("click",function(){S.habits[a.id].push({id:uid(),label:"Novo hábito",type:"check",fromN:Math.max(1,todayNum())});touch();renderSettings()});
     c.appendChild(add);box.appendChild(c);
   });
 }
@@ -1602,7 +1638,7 @@ var MOT=[
 "O cansaço passa. O nome na lista de aprovados fica.",
 "Trinta vagas. Cada dia de constância te aproxima de uma delas.",
 "Hoje não é dia de estudar muito. É dia de estudar o que foi planejado, inteiro.",
-"Quem acorda às 02h30 já venceu a primeira batalha do dia. Agora vença a segunda: o bloco 1.",
+"Quem acorda às 02h30 já venceu a primeira batalha do dia. Agora vença a segunda: começar a estudar até 02h45.",
 "Não compare o seu capítulo 1 com o capítulo 20 de outra pessoa. Compare com o seu de ontem.",
 "Constância derrota talento quando o talento não é constante.",
 "Uma meta cumprida por dia, todos os dias. É assim que se fecha um edital.",
@@ -1623,7 +1659,7 @@ var MOT=[
 "Uma hora líquida vale mais do que três horas distraídas. Celular longe.",
 "A FGV gosta de pegadinha. Você gosta de Caderno de Erros. Vantagem sua.",
 "Não existe dia perdido se você fez ao menos o mínimo. Garanta o mínimo hoje.",
-"O jejum treina a cabeça a esperar. A aprovação também exige isso.",
+"Sono, água e comida de verdade rendem mais que qualquer cápsula. Cuide da base.",
 "Revisar é proteger o que você já conquistou. Não deixe o D+1 passar.",
 "Seja o candidato que você contrataria para a Receita Federal.",
 "Quem planeja o dia na véspera acorda sabendo para onde ir.",
@@ -1652,7 +1688,7 @@ var MOT=[
 "Você escolheu o caminho difícil porque o destino vale a pena.",
 "Faça hoje o que o Marcos aprovado agradeceria em março.",
 "Menos ferramenta nova, mais questão resolvida.",
-"Orgulho é chegar às 20h sabendo que fez o que prometeu.",
+"Orgulho é chegar às 19h30 sabendo que fez o que prometeu.",
 "Cada hábito cumprido prova que você cumpre o que decide.",
 "Não pare no meio. O ponto que decide a vaga pode estar na próxima página."];
 function dayKey(d){return Math.floor((new Date(d.getFullYear(),d.getMonth(),d.getDate())-new Date(2026,0,1))/864e5)}
@@ -1667,30 +1703,29 @@ var FRUTAS=["Banana","Maçã","Mamão","Laranja","Pera","Abacaxi","Goiaba"];
 function foodFor(n){var k=((dayKey(dateOf(n))%7)+7)%7;return {alm:PROT_ALM[k],jan:PROT_JAN[(k+3)%7],fru:FRUTAS[(k+5)%7]}}
 function renderFood(id,n){
   var e=document.getElementById(id);if(!e)return;if(n<1){e.hidden=true;return}e.hidden=false;
-  var f=foodFor(n),dow=dateOf(n).getDay(),jt=dow===6?"17h45":dow===0?"18h00":"18h15",st="";
-  if(n===todayNum()){
-    var now=new Date(),m=now.getHours()*60+now.getMinutes(),jd=hm(dow===6?"18:30":dow===0?"19:30":"18:45");
-    if(m<720){var left=720-m,since=m+(24*60-jd);st="<p class='fast'>Em jejum há <b>"+Math.floor(since/60)+"h"+String(since%60).padStart(2,"0")+"</b>. Termina às 12h00, daqui a "+Math.floor(left/60)+"h"+String(left%60).padStart(2,"0")+".</p>"}
-    else if(m<jd)st="<p class='fast'>Janela de alimentação aberta até o fim do jantar, às "+hmTxt((dow===6?"18:30":dow===0?"19:30":"18:45"))+".</p>";
-    else st="<p class='fast'>Jejum começou. Próxima refeição: amanhã às 12h00.</p>";
-  }
-  var jj=findH("jejum"),ok=jj&&!hPending(jj,n);
-  e.innerHTML="<h3>Alimentação do dia<span>Jejum até 12h · 2 refeições</span></h3>"+st+
-    "<div class='ml'><div class='k'>até 12h</div><div><b>Jejum</b>"+(ok?"<span class='leve'>feito</span>":"")+"<p>Só água, café preto ou chá sem açúcar. Nada de leite, adoçante calórico ou suco. O treino da madrugada é feito em jejum: se sentir tontura, pare e coma algo.</p></div></div>"+
-    "<div class='ml'><div class='k'>12h00</div><div><b>Almoço</b><p>Arroz, feijão, proteína e salada. Metade do prato salada; um quarto proteína; um quarto arroz e feijão.</p><p>Proteína de hoje: <b>"+esc(f.alm)+"</b>, uma porção do tamanho da palma da mão.</p></div></div>"+
-    "<div class='ml'><div class='k'>"+jt+"</div><div><b>Jantar</b><p>Proteína, fruta e pão integral (2 fatias).</p><p>Sugestão de hoje: <b>"+esc(f.jan)+"</b> e <b>"+esc(f.fru)+"</b>.</p></div></div>"+
-    "<p class='foot'>As proteínas variam sozinhas pelo dia da semana; são sugestões, troque à vontade. Depois do jantar, só água até as 18h30.</p>";
+  var f=foodFor(n),dow=dateOf(n).getDay(),tr=WEEK[dow]!=="ativ",o=S.foodOpt||"";
+  var sw="<div class='row' style='margin:4px 0 8px'><span class='small'>Teste da semana:</span>"+
+    "<button type='button' class='btn"+(o==="A"?"":" ghost")+"' data-food='A'>A · jejum curto</button>"+
+    "<button type='button' class='btn"+(o==="B"?"":" ghost")+"' data-food='B'>B · sem jejum</button></div>";
+  var acordar=o==="B"?"Copo d'água e café da manhã leve: ovos, fruta, pão integral ou tapioca.":o==="A"?"Copo d'água. Café a partir de 30 min depois de acordar. Jejum até depois do treino ou do estudo extra.":"Copo d'água. Escolha acima a opção que está testando nesta semana.";
+  var manha=o==="B"?"Lanche: fruta + iogurte natural ou castanhas.":"Quebra do jejum: ovos, fruta, pão integral ou tapioca, iogurte natural.";
+  e.innerHTML="<h3>Alimentação do dia<span>"+(o?"Opção "+o+(o==="A"?" · jejum curto":" · sem jejum"):"teste A ou B")+"</span></h3>"+sw+
+    "<div class='ml'><div class='k'>02h30</div><div><b>Ao acordar</b><p>"+esc(acordar)+"</p><p>Suplementos: <b>Alpha GPC</b>"+(tr?" e <b>farinha de beterraba</b> (dia de treino; quebra o jejum)":"")+".</p></div></div>"+
+    "<div class='ml'><div class='k'>06h30</div><div><b>"+(o==="B"?"Lanche":"Primeira refeição")+"</b><p>"+esc(manha)+"</p></div></div>"+
+    "<div class='ml'><div class='k'>12h00</div><div><b>Almoço</b><p>Arroz, feijão, proteína e salada. Satisfeito, não estufado: evita a moleza das 14h.</p><p>Proteína de hoje: <b>"+esc(f.alm)+"</b>.</p><p>Suplementos: <b>Q10, vitamina D+K e creatina</b>"+(tr?"":" + farinha de beterraba")+".</p></div></div>"+
+    "<div class='ml'><div class='k'>15h00</div><div><b>Lanche (opcional)</b><p>"+esc(f.fru)+" ou iogurte natural.</p></div></div>"+
+    "<div class='ml'><div class='k'>até 18h</div><div><b>Jantar</b><p>Proteína, fruta e pão integral, leve. Sugestão: <b>"+esc(f.jan)+"</b>.</p><p>Depois do jantar: <b>magnésio</b>.</p></div></div>"+
+    "<p class='foot'>Água: 2,5 a 3 L no dia, garrafa na mesa de estudo. Café só até o almoço. Peixe 2 a 3 vezes por semana. Gripado: pause o jejum e coma ao acordar.</p>";
 }
+document.addEventListener("click",function(ev){var b=ev.target.closest&&ev.target.closest("button[data-food]");if(!b)return;var v=b.getAttribute("data-food");S.foodOpt=S.foodOpt===v?"":v;touch();renderFood("foodNow",todayNum());if(sel!==null)renderFood("foodDay",sel)});
 
 // ---------- Família Aprovada ----------
 var FA_URL="https://nubiaoliveira.tutory.com.br/painel/metas";
 function faSlot(t,i,n){
-  var x=t.toLowerCase(),dow=dateOf(n).getDay();
-  if(/revis|flash|caderno|limpe os erros/.test(x))return dow===0?"Domingo 14h30, Caderno de Erros":"Revisões, 17h30";
-  if(/quest|exerc|simulad|bateria|discurs/.test(x))return dow===0?"Domingo 09h00, simulado e questões":"Bloco 2, 05h10";
-  if(dow===0)return "Domingo 03h00, teoria";
-  if(dow===6&&i>=1)return i===1?"Sábado 13h30, tarde 1":"Sábado 15h45, tarde 2";
-  return i===0?"Bloco 1, 03h30":i===1?"Bloco 2, 05h10":"Bloco 3, 18h45";
+  var x=t.toLowerCase(),dow=dateOf(n).getDay(),extra=WEEK[dow]==="ativ"&&dow!==0;
+  if(/revis|flash|caderno|limpe os erros/.test(x))return dow===0?"Domingo 14h00, estudo da tarde":"Caderno de Erros, 18h00";
+  if(/quest|exerc|simulad|bateria|discurs/.test(x))return dow===6?"Sábado 14h00, simulado e questões":dow===0?"Domingo 14h00, estudo da tarde":extra?"Estudo extra, 05h30":"Almoço, 12h00";
+  return i===0?"Estudo principal, 02h55":i===1?(extra?"Estudo extra, 05h30":"Estudo principal, 04h15"):"Almoço, 12h00";
 }
 function faParse(txt){return txt.split(/\r?\n/).map(function(l){return l.replace(/^\s*(?:[-•*▪◦·]|\d+[.)\-]|\[\s?[xX ]?\s?\])\s*/,"").trim()}).filter(function(l){return l.length>1}).slice(0,15)}
 function faPrevPending(n){for(var k=n-1;k>=Math.max(1,n-3);k--){var f=(dayData(k).fa||[]).filter(function(m){return !m.d});if((dayData(k).fa||[]).length)return {n:k,list:f}}return null}
@@ -2010,46 +2045,38 @@ document.getElementById("qEdit").addEventListener("click",function(e){
 });
 
 // ---------- AGORA: o que fazer neste momento ----------
-var BL_CLOSE={f:"19:30",t:"20:00",ti:"Fechar o dia",d:"Registre o que falta, prepare a roupa do treino e durma às 20h.",k:"close",h:["horas","agua","alcool","gastos","impulso","guardado","porno","masturb","redes"]};
+var BL_CLOSE={f:"19:00",t:"19:30",ti:"Fechar o dia",d:"Registre o que falta, desligue as telas e deixe o celular fora do quarto. Dormir às 19h30: 7 h de sono são parte do estudo.",k:"close",h:["horas","agua","prato","cafe","porno","masturb","celquarto","feedlimpo"]};
 var BL_MORNING=[
-  {f:"02:30",t:"02:35",ti:"Acordar",d:"Água e nada de celular. Comece antes do mundo.",h:["sono"]},
-  {f:"02:35",t:"02:55",ti:"Fé",d:"Oração e leitura sagrada, 15 minutos.",h:["oracao"]},
-  {f:"02:55",t:"03:30",ti:"Treino do dia",k:"treino",h:["treino","mobil","foto"]},
-  {f:"03:30",t:"05:00",ti:"Estudo: bloco 1",d:"Teoria nova, com a cabeça descansada.",k:"study"},
-  {f:"05:00",t:"05:10",ti:"Pausa",d:"10 minutos longe da tela. Água e alongamento."},
-  {f:"05:10",t:"06:45",ti:"Estudo: bloco 2",d:"Questões da banca e registro de erros.",h:["quest"],k:"study"},
-  {f:"06:45",t:"07:30",ti:"Saída em jejum",d:"Até as 12h, só água, café preto ou chá sem açúcar. Leve a garrafa: a primeira termina até as 10h."}];
-var BL_WEEK=BL_MORNING.concat([
-  {f:"07:30",t:"12:00",ti:"Moinho",d:"Garrafa 1 até as 10h. Nas pausas, celular guardado: conta para o limite de redes.",k:"work"},
-  {f:"12:00",t:"13:30",ti:"Almoço, leitura e flashcards",d:"Fim do jejum: arroz, feijão, proteína e salada. Depois, 10 páginas e 20 minutos de flashcards. Se der, 15 minutos de cochilo.",h:["jejum","leitura"]},
-  {f:"13:30",t:"17:00",ti:"Moinho",d:"Garrafa 2 até as 13h e garrafa 3 até as 17h.",k:"work"},
-  {f:"17:00",t:"17:30",ti:"Volta para casa",d:"Respire. Sem redes sociais no caminho."},
-  {f:"17:30",t:"18:15",ti:"Revisões D+1 e D+3",d:"Caderno de Erros: reincidências primeiro, depois quase-erros.",h:["erros"],k:"study"},
-  {f:"18:15",t:"18:45",ti:"Jantar",d:"Proteína, fruta e pão integral. Garrafa 4 até 18h30. Depois disso, jejum até amanhã às 12h.",h:["dieta75","planej","prato"]},
-  {f:"18:45",t:"19:30",ti:"Estudo: bloco 3",d:"Questões leves ou lei seca. Nada de matéria nova a esta hora.",k:"study"},
-  BL_CLOSE]);
-var BL_SAT=BL_MORNING.concat([
-  {f:"07:30",t:"12:00",ti:"Moinho",d:"Sábado vai até o meio-dia. Garrafa 1 até as 10h.",k:"work"},
-  {f:"12:00",t:"13:30",ti:"Almoço e leitura",d:"Fim do jejum: arroz, feijão, proteína e salada. Depois, 10 páginas.",h:["jejum","leitura"]},
-  {f:"13:30",t:"15:30",ti:"Estudo: bloco da tarde 1",d:"Matéria de peso alto: teoria e questões.",k:"study"},
-  {f:"15:45",t:"17:45",ti:"Estudo: bloco da tarde 2",d:"Revisão D+7 e Caderno de Erros.",h:["erros"],k:"study"},
-  {f:"17:45",t:"18:30",ti:"Jantar",d:"Proteína, fruta e pão integral. Garrafa 4 até 18h30.",h:["dieta75","planej","prato"]},
-  {f:"18:30",t:"19:30",ti:"Tempo livre",d:"Descanso de verdade também faz parte. Longe das telas, se der."},
-  BL_CLOSE]);
-var BL_SUN=[
-  {f:"02:30",t:"02:35",ti:"Acordar",d:"Água e nada de celular.",h:["sono"]},
-  {f:"02:35",t:"03:00",ti:"Fé",d:"Oração e leitura sagrada, 15 minutos.",h:["oracao"]},
-  {f:"03:00",t:"05:30",ti:"Estudo: teoria e revisão D+7",d:"Dois blocos com 10 minutos de pausa no meio.",k:"study"},
-  {f:"05:30",t:"06:00",ti:"Água e café preto",d:"Jejum até as 12h. Prepare-se para correr com a luz do dia."},
-  {f:"06:00",t:"06:35",ti:"Treino do dia",k:"treino",h:["treino","mobil","foto"]},
-  {f:"06:35",t:"09:00",ti:"Família e descanso",d:"Banho e tempo com a família. Jejum segue até as 12h."},
-  {f:"09:00",t:"12:00",ti:"Simulado ou bateria de questões",d:"A cada duas semanas, simulado cronometrado. Depois, revisão D+30.",h:["quest","erros"],k:"study"},
-  {f:"12:00",t:"13:30",ti:"Almoço e descanso",d:"Fim do jejum: arroz, feijão, proteína e salada.",h:["jejum","dieta75"]},
-  {f:"13:30",t:"14:30",ti:"Leitura e cochilo",d:"10 páginas de não-ficção. Cochilo de até 20 minutos, se precisar.",h:["leitura"]},
-  {f:"14:30",t:"16:30",ti:"Caderno de Erros e discursiva",d:"Reincidências primeiro. Uma discursiva por semana.",k:"study"},
-  {f:"17:00",t:"18:00",ti:"Revisão da semana",d:"Revisão semanal, cobertura do edital, cardápio, compras e backup.",k:"weekly"},
-  {f:"18:00",t:"19:30",ti:"Jantar e família",d:"Proteína, fruta e pão integral. Prepare as marmitas da semana se ainda não fez.",h:["planej","prato"]},
-  BL_CLOSE];
+  {f:"02:30",t:"02:40",ti:"Ativação",d:"Luz mais forte da casa, copo d'água, Alpha GPC e 5 min de movimento (polichinelos, agachamentos, alongamento). Celular longe até o fim do primeiro bloco.",h:["sono","ativacao"]},
+  {f:"02:40",t:"02:55",ti:"Revisão leve",d:"15 min de flashcards ou Caderno de Erros. Aquece o cérebro; o pesado vem depois. Comece até 02h45.",h:["engrenar"],k:"study"},
+  {f:"02:55",t:"05:30",ti:"Estudo principal",d:"Teoria nova e questões difíceis, a tarefa que você deixou definida ontem. Pausa de 5 min a cada 50–60 min: levantar, andar, água.",h:["quest"],k:"study"}];
+var BL_EXTRA={f:"05:30",t:"06:30",ti:"Estudo extra",d:"Algo dinâmico, porque o cérebro já está cansado: bateria de questões, lei seca ou flashcards.",k:"study"};
+var BL_TREINO={f:"05:30",t:"06:30",ti:"Treino do dia",k:"treino",h:["treino"]};
+var BL_DINNER={f:"17:00",t:"18:00",ti:"Família e jantar",d:"Jantar até 18h: proteína, fruta e pão integral, leve.",h:["jantar"]};
+var BL_EVENING={f:"18:00",t:"19:00",ti:"Caderno de Erros e véspera",d:"Magnésio. 30 min de Caderno de Erros (reincidências primeiro). Depois, escreva a 1ª tarefa de amanhã e deixe o material aberto na mesa.",h:["erros","tarefa","supl"],k:"study"};
+function blList(g){
+  var am=g===2||g===4||g===0?BL_TREINO:BL_EXTRA;
+  if(g===0)return BL_MORNING.concat([
+    {f:"05:30",t:"06:45",ti:"Treino: longão",k:"treino",h:["treino"]},
+    {f:"06:45",t:"12:00",ti:"Família e descanso",d:"Banho, refeição e tempo com a família. Água por perto."},
+    {f:"12:00",t:"13:30",ti:"Almoço em família",d:"Arroz, feijão, proteína e salada. Q10, vitamina D+K e creatina.",h:["prato"]},
+    {f:"14:00",t:"16:00",ti:"Estudo da tarde",d:"Caderno de Erros, revisões D+7/D+30 ou discursiva. Depois, tempo livre sem culpa.",h:["erros"],k:"study"},
+    BL_DINNER,
+    {f:"18:00",t:"19:00",ti:"Revisão semanal e véspera",d:"Magnésio. 15 min de revisão da semana: horas, acertos por matéria e o que ajustar. Deixe a 1ª tarefa de segunda definida.",h:["tarefa","supl"],k:"weekly"},
+    BL_CLOSE]);
+  var after=g===6?[
+    {f:"06:30",t:"07:30",ti:"Banho, refeição e deslocamento",d:"Leve a garrafa de água."},
+    {f:"07:30",t:"12:00",ti:"Moinho",d:"Sábado vai até o meio-dia. Água sempre por perto; café só até o almoço.",k:"work"},
+    {f:"12:00",t:"14:00",ti:"Almoço e descanso",d:"Arroz, feijão, proteína e salada. Q10, vitamina D+K, creatina e farinha de beterraba.",h:["prato"]},
+    {f:"14:00",t:"17:00",ti:"Simulado ou bateria de questões",d:"Matérias de maior peso, no estilo da banca. Registre os erros.",k:"study"},
+    BL_DINNER,BL_EVENING,BL_CLOSE]:[
+    {f:"06:30",t:"07:30",ti:"Banho, refeição e deslocamento",d:"Leve a garrafa de água: 2,5 a 3 L até a noite."},
+    {f:"07:30",t:"12:00",ti:"Moinho",d:"Água por perto. Café só até o almoço.",k:"work"},
+    {f:"12:00",t:"13:30",ti:"Almoço + estudo leve",d:"Arroz, feijão, proteína e salada; satisfeito, não estufado. Q10, vitamina D+K e creatina"+(am===BL_EXTRA?" + farinha de beterraba":"")+". Depois, 30 min de questões curtas ou flashcards.",h:["prato"],k:"study"},
+    {f:"13:30",t:"17:00",ti:"Moinho",d:"Água por perto. Sem café a partir de agora.",k:"work"},
+    BL_DINNER,BL_EVENING,BL_CLOSE];
+  return BL_MORNING.concat([am]).concat(after);
+}
 function hm(x){var p=x.split(":");return +p[0]*60+ +p[1]}
 function hmTxt(x){return x.replace(":","h")}
 function findH(id){for(var i=0;i<AREAS.length;i++){var h=(S.habits[AREAS[i].id]||[]).filter(function(x){return x.id===id})[0];if(h)return h}return null}
@@ -2067,12 +2094,12 @@ function hctl(h,n){
 }
 function nowState(){
   var d=new Date(),g=d.getDay(),m=d.getHours()*60+d.getMinutes();
-  var list=g===0?BL_SUN:g===6?BL_SAT:BL_WEEK,cur=null,idx=-1;
+  var list=blList(g),cur=null,idx=-1;
   for(var i=0;i<list.length;i++){if(m>=hm(list[i].f)&&m<hm(list[i].t)){cur=list[i];idx=i;break}}
   var nextI=-1;for(var j=0;j<list.length;j++){if(hm(list[j].f)>m){nextI=j;break}}
   return {list:list,m:m,cur:cur,idx:idx,next:nextI>=0?list[nextI]:null,nextI:nextI};
 }
-function treinoTxt(n){try{var cd=trCd(n);if(cd<1)return "30 minutos de manhã.";var x=session(WEEK[dateOf(n).getDay()],cd);return x.t+(x.light?" (leve)":"")+". "+x.d}catch(e){return "30 minutos de manhã."}}
+function treinoTxt(n){try{var x=session(WEEK[dateOf(n).getDay()],trCd(n));return x.t+" ("+x.dur+(x.light?", leve":"")+"). "+x.d}catch(e){return "Treino do dia."}}
 function sesBlockHTML(){
   if(ses.ph==="run")return "<p class='when'>Bloco de "+ses.min+" min em andamento</p><div class='timer js-st'>"+mmss(ses.end-Date.now())+"</div><p class='desc'>Termina às "+new Date(ses.end).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})+". Uma coisa de cada vez.</p><div class='row'><button type='button' class='btn ghost' data-act='stop'>Encerrar agora</button><button type='button' class='btn ghost' data-act='cancel'>Cancelar</button></div>";
   return "<p class='when'>Bloco terminado</p><h2>Pausa e fechamento</h2><p class='desc'>10 minutos longe do celular. Antes, explique o tema em 5 linhas e mande o que travou para o Caderno de Erros.</p><div class='row'><button type='button' class='btn' data-act='done'>Concluir bloco</button></div>";
@@ -2094,9 +2121,9 @@ function renderNow(){
     // bloco atual já feito: adianta o próximo que tenha algo a marcar
     if(b&&(b.h&&b.h.length)&&blDone(b,n)&&b.k!=="study"&&b.k!=="close"&&st.next){b=st.next;early=true}
     if(!b){
-      if(st.m>=hm("20:00")||st.m<hm(st.list[0].f)){
-        var night=st.m>=hm("20:00");
-        h="<p class='when'>"+(night?"Depois das 20h":"Antes das "+hmTxt(st.list[0].f))+"</p><h2>"+(night?"Hora de dormir":"Ainda é cedo")+"</h2><p class='desc'>"+(night?"O sono é quando o cérebro fixa o que você estudou hoje. Celular fora do quarto.":"Volte a dormir se puder. O dia começa às "+hmTxt(st.list[0].f)+".")+"</p>";
+      if(st.m>=hm("19:30")||st.m<hm(st.list[0].f)){
+        var night=st.m>=hm("19:30");
+        h="<p class='when'>"+(night?"Depois das 19h30":"Antes das "+hmTxt(st.list[0].f))+"</p><h2>"+(night?"Hora de dormir":"Ainda é cedo")+"</h2><p class='desc'>"+(night?"O sono é quando o cérebro fixa o que você estudou hoje. Celular fora do quarto.":"Volte a dormir se puder. O dia começa às "+hmTxt(st.list[0].f)+".")+"</p>";
         if(st.next||!night)h+="<p class='next'>Depois: "+hmTxt(st.list[0].f)+" · "+esc(st.list[0].ti)+"</p>";
       }else{
         h="<p class='when'>Intervalo</p><h2>Tempo livre</h2><p class='desc'>Nada agendado agora.</p>"+(st.next?"<p class='next'>Às "+hmTxt(st.next.f)+": "+esc(st.next.ti)+"</p>":"");
@@ -2218,12 +2245,12 @@ function doSearch(){
   });
   Object.keys(S.reviews||{}).forEach(function(w){var r=S.reviews[w]||{};Object.keys(r).forEach(function(k){if(r[k]&&nrm(r[k]).indexOf(q)>=0)add("Revisão","Semana "+w,snip(r[k],q),"view:revisoes")})});
   ((S.conc||{}).disc||[]).forEach(function(x){if(nrm(x.t).indexOf(q)>=0)add("Discursiva",snip(x.t,q),fmtShort(parse(x.d))+(x.n!=null?" · "+x.n+" pts":""),"view:concurso")});
-  AREAS.forEach(function(a){(S.habits[a.id]||[]).forEach(function(h){if(nrm(h.label).indexOf(q)>=0)add("Hábito",snip(h.label,q),a.name,"day:"+Math.max(1,todayNum()))})});
+  AREAS.forEach(function(a){(S.habits[a.id]||[]).filter(live).forEach(function(h){if(nrm(h.label).indexOf(q)>=0)add("Hábito",snip(h.label,q),a.name,"day:"+Math.max(1,todayNum()))})});
   Object.keys(VIDS).forEach(function(k){var v=VIDS[k];if(nrm(v.t+" "+v.c+" "+v.g).indexOf(q)>=0)add("Vídeo",snip(v.t,q),v.g+" · "+v.c+" · "+v.len,"vid:"+k)});
   Object.keys(EXV).forEach(function(e){if(nrm(e).indexOf(q)>=0&&!R.some(function(r){return r.act==="vid:"+EXV[e]}))add("Exercício",snip(e,q),"Ver vídeo de execução","vid:"+EXV[e])});
   [["Seg",1],["Ter",2],["Qua",3],["Qui",4],["Sex",5],["Sáb",6],["Dom",0]].forEach(function(x){var ss=session(WEEK[x[1]],Math.max(1,trCd(Math.max(1,todayNum()))));var t=ss.t+" "+ss.d+" "+(ss.list||[]).join(" ");if(nrm(t).indexOf(q)>=0)add("Treino",x[0]+": "+esc(ss.t),snip(ss.d+" "+(ss.list||[]).join(", "),q),"view:metas")});
   (S.routine||"").split("\n").forEach(function(l){if(l.trim()&&nrm(l).indexOf(q)>=0)add("Rotina",snip(l,q),"Rotina-base","view:metas")});
-  [["Dias úteis",BL_WEEK],["Sábado",BL_SAT],["Domingo",BL_SUN]].forEach(function(x){x[1].forEach(function(b){var t=b.ti+" "+(b.d||"");if(nrm(t).indexOf(q)>=0)add("Horário",hmTxt(b.f)+" · "+esc(b.ti),x[0]+" · "+snip(b.d||"",q),"view:agora")})});
+  [["Seg, qua e sex",blList(1)],["Ter e qui",blList(2)],["Sábado",blList(6)],["Domingo",blList(0)]].forEach(function(x){x[1].forEach(function(b){var t=b.ti+" "+(b.d||"");if(nrm(t).indexOf(q)>=0)add("Horário",hmTxt(b.f)+" · "+esc(b.ti),x[0]+" · "+snip(b.d||"",q),"view:agora")})});
   SFUN.forEach(function(f){if(nrm(f[0]+" "+f[2]).indexOf(q)>=0)add("Função",esc(f[0]),"Abrir","view:"+f[1])});
   MOT.forEach(function(m){if(nrm(m).indexOf(q)>=0)add("Mensagem",snip(m,q),"Mensagem do dia","none")});
   info.textContent=R.length?R.length+(R.length===1?" resultado":" resultados")+(R.length>60?", mostrando os 60 primeiros":""):"Nada encontrado para “"+raw+"”.";
