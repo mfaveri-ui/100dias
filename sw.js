@@ -1,6 +1,6 @@
 // Funciona offline: guarda o app no celular e usa a cópia guardada sem internet.
 // Também recebe os avisos diários e monta o texto com o que ainda falta no dia.
-const VERSION = "v8-2026-11-26";
+const VERSION = "v9-2026-11-26";
 const APP = "app-" + VERSION;
 const FONTS = "fonts-v1";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-maskable-512.png"];
@@ -113,6 +113,10 @@ function compose(slot, S) {
   switch (slot) {
     case "acordar":
       return { title: "⏰ Dia " + C.n + ". Ativação", body: "Luz mais forte da casa, copo d'água, Alpha GPC e 5 min de movimento. Celular longe. Comece a estudar até 02h45." };
+    case "revleve":
+      return P("engrenar")
+        ? { title: "🧠 Revisão leve: 15 min", body: "Flashcards ou Caderno de Erros. Comece até 02h45 e marque no app." }
+        : { title: "✓ Já começou a estudar", body: "Siga para o estudo principal às 02h55." };
     case "estudo":
       return { title: "📚 Estudo principal até 05h30", body: (P("engrenar") ? "Comece pela tarefa que você deixou definida ontem. " : "") + "Pausa de 5 min a cada 50–60 min." };
     case "treino": {
@@ -130,6 +134,16 @@ function compose(slot, S) {
       const lista = qp.length ? qp.map(x => nm(x.s) + " " + x.q).join(" · ") : "Abra o app para ver o roteiro do dia.";
       return { title: "🎯 " + (feitas ? "Faltam " + (tot - feitas) + " questões" : tot + " questões de hoje"), body: pre + lista };
     }
+    case "banho":
+      return { title: "🚿 Banho, refeição e deslocamento", body: (S.foodOpt === "B" ? "Lanche: fruta + iogurte natural ou castanhas." : "Primeira refeição: ovos, fruta, pão integral ou tapioca.") + " Leve a garrafa de água." };
+    case "familia":
+      return { title: "👨‍👩‍👦 Família e descanso", body: "Banho, refeição e tempo com a família. Água por perto." };
+    case "moinho":
+      return { title: "🏭 Moinho", body: "Garrafa de água por perto. Café só até o almoço." + (P("treino") && (C.dow === 2 || C.dow === 4) ? " Treino de hoje ainda não marcado." : "") };
+    case "moinho2":
+      return { title: "🏭 Volta ao moinho", body: "Sem café a partir de agora. Água por perto." + (P("supl") ? " Tomou Q10, vitamina D+K e creatina no almoço?" : "") };
+    case "jantar":
+      return { title: "🍽️ Família e jantar", body: "Jantar até 18h: proteína, fruta e pão integral, leve. Depois, magnésio." };
     case "agua":
       if (!P("agua")) return { title: "✓ Água do dia marcada", body: "Siga firme." };
       return { title: "💧 Água", body: "Meta: 2,5 a 3 L no dia. Garrafa sempre por perto." };
@@ -157,6 +171,7 @@ function show(slot) {
     const m = compose(slot, S);
     return self.registration.showNotification(m.title, {
       body: m.body, tag: "cem-" + slot, renotify: true,
+      vibrate: [400, 150, 400, 150, 800], requireInteraction: slot === "acordar" || slot === "revleve" || slot === "estudo",
       icon: "icon-192.png", badge: "icon-192.png", data: { url: "./" }
     });
   });

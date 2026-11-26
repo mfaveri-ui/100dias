@@ -3,19 +3,25 @@ name: Lembretes diários
 on:
   schedule:
     # Horários em UTC (Brasília + 3 h), disparados 3 min antes para compensar a fila do GitHub
-    # Rotina de nov/2026 — o script push/enviar.js sabe qual aviso é cada linha
+    # Rotina de nov/2026: um aviso por evento. O script push/enviar.js sabe qual aviso é cada linha
     - cron: "27 5 * * *"      # 02h30 ativação
+    - cron: "37 5 * * *"      # 02h40 revisão leve
     - cron: "52 5 * * *"      # 02h55 estudo principal
     - cron: "27 8 * * *"      # 05h30 treino (ter, qui, dom) ou estudo extra (seg, qua, sex, sáb)
+    - cron: "27 9 * * 1-6"    # 06h30 banho, refeição e deslocamento
+    - cron: "42 9 * * 0"      # 06h45 família e descanso (domingo)
+    - cron: "27 10 * * 1-6"   # 07h30 moinho
     - cron: "57 12 * * *"     # 10h00 água
     - cron: "57 14 * * *"     # 12h00 almoço e suplementos
+    - cron: "27 16 * * 1-5"   # 13h30 volta ao moinho
     - cron: "57 16 * * 0,6"   # 14h00 simulado (sáb) / estudo da tarde (dom)
+    - cron: "57 19 * * *"     # 17h00 família e jantar
     - cron: "57 20 * * *"     # 18h00 Caderno de Erros e véspera (dom: revisão da semana)
     - cron: "57 21 * * *"     # 19h00 fechar o dia
   workflow_dispatch:
     inputs:
       slot:
-        description: "Aviso para testar: acordar, estudo, treino, questoes, agua, almoco, tarde, revisao, semanal ou fechar"
+        description: "Aviso para testar: acordar, revleve, estudo, treino, questoes, banho, familia, moinho, agua, almoco, moinho2, tarde, jantar, revisao, semanal ou fechar"
         required: false
         default: "fechar"
 

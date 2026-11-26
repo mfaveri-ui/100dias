@@ -615,8 +615,11 @@ button.vid{background:none;cursor:pointer;font-family:inherit}
     <div id="habitEditor"></div>
 
     <h2 class="section-title">Notificações</h2>
-    <p class="lead">O app avisa nos horários da rotina e cobra só o que ainda falta no dia: ativação às 02h30, estudo principal, treino (ter, qui e dom) ou estudo extra às 05h30, água, almoço e suplementos, Caderno de Erros às 18h e o fechamento às 19h.</p>
+    <p class="lead">O app avisa em cada evento da rotina, de 02h30 às 19h, e cobra só o que ainda falta no dia.</p>
     <div class="card" id="notifCard"></div>
+    <h3 class="ch">Alarmes da rotina</h3>
+    <p class="small" style="margin:0 0 8px">Um aviso para cada evento do dia. Toque em “testar” para ver como chega. O aviso das 02h30, 02h40 e 02h55 fica na tela até você tocar nele.</p>
+    <div class="card" id="alarmList"></div>
 
     <h2 class="section-title">Dados</h2>
     <p class="lead">Seus registros ficam guardados só neste celular, sem login. Baixe um backup de vez em quando, principalmente antes de trocar de aparelho ou limpar os dados do navegador.</p>
@@ -2212,6 +2215,13 @@ document.getElementById("notifCard").addEventListener("click",function(e){
   if(id==="nTest"){idbPut();setTimeout(function(){navigator.serviceWorker.ready.then(function(r){(r.active||navigator.serviceWorker.controller).postMessage({type:"teste",s:"fechar"});msg("Enviado. A notificação aparece em alguns segundos.")})},500)}
   if(id==="nOff"){navigator.serviceWorker.ready.then(function(r){return r.pushManager.getSubscription()}).then(function(s){return s&&s.unsubscribe()}).then(notifRefresh)}
 });
+var ALARMS=[["02h30","acordar","Ativação: luz, água, Alpha GPC e movimento","todos os dias"],["02h40","revleve","Revisão leve (comece até 02h45)","todos os dias"],["02h55","estudo","Estudo principal","todos os dias"],["05h30","treino","Treino do dia","ter, qui e dom"],["05h30","questoes","Estudo extra: questões","seg, qua, sex e sáb"],["06h30","banho","Banho, refeição e deslocamento","seg a sáb"],["06h45","familia","Família e descanso","dom"],["07h30","moinho","Moinho","seg a sáb"],["10h00","agua","Água","todos os dias"],["12h00","almoco","Almoço e suplementos","todos os dias"],["13h30","moinho2","Volta ao moinho","seg a sex"],["14h00","tarde","Simulado (sáb) / estudo da tarde (dom)","sáb e dom"],["17h00","jantar","Família e jantar até 18h","todos os dias"],["18h00","revisao","Magnésio, Caderno de Erros e véspera","seg a sáb"],["18h00","semanal","Revisão da semana","dom"],["19h00","fechar","Fechar o dia","todos os dias"]];
+function renderAlarms(){var c=document.getElementById("alarmList");if(!c)return;
+  c.innerHTML="<table class='bench' style='width:100%;min-width:0'><tr><th>Hora</th><th>Evento</th><th></th></tr>"+ALARMS.map(function(a){return "<tr><td><b>"+a[0]+"</b></td><td>"+esc(a[2])+"<br><span class='small'>"+esc(a[3])+"</span></td><td><button type='button' class='linkbtn' data-alarm='"+a[1]+"'>testar</button></td></tr>"}).join("")+"</table><p class='small' id='alarmMsg' style='margin:8px 0 0'></p>"}
+document.getElementById("alarmList").addEventListener("click",function(e){var b=e.target.closest("button[data-alarm]");if(!b)return;var m=document.getElementById("alarmMsg");
+  if(!notifSupported()||Notification.permission!=="granted"){m.textContent="Ative as notificações acima primeiro.";return}
+  idbPut();setTimeout(function(){navigator.serviceWorker.ready.then(function(r){(r.active||navigator.serviceWorker.controller).postMessage({type:"teste",s:b.getAttribute("data-alarm")});m.textContent="Enviado. O aviso aparece em alguns segundos."})},400)});
+renderAlarms();
 notifRefresh();
 idbPut();
 

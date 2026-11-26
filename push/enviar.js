@@ -9,25 +9,32 @@ if (!PRIVATE) { console.log("Falta o segredo VAPID_PRIVATE_KEY em Settings → S
 webpush.setVapidDetails("mailto:avisos@100dias.app", PUBLIC, PRIVATE);
 
 // Horários de Brasília, em minutos desde a meia-noite, por dia da semana (0 = domingo).
-// Rotina de nov/2026: treino às 05h30 na ter, qui e dom; estudo extra no mesmo horário nos outros dias.
-const BASE = { acordar: 150, estudo: 175, agua: 600, almoco: 720, fechar: 1140 };
+// Rotina de nov/2026: um aviso para cada evento do dia.
+const BASE = { acordar: 150, revleve: 160, estudo: 175, agua: 600, almoco: 720, jantar: 1020, fechar: 1140 };
+const UTIL = { banho: 390, moinho: 450, moinho2: 810, revisao: 1080 };
 const TAB = {
-  0: Object.assign({}, BASE, { treino: 330, tarde: 840, semanal: 1080 }),
-  1: Object.assign({}, BASE, { questoes: 330, revisao: 1080 }),
-  2: Object.assign({}, BASE, { treino: 330, revisao: 1080 }),
-  3: Object.assign({}, BASE, { questoes: 330, revisao: 1080 }),
-  4: Object.assign({}, BASE, { treino: 330, revisao: 1080 }),
-  5: Object.assign({}, BASE, { questoes: 330, revisao: 1080 }),
-  6: Object.assign({}, BASE, { questoes: 330, tarde: 840, revisao: 1080 })
+  0: Object.assign({}, BASE, { treino: 330, familia: 405, tarde: 840, semanal: 1080 }),
+  1: Object.assign({}, BASE, UTIL, { questoes: 330 }),
+  2: Object.assign({}, BASE, UTIL, { treino: 330 }),
+  3: Object.assign({}, BASE, UTIL, { questoes: 330 }),
+  4: Object.assign({}, BASE, UTIL, { treino: 330 }),
+  5: Object.assign({}, BASE, UTIL, { questoes: 330 }),
+  6: Object.assign({}, BASE, { questoes: 330, banho: 390, moinho: 450, tarde: 840, revisao: 1080 })
 };
 // Cada agendamento do GitHub diz qual aviso é, mesmo que a fila atrase o disparo.
 const CRON = {
   "27 5 * * *": () => "acordar",
+  "37 5 * * *": () => "revleve",
   "52 5 * * *": () => "estudo",
   "27 8 * * *": dow => (dow === 0 || dow === 2 || dow === 4) ? "treino" : "questoes",
+  "27 9 * * 1-6": () => "banho",
+  "42 9 * * 0": () => "familia",
+  "27 10 * * 1-6": () => "moinho",
   "57 12 * * *": () => "agua",
   "57 14 * * *": () => "almoco",
+  "27 16 * * 1-5": () => "moinho2",
   "57 16 * * 0,6": () => "tarde",
+  "57 19 * * *": () => "jantar",
   "57 20 * * *": dow => dow === 0 ? "semanal" : "revisao",
   "57 21 * * *": () => "fechar"
 };
